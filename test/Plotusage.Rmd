@@ -1,0 +1,79 @@
+---
+title: "Plot_usage"
+output: html_document
+---
+
+## widedataframe2boxplot
+
+```{r}
+df = generateAbundanceDF()
+head(df)
+```
+
+```{r}
+widedataframe2boxplot(df)
+```
+
+```{e}
+widedataframe2boxplot(df, saveplot="widedataframe2boxplot.pdf", width=10, height=10, units=c("cm"))
+```
+
+## rankPlot
+
+输入数据格式
+
+```{r}
+a <- data.frame(log2FoldChange=rnorm(1000), row.names=paste0("ImageGP",1:1000))
+head(a)
+```
+
+Raw plot
+
+```{r}
+rankPlot(a)
+```
+
+
+Label top 10
+
+```{r}
+rankPlot(a, label=10)
+```
+
+Label specified points
+
+```{r}
+rankPlot(a, label=c("ImageGP1","ImageGP2","ImageGP10"))
+```
+
+
+Label specified points with new names
+
+```{r}
+b <- c("A","B","C")
+names(b) <- c("ImageGP1","ImageGP2","ImageGP10")
+rankPlot(a, label=b)
+```
+
+## volcanoPlot
+
+Prepare data
+
+```{r}
+res_output <- data.frame(log2FoldChange=rnorm(3000), row.names=paste0("ImageGP",1:3000))
+res_output$padj <- 20 ^ (-1*(res_output$log2FoldChange^2))
+padj = 0.05
+log2FC = 1
+res_output$level <- ifelse(res_output$padj<=padj,
+                      ifelse(res_output$log2FoldChange>=log2FC,
+                             paste("groupA","UP"),
+                      ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
+                             paste("groupB","UP"), "NoDiff")) , "NoDiff")
+head(res_output)
+```
+
+Plot
+
+```{r}
+volcanoPlot(res_output, colour="level")
+```

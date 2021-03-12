@@ -1,0 +1,12 @@
+Intersection	Count
+Set1&Set2	2
+Set1	1
+Set2&Set4	1
+Set2&Set3&Set4	1
+Set2&Set5	1
+Set3	1
+Set5	1
+Set4&Set5	1
+Set4	2
+Set1&Set3&Set4&Set5	1
+Set3&Set5	2

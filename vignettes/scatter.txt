@@ -1,0 +1,8 @@
+Samp	X_val	Y_val	Color	Size	Shape
+a	1	1	grp1	10	cluster1
+b	2	2	grp1	10	cluster1
+c	1	3	grp1	10	cluster1
+d	3	1	grp2	15	cluster2
+e	2	2	grp2	15	cluster2
+f	3	3	grp3	5	cluster2
+g	2	1	grp3	5	cluster2

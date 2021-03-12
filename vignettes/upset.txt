@@ -1,0 +1,40 @@
+Name	Action	Adventure	Horror	Musical	Romance	Thriller
+Toy Story (1995)	0	0	0	0	0	0
+Jumanji (1995)	0	1	0	0	0	0
+Grumpier Old Men (1995)	0	0	0	0	1	0
+Waiting to Exhale (1995)	0	0	0	0	0	0
+Father of the Bride Part II (1995)	0	0	0	0	0	0
+Heat (1995)	1	0	0	0	0	1
+Sabrina (1995)	0	0	0	0	1	0
+Tom and Huck (1995)	0	1	0	0	0	0
+Sudden Death (1995)	1	0	0	0	0	0
+GoldenEye (1995)	1	1	0	0	0	1
+American President, The (1995)	0	0	0	0	1	0
+Dracula: Dead and Loving It (1995)	0	0	1	0	0	0
+Balto (1995)	0	0	0	0	0	0
+Nixon (1995)	0	0	0	0	0	0
+Cutthroat Island (1995)	1	1	0	0	1	0
+Casino (1995)	0	0	0	0	0	1
+Sense and Sensibility (1995)	0	0	0	0	1	0
+Four Rooms (1995)	0	0	0	0	0	1
+Ace Ventura: When Nature Calls (1995)	0	0	0	0	0	0
+Money Train (1995)	1	0	0	0	0	0
+Get Shorty (1995)	1	0	0	0	0	0
+Copycat (1995)	0	0	0	0	0	1
+Assassins (1995)	0	0	0	0	0	1
+Powder (1995)	0	0	0	0	0	0
+Leaving Las Vegas (1995)	0	0	0	0	1	0
+Othello (1995)	0	0	0	0	0	0
+Now and Then (1995)	0	0	0	0	0	0
+Persuasion (1995)	0	0	0	0	1	0
+City of Lost Children, The (1995)	0	1	0	0	0	0
+Shanghai Triad (Yao a yao yao dao waipo qiao) (1995)	0	0	0	0	0	0
+Dangerous Minds (1995)	0	0	0	0	0	0
+Twelve Monkeys (1995)	0	0	0	0	0	0
+Wings of Courage (1995)	0	1	0	0	1	0
+Babe (1995)	0	0	0	0	0	0
+Carrington (1995)	0	0	0	0	1	0
+Dead Man Walking (1995)	0	0	0	0	0	0
+Across the Sea of Time (1995)	0	0	0	0	0	0
+It Takes Two (1995)	0	0	0	0	0	0
+Clueless (1995)	0	0	0	0	1	0

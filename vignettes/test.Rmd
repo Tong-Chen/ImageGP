@@ -1,0 +1,156 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r}
+exprTable <- read.table("exprTable.txt", sep="\t", row.names=1, header=T)
+exprTable
+```
+
+## 绘制一个聚类热图很简单
+
+```{r}
+library(pheatmap)
+pheatmap(exprTable)
+```
+
+## 如何自定义分支顺序呢
+
+自己做个`hclust`传进去，顺序跟pheatmap默认是一样的
+
+```{r}
+exprTable_t <- as.data.frame(t(exprTable))
+
+col_dist = dist(exprTable_t)
+
+hclust_1 <- hclust(col_dist)
+
+pheatmap(exprTable, cluster_cols = hclust_1)
+```
+
+## 人为指定顺序排序样品
+
+按发育时间排序样品
+
+```{r}
+manual_order = c("Zygote", "X2_cell", "X4_cell", "X8_cell", "Morula",  "ICM")
+
+dend = reorder(as.dendrogram(hclust_1), wts=order(match(manual_order, rownames(exprTable_t))))
+
+# dend = reorder(as.dendrogram(hclust_1), wts=order(match(manual_order, rownames(exprTable_t))), agglo.FUN = max)
+
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+## 按某个基因的表达由小到大排序
+
+可以按任意指标排序，基因表达是一个例子。
+
+```{r}
+dend = reorder(as.dendrogram(hclust_1), wts=exprTable_t$Tet3)
+
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+## 按某个基因的表达由大到小排序
+
+```{r}
+dend = reorder(as.dendrogram(hclust_1), wts=exprTable_t$Tet3*(-1))
+
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+
+
+## 按分支名字（样品名字）的字母顺序排序
+
+```{r}
+col_cluster <- hclust_1 %>% as.dendrogram %>% sort %>% as.hclust
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+## 梯子形排序：最小的分支在右侧 
+
+```{r}
+col_cluster <- hclust_1 %>% as.dendrogram %>% ladderize(TRUE) %>% as.hclust
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+## 梯子形排序：最小的分支在左侧
+
+```{r}
+col_cluster <- hclust_1 %>% as.dendrogram %>% ladderize(FALSE) %>% as.hclust
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+## 按特征值排序
+
+样本量多时的自动较忧排序
+
+```{r}
+sv = svd(exprTable)$v[,1]
+dend = reorder(as.dendrogram(hclust_1), wts=sv)
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable, cluster_cols = col_cluster)
+```
+
+
+```{r}
+exprTable_cor <- cor(exprTable)
+exprTable_cor
+```
+
+```{r}
+pheatmap(exprTable_cor, cluster_rows = T, cluster_cols = T)
+```
+
+```{r}
+cor_cluster = hclust(as.dist(1-exprTable_cor))
+pheatmap(exprTable_cor, cluster_rows = cor_cluster, cluster_cols = cor_cluster)
+```
+
+```{r}
+cor_sum <- rowSums(exprTable_cor)
+dend = reorder(as.dendrogram(cor_cluster), wts=cor_sum)
+
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable_cor, cluster_rows = col_cluster, cluster_cols = col_cluster)
+```
+
+```{r}
+manual_order = c("Zygote", "X2_cell", "X4_cell", "X8_cell", "Morula",  "ICM")
+
+dend = reorder(as.dendrogram(cor_cluster), wts=order(match(manual_order, rownames(exprTable_cor))),agglo.FUN = max)
+col_cluster <- as.hclust(dend)
+
+pheatmap(exprTable_cor, cluster_rows = col_cluster, cluster_cols = col_cluster)
+```
+
+## Refercens
+
+1. https://stackoverflow.com/questions/52446477/r-hclust-common-order-for-multiple-trees
+2. https://www.biostars.org/p/237067/
+
+
+
+
+height = height[height>0]
+
+height
+
+hang_dend = hang.dendrogram(dend)
+
+plot(hang_dend)
+
+height = get_nodes_attr(hang_dend, "height")
+
+height

@@ -1,0 +1,7 @@
+ID	Count
+Zygote	1
+2_cell	2
+4_cell	4
+8_cell	8
+Morula	16
+ICM	32

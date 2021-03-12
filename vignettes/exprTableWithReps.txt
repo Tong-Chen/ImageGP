@@ -1,0 +1,4 @@
+ID	SampleA_1	SampleA_2	SampleA_3	SampleA_4	SampleA_5	SampleA_6	SampleA_7	SampleA_8	SampleA_9	SampleA_10	SampleB_11	SampleB_12	SampleB_13	SampleB_14	SampleB_15	SampleB_16	SampleB_17	SampleB_18	SampleB_19	SampleB_20
+Gene_a	3.84	4.89	4.7	4.13	2.88	4.75	2.82	4.45	4.22	1.97	4.71	6.66	6.69	3.04	6.93	4.64	4.14	5.23	3.55	5.39
+Gene_b	8.63	6.64	8.05	6.2	8.06	7.21	5.67	7.42	7.26	7.54	4.42	3.47	2.43	4.52	3.53	1.54	1.04	3.06	4.53	2.31
+Gene_c	3.33	6.91	3.23	5.97	6.61	4.17	6.08	4.53	4.14	3.88	6.35	5.65	8.26	8.81	8.45	8.44	6.92	5.58	6.01	6.34

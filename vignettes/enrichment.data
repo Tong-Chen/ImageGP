@@ -1,0 +1,14 @@
+SampleGroup	GeneRatio	Qvalue	Count	Description
+Wildtype_up	7/320	0.001836081	7	ERBB signaling pathway
+Wildtype_up	13/320	0.01680096	13	Wnt signaling pathway
+Wildtype_up	13/320	0.0171473	13	cell-cell signaling by wnt
+Wildtype_up	7/320	0.035797856	7	cell cycle G1/S phase transition
+Wildtype_up	9/320	0.024164034	9	Extrinsic apoptotic signaling pathway
+Wildtype_up	9/320	0.024164034	9	regulation of cell-cell adhesion
+Mutant_up	7/320	0.001836081	7	ERBB signaling pathway
+Mutant_up	14/342	0.001086508	14	ERK1 and ERK2 cascade
+Mutant_up	13/342	0.01680096	13	Wnt signaling pathway
+Mutant_up	17/342	0.002228511	17	regulation of cell growth
+Mutant_up	15/342	0.005075219	15	regulation of cell-cell adhesion
+Mutant_up	10/342	0.040284925	10	neuron apoptotic process
+Mutant_up	15/342	0.005075219	15	neuron

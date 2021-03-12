@@ -1,0 +1,39 @@
+Package: ImageGP
+Type: Package
+Title: For ImageGP cloud platform (http://www.ehbio.com/Cloud_Platform/front/#)
+Version: 0.1.0
+Author: Chen Tong
+Authors@R: c(person("Chen", "Tong", email = "chentong_biology@163.com",
+  role = c("aut", "cre")),
+  person("Fan", "Mingjie", email = "train@ehbio.com",
+  role = c("aut")))
+Maintainer: The package maintainer <chentong_biology@163.com>
+Description: For ImageGP cloud platform.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+VignetteBuilder: knitr
+RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
+URL: http://www.ehbio.com/Cloud_Platform/front/#/
+Depends:
+    R (>= 3.1)
+Imports:
+    ggplot2,
+	pheatmap,
+	grid
+Suggests:
+    WGCNA,
+    DESeq2,
+    RColorBrewer,
+    gplots,
+    amap,
+    reshape2,
+    ggrepel,
+    BiocParallel,
+    cowplot,
+    readr,
+    dplyr,
+	knitr,
+	VennDiagram,
+	UpSetR

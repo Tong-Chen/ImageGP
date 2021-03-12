@@ -1,0 +1,7 @@
+ID	Type
+Pou5f1	TF
+Sox2	TF
+Gata2	TF
+cMyc	TF
+Tet1	Enzyme
+Tet3	Enzyme

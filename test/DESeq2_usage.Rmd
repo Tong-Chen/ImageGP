@@ -1,0 +1,49 @@
+```{r}
+library(DESeq2)
+library("RColorBrewer")
+library("gplots")
+library("amap")
+library("ggplot2")
+library("BiocParallel")
+```
+
+
+```{r}
+output_prefix = "ehbio2"
+file = "salmon.output"
+sampleFile = "sampleFile"
+design="conditions"
+tx2gene="genome/GRCh38.tx2gene"
+type="salmon"
+padj=0.05
+log2FC=1
+```
+
+## 分步法
+
+```{r}
+dds <- salmon2deseq(file, sampleFile, design=design, tx2gene=tx2gene)
+normexpr <- deseq2normalizedExpr(dds)
+```
+
+```{r}
+normalizedExpr2DistribBoxplot(normexpr, 
+                              saveplot=paste(output_prefix, "DESeq2.normalizedExprDistrib.pdf", sep="."))
+```
+
+```{r}
+clusterSampleHeatmap2(normexpr$rlog, 
+                      cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."), 
+                      saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
+```
+
+```{r}
+multipleGroupDEgenes(dds, design=design, output_prefix=output_prefix, padj=padj, log2FC=log2FC)
+```
+
+## 一步法
+
+```{r}
+DESeq2_ysx(file, sampleFile, design=design, type=type, tx2gene=tx2gene, 
+           output_prefix=output_prefix, padj=padj, log2FC=log2FC)
+```

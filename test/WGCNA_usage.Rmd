@@ -1,0 +1,62 @@
+  
+```{r}
+library(WGCNA)
+library(ggplot2)
+library(reshape2)
+library(stringr)
+library(ImageGP)
+
+options(stringsAsFactors = FALSE)
+
+if (Sys.info()['sysname'] == "Linux"){
+  # 打开多线程
+  enableWGCNAThreads()
+} else {
+# if mac
+  allowWGCNAThreads()
+}
+# 格式如前面描述
+# 常规表达矩阵，log2转换后或
+# Deseq2的varianceStabilizingTransformation转换的数据
+# 如果有批次效应，需要事先移除，可使用removeBatchEffect
+# 如果有系统偏移(可用boxplot查看基因表达分布是否一致)，
+# 需要quantile normalization
+exprMat <- "LiverFemaleClean.txt"
+
+# 如果没有，设置为空
+# traitData <- NULL
+traitData <- "TraitsClean.txt"
+
+wgcnaL <- WGCNA_readindata(exprMat, traitData)
+
+datExpr <- wgcnaL$datExpr
+
+WGCNA_dataCheck(datExpr, saveplot="WGCNA_dataCheck.pdf", width=20)
+
+datExpr <- WGCNA_dataFilter(datExpr)
+
+#datExpr <- WGCNA_sampleClusterDetectOutlier(datExpr)
+
+datExpr <- WGCNA_sampleClusterDetectOutlier(datExpr, traitColors=wgcnaL$traitColors, saveplot="WGCNA_sampleClusterDetectOutlier.pdf")
+
+power <- WGCNA_softpower(datExpr, saveplot="WGCNA_softpower.pdf")
+
+net <- WGCNA_coexprNetwork(datExpr, power, saveplot="WGCNA_module_generation_plot.pdf")
+
+MEs_col <- WGCNA_saveModuleAndMe(net, datExpr, saveplot="WGCNA_module_correlation_plot.pdf")
+
+WGCNA_MEs_traitCorrelationHeatmap(MEs_col, traitData=wgcnaL$traitData, saveplot="WGCNA_moduletrait_correlation_plot.pdf")
+
+cyt <- WGCNA_cytoscape(net, power, datExpr)
+
+hubgene <- WGCNA_hubgene(cyt)
+
+WGCNA_moduleTraitPlot(MEs_col, traitData=wgcnaL$traitData, saveplot="WGCNA_moduleTraitHeatmap.pdf", width=15, height=12)
+
+geneTraitCor <- WGCNA_ModuleGeneTraitHeatmap(datExpr, traitData=wgcnaL$traitData, net=net, saveplot="WGCNA_ModuleGeneTraitHeatmap.pdf")
+
+WGCNA_GeneModuleTraitCoorelation(datExpr, MEs_col, geneTraitCor, traitData=wgcnaL$traitData, net)
+
+```
+
+
