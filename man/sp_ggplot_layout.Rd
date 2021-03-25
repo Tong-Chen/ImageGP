@@ -14,11 +14,17 @@ sp_ggplot_layout(
   y_label = NULL,
   title = NULL,
   coordinate_flip = FALSE,
+  ylim = NULL,
   width = 12,
   height = 6.18,
   fontname = "",
   base_font_size = 10,
   additional_theme = NULL,
+  zoom_split = FALSE,
+  zoom_xlim = NULL,
+  zoom_ylim = NULL,
+  saveppt = FALSE,
+  savehtml = FALSE,
   ...
 )
 }
@@ -44,6 +50,16 @@ sp_ggplot_layout(
 \item{width}{Picture width (units: cm)}
 
 \item{height}{Picture height (units: cm)}
+
+\item{zoom_split}{If both x and y is given, should each axis zoom be shown separately as well? Defaults to FALSE.}
+
+\item{zoom_xlim}{Specific zoom ranges for x axis.}
+
+\item{zoom_ylim}{Specific zoom ranges for y axis.}
+
+\item{saveppt}{Output PPT format.}
+
+\item{savehtml}{Save the images as HTML files.}
 
 \item{...}{Extra parameters to \code{\link[ggplot2]{ggsave}}.}
 }

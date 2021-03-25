@@ -47,6 +47,7 @@ sp_boxplot(
   facet_scales = "fixed",
   metadata = NULL,
   debug = F,
+  filename = NULL,
   extra_ggplot2_cmd = NULL,
   ...
 )
@@ -161,6 +162,8 @@ use same scale (x,y range), \code{free} (variable x, y ranges for each sub-plot)
 
 \item{metadata}{Giving a metadata file with format specified in example
 to tell the group information for each sample.}
+
+\item{filename}{Output picture to given file.}
 
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
 

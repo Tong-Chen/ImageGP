@@ -4,7 +4,7 @@
 \alias{generate_color_list}
 \title{Generate color code}
 \usage{
-generate_color_list(color, number, alpha = 1)
+generate_color_list(color, number, alpha = 1, constantColor = F)
 }
 \arguments{
 \item{color}{Colors like c('red', 'blue', '#6181BD') or

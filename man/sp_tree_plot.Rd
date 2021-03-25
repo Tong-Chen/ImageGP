@@ -37,7 +37,8 @@ A tree with Multiple-Sequence-Alignment plot would be generated when given.}
 
 \item{color_branches}{Name of columns in \code{tree_attrib} used for color branches.}
 
-\item{layout}{one of 'rectangular', 'slanted', 'fan', 'circular', 'radial', 'equal_angle', 'daylight' or 'ape'}
+\item{layout}{one of 'rectangular', 'dendrogram', 'slanted', 'ellipse', 'roundrect',
+'fan', 'circular', 'inward_circular', 'radial', 'equal_angle', 'daylight' or 'ape'}
 
 \item{ladderize}{logical (default \code{TRUE}). Should the tree be re-organized to have a 'ladder'
 aspect?}
@@ -74,7 +75,7 @@ Generate tree file
 
 library(ggtree)
 library("ggplot2")
-library(YSX)
+library(ImageGP)
 treefile <- "iqtree.treefile"
 sp_tree_plot(treefile)
 }

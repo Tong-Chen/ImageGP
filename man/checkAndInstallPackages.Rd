@@ -13,7 +13,7 @@ checkAndInstallPackages(
 \item{package}{A list containing names and install-names of each package.
 (instll-names is only required for packages from github.)
 Like list(package1=c("ggplot2")) or
-list(packages1=c("ggplot2"), package2=c("YSX", "git_user/YSX"))}
+list(packages1=c("ggplot2"), package2=c("ImageGP", "git_user/ImageGP"))}
 }
 \description{
 Check and install given packages
@@ -22,6 +22,6 @@ Check and install given packages
 
 checkAndInstallPackages(list(package1=c("ggplot2")))
 
-checkAndInstallPackages(list(packages1=c("ggplot2"), package2=c("YSX", "git_user/YSX")))
+checkAndInstallPackages(list(packages1=c("ggplot2"), package2=c("ImageGP", "git_user/ImageGP")))
 
 }
