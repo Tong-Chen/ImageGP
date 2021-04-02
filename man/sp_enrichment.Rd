@@ -16,16 +16,17 @@ sp_enrichment(
   title = NULL,
   x_label = NULL,
   y_label = NULL,
+  scale_size_max = NULL,
+  scale_size_min = NULL,
   yvariable_width = 60,
   manual_color_vector = c("green", "red"),
-  log10_transform_variable = "no_transform",
-  sqrt_transform_variable = "no_transform",
+  log10_transform_variable = NULL,
+  sqrt_transform_variable = NULL,
   legend.position = "right",
   xtics_angle = 0,
   shape_variable = NULL,
   coordinate_flip = FALSE,
   extra_ggplot2_cmd = NULL,
-  file_name = NULL,
   ...
 )
 }
@@ -56,6 +57,10 @@ accept a vector like c('SampA_Up','SampB_Up').}
 
 \item{y_label}{Y-axis title of picture. Default empty.}
 
+\item{scale_size_max}{Scale size with maximum value specified}
+
+\item{scale_size_min}{Scale size with minimum value specified}
+
 \item{yvariable_width}{Default 60. Normally yvariable would be terms. This is used to set
 the max-allowed term length. Terms with length larger than given  value will be wrap
 to new line.}
@@ -73,11 +78,11 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 (check http://www.sthda.com/english/wiki/colors-in-r for more).}
 
 \item{log10_transform_variable}{Get log-transformed data for given variable.
-Default \code{no_transform}, means no log10 transform.
+Default \code{NULL}, means no log10 transform.
 Accept a variable like \code{p_value} to get \code{(-1) * log10(p_value)}.}
 
 \item{sqrt_transform_variable}{Get square root-transformed data for given variable.
-Default \code{no_transform}, means no sqrt transform.
+Default \code{NULL}, means no sqrt transform.
 Accept a variable like \code{count} to get \code{sqrt(count)}.}
 
 \item{legend.position}{Position of legend, accept top, bottom, left, right, none or c(0.8,0.8).}
@@ -91,10 +96,6 @@ Accept a variable like \code{count} to get \code{sqrt(count)}.}
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
 
 \item{...}{Parameters given to \code{sp_ggplot_layout}}
-
-\item{scale_size_min}{Scale size with minimum value specified}
-
-\item{scale_size_max}{Scale size with maximum value specified}
 }
 \value{
 A ggplot2 object
@@ -109,7 +110,7 @@ Generating enrichment plot
 ## Not run:
 enrichment_data <- "enrichment.data"
 
-library(YSX)
+library(ImageGP)
 enrichment_data <- "enrichment.data"
 sp_enrichment(data = enrichment_data, xvariable = "GeneRatio", yvariable = "Description",
               log10_transform_variable = "Qvalue", sqrt_transform_variable = "Count",

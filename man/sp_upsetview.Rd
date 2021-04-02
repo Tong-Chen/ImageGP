@@ -9,8 +9,23 @@ sp_upsetview(
   vennFormat = 0,
   pointsize = 8,
   keep_empty = FALSE,
+  sets = NULL,
+  nintersects = NA,
+  order.by = "freq",
+  decreasing = TRUE,
+  scale.intersections = "identity",
+  scale.sets = "identity",
+  queries_bar1 = NULL,
+  queries_bar2 = NULL,
+  queries_bar3 = NULL,
+  queries_bar1_color = NULL,
+  queries_bar2_color = NULL,
+  queries_bar3_color = NULL,
   saveplot = NULL,
   debug = FALSE,
+  saveppt = FALSE,
+  main_bar_color_vector = "gray23",
+  constantColor = T,
   ...
 )
 }
@@ -26,19 +41,37 @@ sp_upsetview(
 
 \item{keep_empty}{Keep empty intersections. Default FALSE. Accept TRUE to remove empty intersections.}
 
+\item{sets}{Specific sets to look at (Include as combinations. Ex: c('Name1', 'Name2')).}
+
+\item{nintersects}{Number of intersections to plot. If set to NA, all intersections will be plotted.}
+
+\item{order.by}{How the intersections in the matrix should be ordered by. Options include frequency (entered as 'freq'), degree.}
+
+\item{decreasing}{How the variables in order.by should be ordered. 'freq' is decreasing (greatest to least) and 'degree' is increasing (least to greatest).}
+
+\item{scale.intersections}{The scale to be used for the intersection sizes. Options: 'identity', 'log10', 'log2'.}
+
+\item{scale.sets}{The scale to be used for the set sizes. Options: 'identity', 'log10', 'log2'.}
+
+\item{queries_bar1}{Specifies an intersection. Changes the column color.}
+
+\item{queries_bar1_color}{Input color. Specifies an intersection to use this color.}
+
 \item{saveplot}{Save plot to given file "a.pdf", "b.png".}
 
-\item{...}{}
+\item{...}{Other parameters given to \code{base_plot_save}}
 }
 \value{
 A pdf file.
 }
 \description{
 Input file is a matrix:
-vennFormat 0
 }
 \details{
+vennFormat 0
+
 (First row would be treated as header line. First column is just a normal column (but needed). 0 represents the sample does not contain the genes in row. 1 represents the containing relationship)
+
 ID	Samp1	Samp2	Samp3	Samp4	Samp5
 
 G1	1	0	1	0	1
@@ -52,6 +85,7 @@ G4	1	1	1	0	0
 G5	0	1	0	1	1
 
 G6	1	0	1	0	0
+
 vennFormat 1 or 2
 
 The output contains two barplots, horizontal bar represents the number of genes in each sample, which is the sum of all 1 in sample column. Vertical bar represents the number of sample specific and common genes as indicated by linking vertical lines and points (just as the overlapping regions of venndiagram).

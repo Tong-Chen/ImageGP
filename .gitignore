@@ -1,3 +1,6 @@
+
+build
+
 bin/py2
 .history
 .swp
@@ -57,3 +60,4 @@ build
 *.log
 
 Plot_files/
+

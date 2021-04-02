@@ -51,7 +51,7 @@ Rankplot for given column.
 }
 \examples{
 
-a <- data.frame(log2FoldChange=rnorm(1000), row.names=paste0("YSX",1:1000))
+a <- data.frame(log2FoldChange=rnorm(1000), row.names=paste0("ImageGP",1:1000))
 
 ## Raw plot
 
@@ -63,12 +63,12 @@ rankPlot(a, label=10)
 
 ## Label specified points
 
-rankPlot(a, label=c("YSX1","YSX2","YSX10"))
+rankPlot(a, label=c("ImageGP1","ImageGP2","ImageGP10"))
 
 ## Label specified points with new names
 
 b <- c("A","B","C")
-names(b) <- c("YSX1","YSX2","YSX10")
+names(b) <- c("ImageGP1","ImageGP2","ImageGP10")
 rankPlot(a, label=b)
 
 }

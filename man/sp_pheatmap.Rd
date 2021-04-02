@@ -15,6 +15,10 @@ sp_pheatmap(
   annotation_col = NULL,
   cluster_rows = FALSE,
   cluster_cols = FALSE,
+  cluster_cols_variable = NULL,
+  cluster_rows_variable = NULL,
+  remove_cluster_cols_variable_in_annocol = FALSE,
+  remove_cluster_rows_variable_in_annorow = FALSE,
   clustering_method = "complete",
   clustering_distance_rows = "pearson",
   clustering_distance_cols = "pearson",
@@ -37,6 +41,7 @@ sp_pheatmap(
   height = 0,
   title = "",
   debug = FALSE,
+  saveppt = FALSE,
   ...
 )
 }
@@ -74,17 +79,27 @@ would always be set to FALSE.}
 When there are less than 3 columns or more than 5000 columns, this parameter
 would always be set to FALSE.}
 
+\item{cluster_cols_variable}{Reorder branch order of clustered columns by given variable. (Test only)}
+
+\item{cluster_rows_variable}{Reorder branch order of clustered rows by given variable. (Test only)}
+
+\item{remove_cluster_cols_variable_in_annocol}{Do not show \code{cluster_cols_variable} in column annotation.}
+
+\item{remove_cluster_rows_variable_in_annorow}{Do not show \code{cluster_rows_variable} in row annotation.}
+
 \item{clustering_method}{Clustering method, Default "complete".
 Accept "ward.D", "ward.D2","single", "average" (=UPGMA),
 "mcquitty" (=WPGMA), "median" (=WPGMC) or "centroid" (=UPGMC)}
 
 \item{clustering_distance_rows}{Clustering distance method for rows.
 Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
-"canberra", "binary", "minkowski".}
+"canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
+"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".}
 
 \item{clustering_distance_cols}{Clustering distance method for cols.
 Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
-"canberra", "binary", "minkowski".}
+"canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
+"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".}
 
 \item{breaks}{A sequence of numbers that covers the range of values in mat and
 is one element longer than color vector. Used for mapping values to colors.
@@ -154,6 +169,8 @@ kmeans cluster, also the parameter represents the number of expected clusters}
 \item{height}{Picture height}
 
 \item{title}{Title of picture. Default empty title}
+
+\item{saveppt}{Whether to output PPT format. Default false, doesn't output. Accept TRUE, will output ppt file.}
 
 \item{...}{Other parameters given to \link[pheatmap]{pheatmap}.}
 }

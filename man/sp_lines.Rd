@@ -16,6 +16,7 @@ sp_lines(
   legend_variable_order = NULL,
   color_variable = NULL,
   color_variable_order = NULL,
+  error_bar_variable = NULL,
   x_label = NULL,
   y_label = NULL,
   y_start_from_zero = T,
@@ -77,6 +78,8 @@ Default same as \code{variable}, this should only be set when \code{melted} is T
 
 \item{color_variable_order}{Set orders of color variable.
 Only used when \code{color_variable} is not the same as \code{legend_variable}.}
+
+\item{error_bar_variable}{Error-bar column (one of column names). Specify the column containing error bars.}
 
 \item{x_label}{Xlab label. Default empty.}
 

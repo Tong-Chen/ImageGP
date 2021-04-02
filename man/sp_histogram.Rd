@@ -44,7 +44,7 @@ sp_histogram(
   font_path = NULL,
   debug = F,
   extra_ggplot2_cmd = NULL,
-  file_name = NULL,
+  filename = NULL,
   base_font_size = 11,
   ...
 )
@@ -147,6 +147,8 @@ like '/etc/fonts/Arial.ttf'
 or 'HeiArial.ttc'(if in current directory), Default system default.}
 
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
+
+\item{filename}{Output picture to given file.}
 
 \item{...}{Other parameters given to sp_ggplot_layout}
 }

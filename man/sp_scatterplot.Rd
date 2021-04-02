@@ -21,6 +21,8 @@ sp_scatterplot(
   shape_variable = NULL,
   color_variable = NULL,
   point_hjust = 0,
+  line_size = NULL,
+  smooth_method = "no smooth",
   alpha = 1,
   jitter = FALSE,
   jitter_text = F,
@@ -88,6 +90,12 @@ such as a number or a variable like \code{count} (one of column names), normally
 \item{shape_variable}{The variable for point shape. Optional, such as \code{shape} (one of column names).}
 
 \item{color_variable}{The variable for point color. Optional, such as \code{color} (one of column names).}
+
+\item{line_size}{line size. Default NULL. Accept a number.}
+
+\item{smooth_method}{The smooth method one wants to use, eg. auto, lm, glm, gam, loess, rlm.
+For observations < 1000 default is 'loess', observations >= 1000 defaults to 'gam'.
+Default 'no smooth' meaning show the real lines and do not smooth lines. Accept auto, lm, glm, gam, loess, rlm.}
 
 \item{alpha}{Transparency value for points. Optional, such as a number or a variable
 indicating one data column, normally should be number column (one of column names).}

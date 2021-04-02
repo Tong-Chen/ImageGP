@@ -52,7 +52,7 @@ Volcano plot
 \examples{
 
 ### Generate test data
-res_output <- data.frame(log2FoldChange=rnorm(3000), row.names=paste0("YSX",1:3000))
+res_output <- data.frame(log2FoldChange=rnorm(3000), row.names=paste0("ImageGP",1:3000))
 res_output$padj <- 20 ^ (-1*(res_output$log2FoldChange^2))
 padj = 0.05
 log2FC = 1

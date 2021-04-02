@@ -19,7 +19,7 @@ sp_manhattan2_plot(
   color_var_order = c(),
   shape_col_order = c(),
   log10_transform_fdr = TRUE,
-  file_name = NULL,
+  filename = NULL,
   point_label_var = "CTctctCT",
   title = "",
   x_label = NULL,
@@ -57,6 +57,8 @@ sp_manhattan2_plot(
 \item{shape_col_order}{Levels for shapes, like "'Sig','nonSig'".}
 
 \item{log10_transform_fdr}{Get \code{-log10(FDR)} for column given to \code{FDR_var}. Default FALSE, accept TRUE.}
+
+\item{filename}{Output picture to given file.}
 
 \item{point_label_var}{Name of columns containing labels for points.}
 
