@@ -153,7 +153,7 @@ library(ggrepel)
 
 set.seed(1)
 
-res_output <- data.frame(log2FoldChange=rnorm(3000), row.names=paste0("ImageGP",1:3000))
+res_output <- data.frame(log2FoldChange=rnorm(3000), row.names=paste0("ImageGP",1:3000), ID=paste0("ImageGP",1:3000))
 res_output$padj <- 20 ^ (-1*(res_output$log2FoldChange^2))
 
 padj = 0.05
@@ -178,6 +178,18 @@ sp_volcano_plot(data=res_output,
 
 ```
 
+
+```{r}
+geneDF = data.frame(gene=c("ImageGP14","ImageGP4"), label=c("Pou5f1","Gata2"))
+geneDF = data.frame(gene=c("ImageGP14","ImageGP4"))
+sp_volcano_plot(data=res_output,
+                geneL=geneDF,
+           log2fc_var="log2FoldChange",
+           fdr_var="padj",
+           status_col_var = 'level',
+           point_label_var = 'label'
+           )
+```
 
 ```{r}
 sp_volcano_plot(data=res_output,

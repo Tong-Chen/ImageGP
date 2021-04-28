@@ -7,7 +7,8 @@
 
 #' Generating volcano plot
 #'
-#' @param data Data frame or data file (with header line, the first column will not be treated as the rowname, tab seperated)
+#' @param data Data frame or data file (with header line, the first column will not be treated as the rowname, tab separated)
+#' @param geneL Data frame or data file (with header line, the first column will not be treated as the rowname, tab separated)
 #' @param log2fc_var Name of fold change column.
 #' @param fdr_var Name of FDR or p-value column.
 #' @param coordinate_flip Default FALSE meaning `log2fc_var` in `X-axis`. Specify `TRUE` to make `fdr_var` in `X-axis`.
@@ -61,6 +62,7 @@
 
 sp_volcano_plot <-
   function(data,
+           geneL=NULL,
            log2fc_var="log2FoldChange",
            fdr_var="padj",
            coordinate_flip = FALSE,
@@ -72,7 +74,7 @@ sp_volcano_plot <-
            max_allowed_log10p = Inf,
            max_allowed_log2fc = Inf,
            title=NULL,
-           point_label_var = 'CTctctCT',
+           point_label_var = NULL,
            log2fc_symmetry = TRUE,
            alpha = NA,
            point_size = NA,
@@ -93,6 +95,8 @@ sp_volcano_plot <-
     } else if (class(data) != "data.frame") {
       stop("Unknown input format for `data` parameter.")
     }
+
+
 
     data_colnames <- colnames(data)
 
@@ -238,8 +242,42 @@ sp_volcano_plot <-
       p <- p + xlim(-1 * boundary, boundary)
     }
 
-    if (point_label_var != "CTctctCT") {
-      data.l <- data[data[[point_label_var]] != "-" & data[[point_label_var]] != "" & data[[point_label_var]] != "NA", ]
+    data.l <- NULL
+
+    if(!sp.is.null(geneL)){
+      if (class(geneL) == "character") {
+        geneL <- sp_readTable(geneL, row.names = NULL)
+      } else if (class(geneL) != "data.frame") {
+        stop("Unknown input format for `geneL` parameter.")
+      }
+      if(length(geneL) == 1){
+        matched_column <-
+          get_matched_columns_based_on_value(data, geneL,
+                                             only_allow_one_match = T)
+        print(matched_column)
+        print(head(data[matched_column[1]]))
+        print(head(geneL[matched_column[2]]))
+        print(table(data[matched_column[1]] %in% geneL[matched_column[2]]))
+        data.l <- data[data[[matched_column[1]]] %in% geneL[[matched_column[2]]],]
+        point_label_var <- matched_column[1]
+      } else {
+        data.l <- merge_data_with_auto_matched_column(geneL, data, suffixes=c('','.y'))
+        if(sp.is.null(point_label_var)){
+          point_label_var <- colnames(geneL)[1]
+        }
+      }
+
+      print(head(data.l))
+      print(point_label_var)
+    }
+
+    if (!sp.is.null(point_label_var)) {
+      # Only kept for back-compatible
+      # giving geneL is the recommended way
+      if(sp.is.null(data.l)){
+        data.l <- data[data[[point_label_var]] != "-" & data[[point_label_var]] != "" & data[[point_label_var]] != "NA", ,drop=F]
+      }
+      print(head(data.l))
       if (dim(data.l)[1]>0){
         label_en = sym(point_label_var)
         checkAndInstallPackages(list(packages1=c("ggrepel")))

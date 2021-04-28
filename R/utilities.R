@@ -1225,3 +1225,29 @@ get_matched_columns_based_on_value <-
 
     matches_names
   }
+
+#' Check matched columns between two data frames and try to merge them.
+#'
+#' @param df1 Dataframe 1
+#' @param df2 Dataframe 2
+#' @param ... Extra parameters given to \code{\link[base]{merge}}.
+#'
+#' @return merged dataframe
+#' @export
+#'
+#' @examples
+#'
+#' vec1 <- data.frame(col1=c('a','a','b','d'), a=c(1,2,3,6))
+#' vec2 <- data.frame(col2=c('d','d','a','b'), b=c(1,2,4,5),a=c(1,2,3,4))
+#' merge_data_with_auto_matched_column(vec1, vec2)
+#'
+merge_data_with_auto_matched_column <- function(df1, df2, ...){
+  matched_column <-
+    get_matched_columns_based_on_value(df1, df2,
+                                       only_allow_one_match = T)
+
+  data <-
+    merge(df1, df2, by.x = matched_column[1], by.y = matched_column[2], ...)
+  invisible(data)
+}
+

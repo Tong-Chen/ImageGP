@@ -3,7 +3,7 @@
 #' `metadata`
 #'
 #' @param data Data file (with header line, the first row is the colname,
-#' tab seperated. Multiple formats are allowed and described above)
+#' tab separated. Multiple formats are allowed and described above)
 #' @param melted When TRUE, meaning a long format matrix is supplied to `data`.
 #' function will skip preprocess. Default FALSE.
 #' @param metadata Giving a metadata file with format specified in example
@@ -487,19 +487,19 @@ sp_boxplot <- function(data,
        LSD.test_table = as.data.frame(out$statistics)
        stat = out$groups
        data$stat = stat[as.character(data$combine__grp__for__statistis_sp), ]$groups
-    
+
      } else{
 		# Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
 		# return(Tukey_HSD)
 		# Tukey_HSD_table = as.data.frame(Tukey_HSD$combine__grp__for__statistis_sp)
 		#print(Tukey_HSD$combine__grp__for__statistis_sp)
-		
+
 		if (length(unique(data$combine__grp__for__statistis_sp)) == 2) {
 			Tukey.levels = Tukey_HSD$combine__grp__for__statistis_sp[, 4, drop=F]
 		} else {
 			Tukey.levels = Tukey_HSD$combine__grp__for__statistis_sp[, 4]
 		}
-		
+
 		Tukey.labels = data.frame(multcompLetters(Tukey.levels)['Letters'])
 		Tukey.labels$group = rownames(Tukey.labels)
 		Tukey.labels = Tukey.labels[order(Tukey.labels$group), ]
