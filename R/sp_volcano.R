@@ -69,7 +69,7 @@ sp_volcano_plot <-
            status_col_var = NULL,
            significance_threshold = c(0.05,1),
            status_col_var_order = NULL,
-           point_color_vector = c("red", "green", "grey"),
+           point_color_vector = c("#E6AAAA", "#9AD7EA", "#E6E5E5"),
            log10_transform_fdr = TRUE,
            max_allowed_log10p = Inf,
            max_allowed_log2fc = Inf,
@@ -254,10 +254,10 @@ sp_volcano_plot <-
         matched_column <-
           get_matched_columns_based_on_value(data, geneL,
                                              only_allow_one_match = T)
-        print(matched_column)
-        print(head(data[matched_column[1]]))
-        print(head(geneL[matched_column[2]]))
-        print(table(data[matched_column[1]] %in% geneL[matched_column[2]]))
+        #print(matched_column)
+        #print(head(data[matched_column[1]]))
+        #print(head(geneL[matched_column[2]]))
+        #print(table(data[matched_column[1]] %in% geneL[matched_column[2]]))
         data.l <- data[data[[matched_column[1]]] %in% geneL[[matched_column[2]]],]
         point_label_var <- matched_column[1]
       } else {
@@ -267,8 +267,8 @@ sp_volcano_plot <-
         }
       }
 
-      print(head(data.l))
-      print(point_label_var)
+      #print(head(data.l))
+      #print(point_label_var)
     }
 
     if (!sp.is.null(point_label_var)) {
@@ -277,7 +277,7 @@ sp_volcano_plot <-
       if(sp.is.null(data.l)){
         data.l <- data[data[[point_label_var]] != "-" & data[[point_label_var]] != "" & data[[point_label_var]] != "NA", ,drop=F]
       }
-      print(head(data.l))
+      #print(head(data.l))
       if (dim(data.l)[1]>0){
         label_en = sym(point_label_var)
         checkAndInstallPackages(list(packages1=c("ggrepel")))
