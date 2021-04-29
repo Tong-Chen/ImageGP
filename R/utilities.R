@@ -147,6 +147,7 @@ sp_string2vector <- function(x, pattern = ",") {
 #' @inheritParams  utils::read.table
 #' @param renameDuplicateRowNames If TRUE, the function will transfer first column
 #' as row names (with duplicates numbered)
+#' @param ... Other parameters given to \code{read.table}
 #'
 #' @return data.frame
 #' @export
@@ -164,7 +165,8 @@ sp_readTable <-
            quote = "",
            comment = "",
            check.names = F,
-           renameDuplicateRowNames = F) {
+           renameDuplicateRowNames = F,
+           ...) {
     if (renameDuplicateRowNames) {
       data <- read.table(
         file,
@@ -173,7 +175,8 @@ sp_readTable <-
         header = header,
         quote = quote,
         comment = comment,
-        check.names = check.names
+        check.names = check.names,
+        ...
       )
       rownames_data <- make.unique(as.vector(data[, 1]))
       data <- data[,-1, drop = F]
@@ -187,7 +190,8 @@ sp_readTable <-
           header = header,
           quote = quote,
           comment = comment,
-          check.names = check.names
+          check.names = check.names,
+          ...
         )
     }
     invisible(data)

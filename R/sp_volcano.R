@@ -91,7 +91,7 @@ sp_volcano_plot <-
     options(scipen = 999)
 
     if (class(data) == "character") {
-      data <- sp_readTable(data, row.names = NULL)
+      data <- sp_readTable(data, row.names = NULL, stringsAsFactors=F)
     } else if (class(data) != "data.frame") {
       stop("Unknown input format for `data` parameter.")
     }
@@ -246,7 +246,7 @@ sp_volcano_plot <-
 
     if(!sp.is.null(geneL)){
       if (class(geneL) == "character") {
-        geneL <- sp_readTable(geneL, row.names = NULL)
+        geneL <- sp_readTable(geneL, row.names = NULL, stringsAsFactors=F)
       } else if (class(geneL) != "data.frame") {
         stop("Unknown input format for `geneL` parameter.")
       }
