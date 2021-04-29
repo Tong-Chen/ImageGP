@@ -1224,7 +1224,8 @@ get_matched_columns_based_on_value <-
           "Multiple pairs of columns matched each other between given two data.frames. The program does not know which to return. Please check."
         )
       } else {
-        return(matches_names[, 1])
+        # In case there are factors
+        return(as.vector(matches_names[, 1]))
       }
 
     matches_names
