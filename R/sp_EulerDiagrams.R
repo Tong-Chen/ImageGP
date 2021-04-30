@@ -111,6 +111,9 @@ sp_EulerDiagrams <- function (data,
   }
 
   setnumber <- length(setname)
+  if(setnumber>6){
+	stop("Datamatrix with more than 6 sets is not allowed!")
+  }
 
   Euler <- euler(data, shape = shape)
 
