@@ -178,7 +178,10 @@ sp_readTable <-
         check.names = check.names,
         ...
       )
-      rownames_data <- make.unique(as.vector(data[, 1]))
+      if (!is.numeric(as.vector(data[, 1]))){
+        rownames_data <- make.unique(as.vector(data[, 1]))
+      }
+
       data <- data[,-1, drop = F]
       rownames(data) <- rownames_data
     } else {
