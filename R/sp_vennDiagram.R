@@ -137,10 +137,10 @@ sp_vennDiagram <- function (data,
     names(labelContent) <- labelRecord
 
 
-    color_v <- generate_color_list(manual_color_vector, num)
+    color_v <- generate_color_list(manual_color_vector, num,alpha=0.6)
     #label.col = c("orange", "white", "darkorchid4", "white", "white", "white", "white", "white", "darkblue", "white", "white", "white", "white", "darkgreen", "white"),
     if(color_for_circumference != "transparent"){
-      color_for_circumference <- generate_color_list(color_for_circumference, num)
+      color_for_circumference <- generate_color_list(color_for_circumference, num, alpha=0.6)
     }
 
     main.pos = c(0.5, 1.05)
