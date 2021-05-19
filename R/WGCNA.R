@@ -1345,7 +1345,9 @@ WGCNA_moduleTraitPlot <-
       cat(sp_current_time(), "No plot since no trait data available.\n")
       return(1)
     }else{
+      #print(traitData)
       traitData <- WGCNA_filterTrait(MEs_col, traitData)
+      #print(trairData)
     }
     nSamples <- nrow(traitData)
     robustY = ifelse(corType == "pearson", T, F)
@@ -1364,20 +1366,29 @@ WGCNA_moduleTraitPlot <-
     if (!sp.is.null(saveplot)) {
       base_plot_save(saveplot, bg = "white", ...)
     }
-    labeledHeatmap(
-      Matrix = modTraitCor,
-      xLabels = colnames(traitData),
-      yLabels = colnames(MEs_col),
-      cex.lab = 0.5,
-      ySymbols = colnames(MEs_col),
-      colorLabels = FALSE,
-      colors = blueWhiteRed(50),
-      textMatrix = textMatrix,
-      setStdMargins = FALSE,
-      cex.text = 0.5,
-      zlim = c(-1, 1),
-      main = paste("Module-trait relationships")
-    )
+    #labeledHeatmap(
+    #  Matrix = modTraitCor,
+    #  xLabels = colnames(traitData),
+    #  yLabels = colnames(MEs_col),
+    #  cex.lab = 0.5,
+    #  ySymbols = colnames(MEs_col),
+    #  colorLabels = FALSE,
+    #  colors = blueWhiteRed(50),
+    #  textMatrix = textMatrix,
+    #  setStdMargins = FALSE,
+    #  cex.text = 0.5,
+    #  zlim = c(-1, 1),
+    #  main = paste("Module-trait relationships")
+    #)
+    module_name = colnames(MEs_col)
+    annotation_row = data.frame(Module=module_name, row.names = module_name)
+    module_name_without_me = substring(module_name,3)
+    names(module_name_without_me) = module_name
+    sp_pheatmap(data=as.data.frame(modTraitCor), annotation_row = annotation_row,
+                display_numbers = textMatrix,
+                manual_annotation_colors_sidebar = list(Module=module_name_without_me),
+                cluster_rows = T, cluster_cols = T,
+                xtics_angle=45)
 
     if (!sp.is.null(saveplot)) {
       dev.off()

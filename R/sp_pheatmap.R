@@ -53,19 +53,20 @@ draw_colnames_custom <-
     vjust <- 0
     hjust <- 0.5
 
-    if (xtics_angle == 270) {
+    if (xtics_angle %% 90 == 0) {
       vjust <- 1
       hjust <- 0.5
-    } else if (xtics_angle == 45) {
+    } else {
       vjust <- .5
       hjust <- 1
-    } else if (xtics_angle == 90) {
-      hjust <- 1
-      vjust <- 0.5
-    } else if (xtics_angle == 0) {
-      vjust <- 1
-      hjust <- 0.5
     }
+    #else if (xtics_angle == 90) {
+    #  hjust <- 1
+    #  vjust <- 0.5
+    #} else if (xtics_angle == 0) {
+    #  vjust <- 1
+    #  hjust <- 0.5
+    #}
 
     res = grid::textGrob(
       coln,
