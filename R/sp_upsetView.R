@@ -178,7 +178,7 @@ sp_upsetview <- function (data,
                             alpha = 1, constantColor = T)
     }
     main_bar_color_vector <-
-        generate_color_list  (main_bar_color_vector, number,
+        generate_color_list(main_bar_color_vector, number,
                             alpha = 1, constantColor = T)
   }
 
