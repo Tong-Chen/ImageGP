@@ -94,14 +94,14 @@ sp_upsetview <- function (data,
     data[,-1][data[,-1] != 0] <- 1
     data[,-1][data[,-1] == 0] <- 0
 
-    long_data <- melt(data)
-    long_data<- long_data[long_data$value == 1,][,1:2]
-    colnames(long_data) <- c("Item", "Grp")
-    sp_writeTable(long_data,file="set_count_input.txt",keep_rownames =  F)
-    system("python set_count.py -f set_count_input.txt -c Item -o jx")
+    #long_data <- melt(data)
+    #long_data<- long_data[long_data$value == 1,][,1:2]
+    #colnames(long_data) <- c("Item", "Grp")
+    #sp_writeTable(long_data,file="set_count_input.txt",keep_rownames =  F)
+    #system("python set_count.py -f set_count_input.txt -c Item -o jx")
     # source_python("./set_count.py")
-    set_count_data <- sp_readTable("jx.txt", row.names = NULL,header = F)
-    number<- nrow(set_count_data)
+    #set_count_data <- sp_readTable("jx.txt", row.names = NULL,header = F)
+    #number<- nrow(set_count_data)
 
   } else {
     header = ifelse(vennFormat == 1, F, T)
@@ -113,17 +113,19 @@ sp_upsetview <- function (data,
     data <- unique(data[, 1:2])
     colnames(data) <- c("Item", "Grp")
 
-    sp_writeTable(data,file="set_count_input.txt",keep_rownames =  F)
-    system("python set_count.py -f set_count_input.txt -c Item -o jx")
+    #sp_writeTable(data,file="set_count_input.txt",keep_rownames =  F)
+    #system("python set_count.py -f set_count_input.txt -c Item -o jx")
     # source_python("./set_count.py")
-    set_count_data <- sp_readTable("jx.txt", row.names = NULL,header = F)
-    number<- nrow(set_count_data)
+    #set_count_data <- sp_readTable("jx.txt", row.names = NULL,header = F)
+    #number<- nrow(set_count_data)
 
     data = as.data.frame(reshape2::acast(data, Item ~ Grp, length))
     data = cbind(ID = rownames(data), data)
   }
 
   nsets = dim(data)[2] - 1
+  
+  
 
   if (keep_empty) {
     keep_empty = 'on'
@@ -172,14 +174,22 @@ sp_upsetview <- function (data,
 
 
   if (main_bar_color_vector != "gray23") {
+    print(nintersects)
     if (!is.na(nintersects)){
       main_bar_color_vector <-
         generate_color_list(main_bar_color_vector, nintersects,
                             alpha = 1, constantColor = T)
+    } else{
+      if (!sp.is.null(keep_empty)){
+        all_possible_nintersects = sum(choose(nsets, 1:nsets))
+        main_bar_color_vector <-
+          generate_color_list(main_bar_color_vector, all_possible_nintersects,
+                              alpha = 1, constantColor = T)
+      }else{
+        main_bar_color_vector = "gray23"
+      }
+      
     }
-    main_bar_color_vector <-
-        generate_color_list(main_bar_color_vector, number,
-                            alpha = 1, constantColor = T)
   }
 
   a = UpSetR::upset(

@@ -375,6 +375,11 @@ sp_pheatmap <- function(data,
 
   cor_data = F
 
+  if(scale == "row"){
+    data_sd <- apply(data, 1, sd)
+    data <- data[data_sd != 0, ]
+  }
+
   if (correlation_plot  == "row" || correlation_plot  == "Row") {
     if (clustering_distance_rows  == "pearson") {
       row_cor = cor(t(data))

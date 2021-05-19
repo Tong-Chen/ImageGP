@@ -54,7 +54,7 @@ sp_boxplot(
 }
 \arguments{
 \item{data}{Data file (with header line, the first row is the colname,
-tab seperated. Multiple formats are allowed and described above)}
+tab separated. Multiple formats are allowed and described above)}
 
 \item{melted}{When TRUE, meaning a long format matrix is supplied to \code{data}.
 function will skip preprocess. Default FALSE.}

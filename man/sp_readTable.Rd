@@ -12,7 +12,8 @@ sp_readTable(
   quote = "",
   comment = "",
   check.names = F,
-  renameDuplicateRowNames = F
+  renameDuplicateRowNames = F,
+  ...
 )
 }
 \arguments{
@@ -77,6 +78,8 @@ sp_readTable(
 
 \item{renameDuplicateRowNames}{If TRUE, the function will transfer first column
 as row names (with duplicates numbered)}
+
+\item{...}{Other parameters given to \code{read.table}}
 }
 \value{
 data.frame

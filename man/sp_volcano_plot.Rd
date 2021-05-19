@@ -6,18 +6,19 @@
 \usage{
 sp_volcano_plot(
   data,
+  geneL = NULL,
   log2fc_var = "log2FoldChange",
   fdr_var = "padj",
   coordinate_flip = FALSE,
   status_col_var = NULL,
   significance_threshold = c(0.05, 1),
   status_col_var_order = NULL,
-  point_color_vector = c("red", "green", "grey"),
+  point_color_vector = c("#E6AAAA", "#9AD7EA", "#E6E5E5"),
   log10_transform_fdr = TRUE,
   max_allowed_log10p = Inf,
   max_allowed_log2fc = Inf,
   title = NULL,
-  point_label_var = "CTctctCT",
+  point_label_var = NULL,
   log2fc_symmetry = TRUE,
   alpha = NA,
   point_size = NA,
@@ -33,7 +34,9 @@ sp_volcano_plot(
 )
 }
 \arguments{
-\item{data}{Data frame or data file (with header line, the first column will not be treated as the rowname, tab seperated)}
+\item{data}{Data frame or data file (with header line, the first column will not be treated as the rowname, tab separated)}
+
+\item{geneL}{Data frame or data file (with header line, the first column will not be treated as the rowname, tab separated)}
 
 \item{log2fc_var}{Name of fold change column.}
 
