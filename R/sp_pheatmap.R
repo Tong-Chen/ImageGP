@@ -479,8 +479,6 @@ sp_pheatmap <- function(data,
 
 
 
-  cluster_rows_results = cluster_rows
-  cluster_cols_results = cluster_cols
 
   if (nrow(data) < 3) {
     cluster_rows = FALSE
@@ -500,6 +498,8 @@ sp_pheatmap <- function(data,
     cluster_cols = FALSE
   }
 
+  cluster_rows_results = cluster_rows
+  cluster_cols_results = cluster_cols
 
   #if (height != 0) {
   #  height = height
