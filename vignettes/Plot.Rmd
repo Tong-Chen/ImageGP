@@ -27,8 +27,23 @@ library(ImageGP)
 library(pheatmap)
 library(RColorBrewer)
 library(grid)
+sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 0, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 10, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 60, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 90, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 100, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 150, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 180, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 200, cluster_rows = T, cluster_cols = T)
+sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T)
+```
 
+
+Save in PPT format
+
+```{r}
 sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, saveppt = TRUE, filename = "pheatmap.pdf")
 
 ```
