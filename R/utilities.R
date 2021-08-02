@@ -596,6 +596,15 @@ sp_set_factor_order <-
       if (!is.numeric(data[[variable]])) {
         data[[variable]] <- mixedToFloat(data[[variable]])
       }
+      # add to filter by numeric values
+      if (!sp.is.null(variable_order) && length(variable_order)==2){
+        variable_order <- sort(mixedToFloat(variable_order))
+        data <- data[data[[variable]]>=variable_order[1] & data[[variable]]<=variable_order[2], ,drop=F]
+        if(nrow(data)==0){
+          stop(paste0("No data avaiable after filtering by column <", variable, "> with <", 
+                      paste(variable_order, collapse=","),">"))
+        }
+      }
     } else {
       if (!sp.is.null(variable_order)) {
         data = data[data[[variable]] %in% variable_order, , drop = F]
