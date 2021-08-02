@@ -276,6 +276,13 @@ sp_enrichment <- function(data,
       p <- p + scale_size(name = size_variable,
                           range = range(scale_size_min, scale_size_max))
     }
+    if(is.numeric(data[[size_variable]])){
+      if(all(data[[size_variable]] == as.integer(data[[size_variable]]))){
+        min = min(data[[size_variable]])
+        max = max(data[[size_variable]])
+        p <- p + scale_size_continuous(breaks=round(seq(min, max, length=4)))
+      }
+    }
   }
 
   if (!sp.is.null(color_variable)) {

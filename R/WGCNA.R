@@ -1244,6 +1244,7 @@ WGCNA_hubgene <- function(cyt,
   edgeData <- rbind(edgeData1, edgeData2)
   edgeData$Module1 <-
     nodeattrib[match(edgeData$Node1, nodeattrib$nodeName), 2]
+  edgeData <- edgeData[edgeData$Module1!="grey",,drop=F]
   #edgeData$Module2 <- nodeattrib[match(edgeData$Node2, nodeattrib$nodeName), 2]
   #edgeData <- edgeData[edgeData$Module1==edgeData$Module2,c(1,3,4)]
   #head(edgeData)

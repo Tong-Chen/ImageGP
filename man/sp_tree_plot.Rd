@@ -21,6 +21,7 @@ sp_tree_plot(
   bootstrap_size = 3,
   bootstrap_color = "red",
   debug = FALSE,
+  manual_color_vector = "Set3",
   ...
 )
 }
@@ -63,7 +64,24 @@ be used for \code{tree_type=iqtree}.}
 
 \item{bootstrap_color}{Text color of bootstrap labels.}
 
-\item{...}{additional parameter}
+\item{manual_color_vector}{Manually set colors for each geom.
+Default NULL, meaning using ggplot2 default.
+Colors like c('red', 'blue', '#6181BD') (number of colors not matter) or
+a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
+"RdBu"     "RdGy"     "RdYlBu"   "RdYlGn"  "Spectral" "Accent"
+"Dark2"    "Paired"   "Pastel1"  "Pastel2"  "Set1"
+"Set2"    "Set3"     "Blues"    "BuGn"     "BuPu"
+"GnBu"     "Greens"   "Greys"    "Oranges" "OrRd"     "PuBu"
+"PuBuGn"   "PuRd"     "Purples"  "RdPu"     "Reds"
+"YlGn"    "YlGnBu"   "YlOrBr"   "YlOrRd"
+(check http://www.sthda.com/english/wiki/colors-in-r for more).}
+
+\item{...}{additional parameter
+
+some dot arguments:
+\itemize{
+\item \code{nsplit} integer, the number of branch blocks divided when 'continuous' is not "none", default is 200.
+}}
 }
 \value{
 A ggplot2 object
