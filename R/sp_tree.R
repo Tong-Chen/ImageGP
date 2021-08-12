@@ -17,6 +17,7 @@
 #' `tree` object. Default `UFboot` would
 #' be used for `tree_type=iqtree`.
 #' @param bootstrap_size Text size of bootstrap labels.
+#' @inheritParams sp_manual_color_ggplot2
 #' @param bootstrap_color Text color of bootstrap labels.
 #' @inheritParams sp_ggplot_layout
 #'
@@ -47,6 +48,7 @@ sp_tree_plot <-
            bootstrap_size = 3,
            bootstrap_color = 'red',
            debug = FALSE,
+		   manual_color_vector = 'Set3', 
            ...) {
     if (debug) {
       # tree_type = 'iqtree'
@@ -154,6 +156,7 @@ sp_tree_plot <-
       if (color_branches %in% attribute_var) {
         color_branches_en = sym(color_branches)
         p <- p + aes(color = !!color_branches_en)
+		p <- sp_manual_color_ggplot2(p, tree, color_branches, manual_color_vector)
       } else {
         stop(paste0(color_branches, "is not a valid attribute."))
       }
