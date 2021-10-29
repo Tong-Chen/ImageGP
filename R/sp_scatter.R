@@ -155,10 +155,15 @@ sp_scatterplot <- function (data,
     if (!(shape_variable %in% data_colnames)) {
       stop(paste(shape_variable, 'must be column names of data!'))
     }
-    shape_level <- length(unique(data[[shape_variable]]))
-    shapes = (1:shape_level) %% 30
+	data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+    shape_level <- nlevels(data[[shape_variable]])
+    if (shape_level < 15){
+      shapes = (0:shape_level) %% 15
+    } else{
+      shapes = c(0:14,c((15:shape_level) %% 110 + 18))
+    }
 
-    data = sp_set_factor_order(data, color_variable, color_variable_order)
+    
   }
 
 
