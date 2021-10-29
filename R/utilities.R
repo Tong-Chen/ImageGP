@@ -166,6 +166,7 @@ sp_readTable <-
            comment = "",
            check.names = F,
            renameDuplicateRowNames = F,
+           stringsAsFactors = T,
            ...) {
     if (renameDuplicateRowNames) {
       data <- read.table(
@@ -176,6 +177,7 @@ sp_readTable <-
         quote = quote,
         comment = comment,
         check.names = check.names,
+        stringsAsFactors = stringsAsFactors,
         ...
       )
       if (!is.numeric(as.vector(data[, 1]))){
@@ -196,6 +198,7 @@ sp_readTable <-
           quote = quote,
           comment = comment,
           check.names = check.names,
+          stringsAsFactors = stringsAsFactors,
           ...
         )
     }
@@ -601,7 +604,7 @@ sp_set_factor_order <-
         variable_order <- sort(mixedToFloat(variable_order))
         data <- data[data[[variable]]>=variable_order[1] & data[[variable]]<=variable_order[2], ,drop=F]
         if(nrow(data)==0){
-          stop(paste0("No data avaiable after filtering by column <", variable, "> with <", 
+          stop(paste0("No data avaiable after filtering by column <", variable, "> with <",
                       paste(variable_order, collapse=","),">"))
         }
       }
