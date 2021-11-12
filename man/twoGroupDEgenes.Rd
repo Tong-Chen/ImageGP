@@ -13,6 +13,7 @@ twoGroupDEgenes(
   log2FC = 1,
   dropCol = c("lfcSE", "stat"),
   output_prefix = "ehbio",
+  normalized_counts = NULL,
   ...
 )
 }
@@ -36,6 +37,8 @@ This has no specific usages except make the table clearer.}
 \item{output_prefix}{A string as prefix of output files.}
 
 \item{...}{Additional parameters given to \code{\link{ggsave}}.}
+
+\item{Specify}{a data matrix of normalized counts. Default NULL.}
 }
 \description{
 DE genes analysis for two groups.

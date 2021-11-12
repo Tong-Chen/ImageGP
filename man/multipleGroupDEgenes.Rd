@@ -12,6 +12,7 @@ multipleGroupDEgenes(
   log2FC = 1,
   dropCol = c("lfcSE", "stat"),
   output_prefix = "ehbio",
+  normalized_counts = NULL,
   ...
 )
 }

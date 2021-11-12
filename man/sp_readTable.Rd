@@ -13,6 +13,7 @@ sp_readTable(
   comment = "",
   check.names = F,
   renameDuplicateRowNames = F,
+  stringsAsFactors = T,
   ...
 )
 }
@@ -78,6 +79,10 @@ sp_readTable(
 
 \item{renameDuplicateRowNames}{If TRUE, the function will transfer first column
 as row names (with duplicates numbered)}
+
+\item{stringsAsFactors}{logical: should character vectors be converted
+    to factors?  Note that this is overridden by \code{as.is} and
+    \code{colClasses}, both of which allow finer control.}
 
 \item{...}{Other parameters given to \code{read.table}}
 }
