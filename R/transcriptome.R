@@ -134,7 +134,8 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   txi <- tximport::tximport(salmon_file, type = "salmon", tx2gene = tx2gene)
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t")
+                       quote='', check.names=F, sep="\t",
+                       stringsAsFactors = T)
   sample <- sample[match(colnames(txi$counts), rownames(sample)),, drop=F]
 
   dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample, design=formula)
@@ -186,7 +187,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
                          filter=NULL, rundeseq=T) {
 
   data <- read.table(count_matrix_file, header=T, row.names=1, com='', quote='',
-                     check.names=F, sep="\t")
+                     check.names=F, sep="\t", stringsAsFactors = T)
 
   if(!is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
@@ -196,7 +197,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
   }
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t")
+                       quote='', check.names=F, sep="\t", stringsAsFactors = T)
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
   dds <- DESeqDataSetFromMatrix(countData = data,
@@ -269,6 +270,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
     rlogMat <- rlogMat[order(rlogMat_mad, decreasing=T), ]
 
 
+
     rlogMat_output = data.frame(id=rownames(rlogMat), rlogMat)
 	if(savemat) {
       print("Output rlog transformed normalized counts")
@@ -282,7 +284,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
 
   if (vst) {
-    rld <- DESEq2::vst(dds, blind=FALSE)
+    rld <- DESeq2::vst(dds, blind=FALSE)
     vstMat <- assay(rld)
     vstMat_mad <- apply(vstMat, 1, mad)
     vstMat <- vstMat[order(vstMat_mad, decreasing=T), ]
@@ -346,6 +348,7 @@ normalizedExpr2DistribBoxplot <- function(normexpr, saveplot=NULL, ...) {
 #' Other options \code{"ID", "baseMean", "log2FoldChange", "lfcSE", "stat", "pvalue", "padj"}.
 #' This has no specific usages except make the table clearer.
 #' @param output_prefix A string as prefix of output files.
+#' @param Specify a data matrix of normalized counts. Default NULL.
 #' @param ... Additional parameters given to \code{\link{ggsave}}.
 #'
 #' @import ggplot2
@@ -368,6 +371,7 @@ twoGroupDEgenes <- function
   # "ID", "baseMean", "log2FoldChange", "lfcSE", "stat", "pvalue", "padj"
   dropCol=c("lfcSE", "stat"),
   output_prefix="ehbio",
+  normalized_counts = NULL,
   ...
 ){
   #print(sampleV)
@@ -397,7 +401,19 @@ twoGroupDEgenes <- function
   print(contrastV)
   res <- DESeq2::results(dds,  contrast=contrastV)
 
-  normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
+  if (is.null(normalized_counts)){
+    normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
+  } else {
+    name_nc <- names(normalized_counts)
+    if ('rlog' %in% name_nc){
+      normalized_counts <- normalized_counts$rlog
+    } else if ('vst' %in% name_nc){
+      normalized_counts <- normalized_counts$vst
+    } else {
+      normalized_counts <- normalized_counts[[1]]
+    }
+  }
+
 
   baseA <- normalized_counts[, colData(dds)[[design]] == groupA]
   if (is.vector(baseA)){
@@ -480,8 +496,12 @@ twoGroupDEgenes <- function
                              ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
                                     paste(groupB,"UP"), "NoDiff")) , "NoDiff")
 
-  volcanoPlot(res_output, "log2FoldChange", "padj",
-              "level", saveplot=paste0(file_base1,".volcano.pdf"), ...)
+  #volcanoPlot(res_output, "log2FoldChange", "padj",
+  #            "level", saveplot=paste0(file_base1,".volcano.pdf"), ...)
+
+  sp_volcano_plot(res_output, log2fc_var = "log2FoldChange", fdr_var = "padj",
+                  status_col_var = "level", log10_transform_fdr=T,
+                  filename=paste0(file_base1,".volcano.pdf"))
 
   rankPlot(res_output, label=10, saveplot=paste0(file_base1,".rankplot.pdf"), width=20, ...)
 
@@ -492,9 +512,15 @@ twoGroupDEgenes <- function
   res_de_top20 <- c(res_de_up_top20_id, res_de_dw_top20_id)
 
 
-  res_de_top20_expr <- normalized_counts[res_de_top20,]
+  res_de_top20_expr <- normalized_counts[res_de_top20,c(colData(dds)[[design]] == groupB |
+                                                        colData(dds)[[design]] == groupA)]
+  sp_writeTable(res_de_top20_expr, file=paste0(file_base1,".top20DEgenes.exprmat.txt"))
 
   sample = as.data.frame(dds@colData)
+
+  sample = sample[sapply(sample, function(x) !is.logical(x))]
+
+  sp_writeTable(sample, file=paste0(file_base1,".top20DEgenes.sample.txt"))
 
   pheatmap::pheatmap(res_de_top20_expr, cluster_row=T, scale="row",
                      annotation_col=sample,
@@ -504,6 +530,8 @@ twoGroupDEgenes <- function
   res_de_top20_expr2 <- reshape2::melt(res_de_top20_expr, id=c("Gene"))
 
   colnames(res_de_top20_expr2) <- c("Gene", "Sample", "Expression")
+  res_de_top20_expr2$Gene <- factor(res_de_top20_expr2$Gene, levels=res_de_top20,
+                                    ordered = T)
 
   res_de_top20_expr2$Group <- sample[match(res_de_top20_expr2$Sample, rownames(sample)),design]
 
@@ -512,7 +540,7 @@ twoGroupDEgenes <- function
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
           axis.title.x = element_blank()) +
-    ylab("Normalized xpression value") + scale_y_log10()
+    ylab("Normalized Expression value") #+ scale_y_log10()
   ggsave(p, file=paste0(file_base1,".top20DEgenes.dotplot.pdf"), width=20,
          height=14, units="cm", ...)
 
@@ -561,6 +589,7 @@ multipleGroupDEgenes <- function(
   # "ID", "baseMean", "log2FoldChange", "lfcSE", "stat", "pvalue", "padj"
   dropCol=c("lfcSE", "stat"),
   output_prefix="ehbio",
+  normalized_counts = NULL,
   ...
 ){
 
@@ -570,7 +599,8 @@ multipleGroupDEgenes <- function(
 
   if(!is.null(comparePairFile)){
     compare_data <- read.table(comparePairFile, sep="\t",
-                               check.names=F, quote='', com='')
+                               check.names=F, quote='', com='',
+                               stringsAsFactors = F)
     colnames(compare_data) <- c("sampA", "sampB")
   } else {
     sampleGroup <- as.data.frame(dds@colData)
@@ -593,7 +623,9 @@ multipleGroupDEgenes <- function(
   unused <- by(compare_data, 1:nrow(compare_data), function (x)
     twoGroupDEgenes(dds, groupA=unlist(x[1,1]), groupB=unlist(x[1,2]), design=design, padj=padj,
                     log2FC=log2FC, dropCol=dropCol,
-                    output_prefix=output_prefix, ...))
+                    output_prefix=output_prefix,
+                    normalized_counts=normalized_counts,
+                    ...))
 
   #twoGroupDEgenes(dds, tmp_compare, design=design, padj=padj, log2FC=log2FC,
   #                dropCol=dropCol, output_prefix=output_prefix, ...)
@@ -649,6 +681,6 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
 
   multipleGroupDEgenes(dds, comparePairFile=comparePairFile, design=design,
                        padj=padj, log2FC=log2FC, dropCol=dropCol,
-                       output_prefix=output_prefix)
+                       output_prefix=output_prefix, normalized_counts = normexpr)
 
 }

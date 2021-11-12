@@ -279,20 +279,23 @@ sp_volcano_plot <-
       }
       #print(head(data.l))
       if (dim(data.l)[1]>0){
+        #print("here")
         label_en = sym(point_label_var)
         checkAndInstallPackages(list(packages1=c("ggrepel")))
         suppressPackageStartupMessages(library(ggrepel))
         p <-
           p + geom_text_repel(
             data = data.l,
-            aes(
+            mapping = aes(
               x = !!log2fc_var_en,
               y = !!fdr_var_en,
               label = !!label_en
             ),
+            box.padding = unit(0.35, "lines"),
+            point.padding = unit(0.3, "lines"),
+            max.overlaps = 200,
             colour = "black",
-            show.legend = F,
-            min.segment.length = unit(0, 'lines')
+            show.legend = F
           )
       }
     }
