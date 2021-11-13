@@ -62,8 +62,11 @@ draw_colnames_custom <-
     } else if (xtics_angle >= 200) {
       hjust <- 0.5
       vjust <- -1
+    } else if (xtics_angle == 250) {
+      hjust <- 0.5
+      vjust <- 0
     } else if (xtics_angle == 0) {
-      vjust <- 1
+      vjust <- 0
       hjust <- 0.5
     } else {
       vjust <- .5
@@ -126,11 +129,11 @@ draw_colnames_custom <-
 #' @param clustering_distance_rows Clustering distance method for rows.
 #' Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 #' "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".
+#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)
 #' @param clustering_distance_cols Clustering distance method for cols.
 #' Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 #' "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".
+#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)
 #' @param breaks A sequence of numbers that covers the range of values in mat and
 #' is one element longer than color vector. Used for mapping values to colors.
 #' Useful, if needed to map certain values to certain colors, to certain values.
@@ -384,25 +387,29 @@ sp_pheatmap <- function(data,
   }
 
   cor_data = F
+  dist_method = c('euclidean', "manhattan", "maximum", "canberra", "binary", "minkowski")
 
   if(scale == "row"){
     data_sd <- apply(data, 1, sd)
     data <- data[data_sd != 0, ]
   }
 
-  if (correlation_plot  == "row" || correlation_plot  == "Row") {
+  if (correlation_plot  %in% c("row", "Row")) {
     if (clustering_distance_rows  == "pearson") {
       row_cor = cor(t(data))
     } else if (clustering_distance_rows  == "spearman") {
       row_cor = cor(t(data), method = "spearman")
     } else {
-      row_cor = as.data.frame(as.matrix(dist(data,
-                                             method = clustering_distance_rows)))
+      if (clustering_distance_rows %in% dist_method){
+        row_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
+      } else {
+        row_cor = as.data.frame(as.matrix(vegan::vegdist(data, method = clustering_distance_rows)))
+      }
     }
-    data = round(row_cor, 2)
+    data = round(row_cor, 3)
     annotation_col = annotation_row
     cor_data = T
-  } else if (correlation_plot == "col"  || correlation_plot  == "Column") {
+  } else if (correlation_plot %in% c("col", "Column")) {
     # Do not know why add this!
     # Comment out
     # data_mad <- apply(data, 1, mad)
@@ -412,12 +419,22 @@ sp_pheatmap <- function(data,
     } else if (clustering_distance_cols == "spearman") {
       col_cor = cor(data, method = "spearman")
     }  else {
-      col_cor = as.data.frame(as.matrix(dist(t(data),
-                                             method = clustering_distance_cols)))
+      if (clustering_distance_cols %in% dist_method){
+        col_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
+      } else {
+        col_cor = as.data.frame(as.matrix(vegan::vegdist(data, method = clustering_distance_rows)))
+      }
     }
-    data = round(col_cor, 2)
+    data = round(col_cor, 3)
     cor_data = T
     annotation_row = annotation_col
+  }
+
+  #print(data)
+  # filter abnormal lines
+  data_sd <- apply(data, 1, sd)
+  if(any(data_sd==0)){
+    stop("Wrong correlation method for this type of data. Please choose another method.")
   }
 
 
@@ -545,11 +562,10 @@ sp_pheatmap <- function(data,
       }
     } else {
       if (!cor_data) {
-        dist_method = c('euclidean', "manhattan", "maximum", "canberra", "binary", "minkowski")
         if (clustering_distance_rows %in% dist_method){
         row_dist = dist(data, method = clustering_distance_rows)
         } else {
-          row_dist = vegdist(data, method = clustering_distance_rows)
+          row_dist = vegan::vegdist(data, method = clustering_distance_rows)
         }
       } else {
         row_cor = data
@@ -602,11 +618,10 @@ sp_pheatmap <- function(data,
       }
     } else {
       if (!cor_data) {
-        dist_method = c('euclidean', "manhattan", "maximum", "canberra", "binary", "minkowski")
         if (clustering_distance_cols %in% dist_method){
           col_dist = dist(t(data), method = clustering_distance_cols)
         } else {
-          col_dist = vegdist(t(data), method = clustering_distance_cols)
+          col_dist = vegan::vegdist(t(data), method = clustering_distance_cols)
         }
       } else {
         col_cor = data
