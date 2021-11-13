@@ -1,3 +1,4 @@
+
 # Some useful keyboard shortcuts for package authoring:
 #
 #   Build and Reload Package:  'Ctrl + Shift + B'
@@ -221,16 +222,18 @@ sp_volcano_plot <-
       ggplot(data = data, aes(x = !!log2fc_var_en, y = !!fdr_var_en,
                                color = !!status_col_var_en))
 
-    p <-
-      p + geom_point() + scale_color_manual(values = point_color_vector)
-
-    if (!is.na(point_size)) {
+    if(!is.na(point_size)){
       if(is.numeric(point_size)){
-        p <- p + aes(size = point_size) + guides(size = F)
-      } else {
-        p <- p + aes(size = !!sym(point_size))
+        p <- p + geom_point(size=point_size)
+      }else{
+        p <- p + geom_point() + aes(size = !!sym(point_size))
       }
+    } else {
+      p <- p + geom_point()
     }
+
+    p <- p + scale_color_manual(values = point_color_vector)
+
 
     if (!is.na(alpha)) {
       p <- p + aes(alpha = alpha) + guides(alpha = F)
@@ -341,4 +344,5 @@ sp_volcano_plot <-
     p
 
   }
+
 

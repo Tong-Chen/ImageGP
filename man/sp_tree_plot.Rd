@@ -76,12 +76,7 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 "YlGn"    "YlGnBu"   "YlOrBr"   "YlOrRd"
 (check http://www.sthda.com/english/wiki/colors-in-r for more).}
 
-\item{...}{additional parameter
-
-some dot arguments:
-\itemize{
-\item \code{nsplit} integer, the number of branch blocks divided when 'continuous' is not "none", default is 200.
-}}
+\item{...}{additional parameter}
 }
 \value{
 A ggplot2 object

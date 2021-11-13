@@ -276,8 +276,13 @@ sp_enrichment <- function(data,
       if(all(data[[size_variable]] == as.integer(data[[size_variable]]))){
         min = min(data[[size_variable]])
         max = max(data[[size_variable]])
+<<<<<<< HEAD
         # 4 is length
 		    step = ceiling((max-min)/4)
+=======
+		# 4 is length
+		step = ceiling((max-min)/4)
+>>>>>>> e127a5a5595c9c2f9890601ac601ee4b69cab1fe
         p <- p + scale_size_continuous(breaks=seq(min, max, by=step))
       }
     }
