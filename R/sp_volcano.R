@@ -341,7 +341,7 @@ sp_volcano_plot <-
                           title = title,
                           coordinate_flip = coordinate_flip,
                   ...)
-    p
+    return(p)
 
   }
 

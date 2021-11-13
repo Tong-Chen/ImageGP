@@ -711,4 +711,5 @@ sp_pheatmap <- function(data,
   if (saveppt){
   eoffice::topptx(gt, filename = paste0(filename,".pptx"))
   }
+  gt
 }

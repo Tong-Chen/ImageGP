@@ -34,9 +34,13 @@
 #' less than 4 points. If there are more than 4 points for all groups, confidence ellipses would be draw.
 #' Accept `confidence ellipse` to draw confidence ellipses for all conditions even though they would
 #' not be draw.
+#' Accept `no` to remove ellipse or other polygens.
 #' @param label_variable The variable for text used to label points. Optional.
+#' Specially supplying `Row.names` would label sample with their names.
 #' @param check_significance Check if the centroids and dispersion of the groups
 #' as defined by measure space are equivalent for all groups.
+#' @param coord_fixed  When True (the default) ensures that one unit on the x-axis is
+#' the same length as one unit on the y-axis.
 #' @param check_paired_significance Paired-check for each two groups.
 #' @inheritParams sp_boxplot
 #' @inheritParams stats::cmdscale
@@ -66,7 +70,7 @@ sp_pcoa <- function(data,
                     shape_variable_order = NULL,
                     size_variable = NULL,
                     size_variable_order = NULL,
-                    label_variable = FALSE,
+                    label_variable = NULL,
                     legend.position = 'right',
                     draw_ellipse = 'auto',
                     manual_color_vector = NULL,
@@ -79,24 +83,26 @@ sp_pcoa <- function(data,
                     extra_ggplot2_cmd = NULL,
                     check_significance = T,
                     check_paired_significance = T,
+                    facet_variable = NULL,
+                    coord_fixed = T,
                     ...) {
-
-
   if (class(data) == "character") {
     file <- data
     data <- sp_readTable(data, row.names = 1)
-  } else if ('data.frame' %in% class(data) | 'dist' %in% class(data)) {
+  } else if ('data.frame' %in% class(data) |
+             'dist' %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
   }
 
   if (class(metadata) == "character") {
     metadata <- sp_readTable(metadata, row.names = 1)
-  } else if ('data.frame' %in% class(metadata) | 'dist' %in% class(metadata)) {
+  } else if ('data.frame' %in% class(metadata) |
+             'dist' %in% class(metadata)) {
     stop("Unknown input format for `metadata` parameter.")
   }
 
   # Keep same columns of data with rows of metadata
-  matchedL <- match_two_df(data, metadata, way="col-row")
+  matchedL <- match_two_df(data, metadata, way = "col-row")
 
   data = matchedL$df1
   metadata = matchedL$df2
@@ -110,10 +116,11 @@ sp_pcoa <- function(data,
   #   stop(paste(color_variable, 'must be column names of data!'))
   # }
 
-  if(input_type == "normalized_OTUtable" && (!'dist' %in% class(data)) ){
+  if (input_type == "normalized_OTUtable" &&
+      (!'dist' %in% class(data))) {
     data <- t(data)
     # copy and modified from vegan::metaMDSdist
-    if(data_transform == "auto"){
+    if (data_transform == "auto") {
       xam <- max(data)
       if (xam > 50) {
         data <- sqrt(data)
@@ -121,12 +128,12 @@ sp_pcoa <- function(data,
       if (xam > 9) {
         data <- vegan::wisconsin(data)
       }
-    } else if(data_transform != "None"){
-      data <- vegan::decostand(data, method=data_transform)
+    } else if (data_transform != "None") {
+      data <- vegan::decostand(data, method = data_transform)
     }
 
-    dist_matrix <- vegan::vegdist(data, method=dissimilarity_index,
-                           binary=binary_dissimilarity_index)
+    dist_matrix <- vegan::vegdist(data, method = dissimilarity_index,
+                                  binary = binary_dissimilarity_index)
   } else {
     dist_matrix <- as.dist(data)
   }
@@ -135,41 +142,31 @@ sp_pcoa <- function(data,
   # 设置维数
   ndimensions = k
   num_samples <- nrow(data)
-  if(ndimensions >= num_samples){
+  if (ndimensions >= num_samples) {
     ndimensions <- num_samples - 1
   }
 
   # 计算pcoa
-  pcoa <- cmdscale(dist_matrix, k=ndimesions, eig=T)
+  pcoa <- cmdscale(dist_matrix, k = ndimensions, eig = T)
 
 
 
   # 整理pcoa结果
   pcoa_points <- as.data.frame(pcoa$points)
   sum_eig <- sum(pcoa$eig)
-  eig_percent <- round(pcoa$eig/sum_eig*100,1)
+  eig_percent <- round(pcoa$eig / sum_eig * 100, 1)
 
   colnames(pcoa_points) <- paste0("PCoA", 1:ndimensions)
 
-  data <- cbind(dune_pcoa_points, metdata)
+  data <- cbind(pcoa_points, metadata)
+
+  data$Row.names <- row.names(metadata)
 
   data_colnames <- colnames(data)
 
 
-
-  # if (!is.numeric(data[[yvariable]]) &&
-  #     !sp.is.null(yvariable_order)) {
-  #   data = sp_set_factor_order(data, yvariable, yvariable_order)
-  # }
-  #
-  # if (!is.numeric(data[[yvariable]]) &&
-  #     !sp.is.null(xvariable_order)) {
-  #   data = sp_set_factor_order(data, xvariable, xvariable_order)
-  # }
-
-
   if (!sp.is.null(color_variable)) {
-    if(sp.is.null(group_variable)){
+    if (sp.is.null(group_variable)) {
       group_variable =  color_variable
     }
     if (!(color_variable %in% data_colnames)) {
@@ -180,7 +177,7 @@ sp_pcoa <- function(data,
 
 
   if (!sp.is.null(shape_variable)) {
-    if(sp.is.null(group_variable)){
+    if (sp.is.null(group_variable)) {
       group_variable =  shape_variable
     }
     if (!(shape_variable %in% data_colnames)) {
@@ -190,14 +187,15 @@ sp_pcoa <- function(data,
     shapes <- generate_shapes(data, shape_variable)
   }
 
-  if (!sp.is.null(size_varaible)) {
-    if (!(size_varaible %in% data_colnames)) {
-      stop(paste(size_varaible, 'must be column names of data!'))
+  if (!sp.is.null(size_variable)) {
+    if (!(size_variable %in% data_colnames)) {
+      stop(paste(size_variable, 'must be column names of data!'))
     }
-    data = sp_set_factor_order(data, size_varaible, size_varaible_order)
+    data = sp_set_factor_order(data, size_variable, size_variable_order)
   }
 
-  if (!sp.is.null(group_variable) && group_variable != color_variable &&
+  if (!sp.is.null(group_variable) &&
+      group_variable != color_variable &&
       group_variable != shape_variable) {
     if (!(group_variable %in% data_colnames)) {
       stop(paste(group_variable, 'must be column names of data!'))
@@ -205,8 +203,8 @@ sp_pcoa <- function(data,
     data = sp_set_factor_order(data, group_variable, group_variable_order)
   }
 
-  if(draw_ellipse == 'auto'){
-    if(all(table(data[[group_variable]])>4)){
+  if (draw_ellipse == 'auto') {
+    if (all(table(data[[group_variable]]) > 4)) {
       draw_ellipse = "confiden ellipse"
     } else {
       # library(ggalt)
@@ -216,17 +214,22 @@ sp_pcoa <- function(data,
 
   library(ggplot2)
 
-  p <- ggplot(data, aes(x=PCoA1, y=PCoA2, group=group_variable)) +
-    labs(x=paste("PCoA 1 (", eig_percent[1], "%)", sep=""),
-         y=paste("PCoA 2 (", eig_percent[2], "%)", sep=""),
-         title=title) + geom_point()
+  group_variable_en = sym(group_variable)
+
+  p <- ggplot(data, aes(x = PCoA1, y = PCoA2)) +
+    labs(
+      x = paste("PCoA 1 (", eig_percent[1], "%)", sep = ""),
+      y = paste("PCoA 2 (", eig_percent[2], "%)", sep = ""),
+      title = title
+    ) + geom_point(aes(group = !!group_variable_en))
 
   if (!sp.is.null(color_variable)) {
-      color_variable_en = sym(color_variable)
-      p <- p + aes(color = !!color_variable_en)
-      p <-
-        sp_manual_color_ggplot2(p, data, color_variable, manual_color_vector)
-    }
+    color_variable_en = sym(color_variable)
+    p <- p + aes(color = !!color_variable_en)
+    p <-
+      sp_manual_color_ggplot2(p, data, color_variable, manual_color_vector)
+  }
+
 
   if (!sp.is.null(shape_variable)) {
     shape_variable_en = sym(shape_variable)
@@ -239,47 +242,79 @@ sp_pcoa <- function(data,
     p <- p + aes(size = !!size_variable_en)
   }
 
-  if (!sp.is.null(label_variable)){
+  if (!sp.is.null(label_variable)) {
     label_variable_en = sym(label_variable)
     library(ggrepel)
-    p <- p + geom_text_repel(aes(label=!!label_variable_en), show.legend = F,
-                             max.overlaps = 100)
+    p <-
+      p + geom_text_repel(
+        aes(label = !!label_variable_en),
+        show.legend = F,
+        max.overlaps = 100
+      )
   }
 
-  if(draw_ellipse == "encircle"){
-    p <- p + geom_encircle(aes(fill=group_variable), alpha = 0.1, show.legend = F)
-  } else{
-    p <- p + stat_ellipse(level = level, type=type, na.rm = TRUE)
+  if (draw_ellipse == "encircle") {
+    p <-
+      p + geom_encircle(alpha = 0.2,
+                        show.legend = F,
+                        aes(fill = !!group_variable_en))
+    p <-
+      sp_manual_fill_ggplot2(p, data, group_variable, manual_color_vector)
+
+  } else if (draw_ellipse == "confiden ellipse") {
+    p <-
+      p + stat_ellipse(
+        level = level,
+        type = type,
+        na.rm = TRUE
+      )
   }
 
-  if(check_significance){
-    pcoa_adonis2 <- adonis2(as.formula(paste("dist_matrix", "~", group_variable)),
-                                             data = metadata,
-                                             permutations = 5999)
+  if (check_significance) {
+    pcoa_adonis2 <-
+      adonis2(as.formula(paste("dist_matrix", "~", group_variable)),
+              data = metadata,
+              permutations = 5999)
 
-    dispersion <- betadisper(dist_matrix, group=metadata[[group_variable]])
+    dispersion <-
+      betadisper(dist_matrix, group = metadata[[group_variable]])
     dispersion_test <- permutest(dispersion)
     dispersion_test_p <- dispersion_test$tab$`Pr(>F)`[1]
 
-    title <- paste0("adonis R2: ",round(pcoa_adonis2$R2,2),
-                    "; adonis P-value: ", pcoa_adonis2$`Pr(>F)`,
-                    "; dispersion P-value: ", dispersion_test_p)
+    title <- paste0(
+      "adonis R2: ",
+      round(pcoa_adonis2$R2, 2),
+      "; adonis P-value: ",
+      round(pcoa_adonis2$`Pr(>F)`,6),
+      "; dispersion P-value: ",
+      round(dispersion_test_p,6)
+    )
 
-    if(check_paired_significance){
+    if (check_paired_significance) {
       # devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
       library(pairwiseAdonis)
-      dune.pairwise.adonis <- pairwise.adonis(x=dist_matrix, factors=metadata[[group_variable]],
-                                              p.adjust.m = "BH",
-                                              reduce = NULL,
-                                              perm = 5999)
-      if(!is.na(filename)){
-        write.table(
-          dune.pairwise.adonis,
+      pairwise.adonis <-
+        pairwise.adonis(
+          x = dist_matrix,
+          factors = metadata[[group_variable]],
+          p.adjust.m = "BH",
+          reduce = NULL,
+          perm = 5999
+        )
+      if (!sp.is.null(filename)) {
+        sp_writeTable(
+          pairwise.adonis,
           file = paste0(filename, ".pairwiseAdonis.txt"),
-          sep = "\t",
-          quote = F,
-          col.names = T,
-          row.names = F
+          keep_rownames = F
+        )
+      }
+
+      tukeyHSD <- TukeyHSD(dispersion)$group
+
+      if (!sp.is.null(filename)) {
+        sp_writeTable(
+          tukeyHSD,
+          file = paste0(filename, ".pairwiseDispersionCheck.txt")
         )
       }
 
@@ -296,36 +331,14 @@ sp_pcoa <- function(data,
 
   p <- sp_ggplot_layout(
     p,
-    xtics_angle = xtics_angle,
     legend.position = legend.position,
     extra_ggplot2_cmd = extra_ggplot2_cmd,
-    x_label = x_label,
-    y_label = y_label,
-    coordinate_flip = coordinate_flip,
     filename = filename,
-    additional_theme = additional_theme,
+    title = title,
     ...
   )
 
   p <- p +  coord_fixed(1)
-
-
-
-
-  p
-
-  # loop for each group pair
-  data_table <- as.matrix(data)
-
-  compare_data <- as.vector(unique(grp_file[[color]]))
-  len_compare_data <- length(compare_data)
-  for (i in 1:(len_compare_data - 1)) {
-    for (j in (i + 1):len_compare_data) {
-      tmp_compare <-
-        as.data.frame(cbind(sampA = compare_data[i], sampB = compare_data[j]))
-      da_adonis(tmp_compare)
-    }
-  }
 
   if (debug) {
     argg <- c(as.list(environment()), list(...))

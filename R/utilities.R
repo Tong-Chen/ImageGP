@@ -84,7 +84,7 @@ match_two_df <- function(df1, df2, way="row-row"){
     df1 <- df1[,common_rownameL,drop=F]
     df2 <- df2[common_rownameL,,drop=F]
   }
-  return(df1=df1, df2=df2)
+  return(list(df1=df1, df2=df2))
 }
 
 #' Get current time in strign format
@@ -1148,6 +1148,7 @@ sp_ggplot_layout <-
       htmlwidgets::saveWidget(as.widget(plot_p), paste0(filename,".index.html"))
       }
     }
+    p
   }
 
 #' Get the x, y limits of a ggplot2 plot

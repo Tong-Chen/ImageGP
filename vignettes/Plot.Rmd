@@ -38,6 +38,10 @@ sp_pheatmap("exprTable.txt", xtics_angle = 150, cluster_rows = T, cluster_cols =
 sp_pheatmap("exprTable.txt", xtics_angle = 180, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 200, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T)
+
+sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
+            correlation_plot = "row", clustering_distance_rows="cao",
+            clustering_distance_cols = "minkowski")
 ```
 
 
@@ -196,13 +200,22 @@ sp_volcano_plot(data=res_output,
 
 ```{r}
 geneDF = data.frame(gene=c("ImageGP14","ImageGP4"), label=c("Pou5f1","Gata2"))
+sp_volcano_plot(data=res_output,
+                geneL=geneDF,
+           log2fc_var="log2FoldChange",
+           fdr_var="padj",
+           status_col_var = 'level',
+           point_label_var = 'label',
+           point_size="padj"
+           ) 
 geneDF = data.frame(gene=c("ImageGP14","ImageGP4"))
 sp_volcano_plot(data=res_output,
                 geneL=geneDF,
            log2fc_var="log2FoldChange",
            fdr_var="padj",
            status_col_var = 'level',
-           point_label_var = 'label'
+           point_label_var = 'label',
+           point_size=0.5
            )
 ```
 
@@ -696,12 +709,13 @@ library(ImageGP)
 enrichment_data <- "goeast.enrich.txt"
 enrichment.data <- sp_readTable(enrichment_data) 
 head(enrichment.data)
-flower_plot()
+#flower_plot()
 p <- sp_enrichment(data = enrichment.data, xvariable = "log_odds_ratio", 
               yvariable = "Term", color_variable = "p", 
               log10_transform_variable="p", size_variable = "q",
               sqrt_transform_variable = "q",
               shape_variable = "Ontology")
+p
 ```
 
 
@@ -783,10 +797,30 @@ suppressMessages(library("vegan"))
 suppressMessages(library("digest"))
 suppressMessages(library("ggrepel"))
 suppressMessages(library("ggpubr"))
+suppressMessages(library("vegan"))
+suppressMessages(library("ggalt"))
+suppressMessages(library("pairwiseAdonis"))
 
 pcoa_data = "pcoa.data"
 group_pcoa_data = "group_pcoa.data"
-sp_pcoa(data=pcoa_data,grp_file = group_pcoa_data, color = "genotype") 
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", input_type = "distance_matrix") 
+
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", draw_ellipse = "no", input_type = "distance_matrix")
+
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", draw_ellipse = "encircle", input_type = "distance_matrix")
+
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", 
+        group_variable = "genotype", shape_variable = "genotype",
+        label_variable = "Row.names", draw_ellipse = "encircle", 
+        input_type = "distance_matrix", manual_color_vector="Set2")
+
+```
+
+```{r}
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", 
+        group_variable = "genotype", shape_variable = "genotype",
+        label_variable = "Row.names", draw_ellipse = "encircle", 
+        input_type = "distance_matrix", manual_color_vector="Set2", filename="pcoa.pdf") 
 ```
 
 ## scatter plot

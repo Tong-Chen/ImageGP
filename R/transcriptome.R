@@ -187,7 +187,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
                          filter=NULL, rundeseq=T) {
 
   data <- read.table(count_matrix_file, header=T, row.names=1, com='', quote='',
-                     check.names=F, sep="\t", stringsAsFactors = T)
+                     check.names=F, sep="\t", stringsAsFactors = F)
 
   if(!is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
@@ -266,6 +266,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
   if (rlog) {
     rld <- DESeq2::rlog(dds, blind=FALSE)
     rlogMat <- assay(rld)
+    normexpr$rlog_unsort <- as.data.frame(rlogMat)
     rlogMat_mad <- apply(rlogMat, 1, mad)
     rlogMat <- rlogMat[order(rlogMat_mad, decreasing=T), ]
 
@@ -284,8 +285,9 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
 
   if (vst) {
-    rld <- DESeq2::vst(dds, blind=FALSE)
+    rld <- DESeq2::varianceStabilizingTransformation(dds, blind=FALSE)
     vstMat <- assay(rld)
+    normexpr$vst_unsort <- as.data.frame(vstMat)
     vstMat_mad <- apply(vstMat, 1, mad)
     vstMat <- vstMat[order(vstMat_mad, decreasing=T), ]
 
@@ -298,6 +300,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 	}
 
     normexpr$vst <- vstMat
+
     normexpr$vstSave <- vstMat_output
   }
 
@@ -348,7 +351,7 @@ normalizedExpr2DistribBoxplot <- function(normexpr, saveplot=NULL, ...) {
 #' Other options \code{"ID", "baseMean", "log2FoldChange", "lfcSE", "stat", "pvalue", "padj"}.
 #' This has no specific usages except make the table clearer.
 #' @param output_prefix A string as prefix of output files.
-#' @param Specify a data matrix of normalized counts. Default NULL.
+#' @param normalized_counts a data matrix of normalized counts or an object return by \link{deseq2normalizedExpr}. Default NULL.
 #' @param ... Additional parameters given to \code{\link{ggsave}}.
 #'
 #' @import ggplot2
@@ -405,12 +408,12 @@ twoGroupDEgenes <- function
     normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
   } else {
     name_nc <- names(normalized_counts)
-    if ('rlog' %in% name_nc){
-      normalized_counts <- normalized_counts$rlog
-    } else if ('vst' %in% name_nc){
-      normalized_counts <- normalized_counts$vst
+    if ('rlog_unsort' %in% name_nc){
+      normalized_counts <- normalized_counts$rlog_unsort
+    } else if ('vst_unsort' %in% name_nc){
+      normalized_counts <- normalized_counts$vst_unsort
     } else {
-      normalized_counts <- normalized_counts[[1]]
+      normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
     }
   }
 
@@ -442,7 +445,7 @@ twoGroupDEgenes <- function
   res$padj <- as.numeric(formatC(res$padj))
   res$pvalue <- as.numeric(formatC(res$pvalue))
 
-  res <- res[order(res$padj),]
+  res <- res[order(res$pvalue),]
 
   comp314 <- paste(groupA, "_vs_", groupB, sep=".")
 
@@ -495,15 +498,18 @@ twoGroupDEgenes <- function
                                     paste(groupA,"UP"),
                              ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
                                     paste(groupB,"UP"), "NoDiff")) , "NoDiff")
+  res_output$level <- factor(res_output$level, levels = c(paste(groupA,"UP"),
+                                                          paste(groupB,"UP"), "NoDiff"),
+                             ordered = T)
 
   #volcanoPlot(res_output, "log2FoldChange", "padj",
   #            "level", saveplot=paste0(file_base1,".volcano.pdf"), ...)
 
-  sp_volcano_plot(res_output, log2fc_var = "log2FoldChange", fdr_var = "padj",
+  volcano_plot <- sp_volcano_plot(res_output, log2fc_var = "log2FoldChange", fdr_var = "padj",
                   status_col_var = "level", log10_transform_fdr=T,
-                  filename=paste0(file_base1,".volcano.pdf"))
+                  filename=paste0(file_base1,".volcano.pdf"), point_size=1)
 
-  rankPlot(res_output, label=10, saveplot=paste0(file_base1,".rankplot.pdf"), width=20, ...)
+  rank_plot <- rankPlot(res_output, label=10, saveplot=paste0(file_base1,".rankplot.pdf"), width=20, ...)
 
 
   res_de_up_top20_id <- as.vector(head(res_de_up$ID,20))
@@ -522,28 +528,32 @@ twoGroupDEgenes <- function
 
   sp_writeTable(sample, file=paste0(file_base1,".top20DEgenes.sample.txt"))
 
-  pheatmap::pheatmap(res_de_top20_expr, cluster_row=T, scale="row",
-                     annotation_col=sample,
-                     filename=paste0(file_base1,".top20DEgenes.heatmap.pdf"))
+  # heatmap_de <- pheatmap::pheatmap(res_de_top20_expr, cluster_row=T, scale="row",
+  #                    annotation_col=sample,
+  #                    filename=paste0(file_base1,".top20DEgenes.heatmap.pdf"))
+  heatmap_de <- sp_pheatmap(res_de_top20_expr, cluster_rows=T, scale="row",
+                    annotation_col=sample, xtics_angle=90,
+                    filename=paste0(file_base1,".top20DEgenes.heatmap.pdf"))
 
   res_de_top20_expr2 <- data.frame(Gene=rownames(res_de_top20_expr), res_de_top20_expr)
-  res_de_top20_expr2 <- reshape2::melt(res_de_top20_expr, id=c("Gene"))
+  res_de_top20_expr2 <- reshape2::melt(res_de_top20_expr2, id=c("Gene"))
 
   colnames(res_de_top20_expr2) <- c("Gene", "Sample", "Expression")
+  print(res_de_top20)
   res_de_top20_expr2$Gene <- factor(res_de_top20_expr2$Gene, levels=res_de_top20,
                                     ordered = T)
 
   res_de_top20_expr2$Group <- sample[match(res_de_top20_expr2$Sample, rownames(sample)),design]
 
-  p = ggplot(res_de_top20_expr2, aes(x=Gene, y=Expression)) +
+  dot_plot = ggplot(res_de_top20_expr2, aes(x=Gene, y=Expression)) +
     geom_point(aes(color=Group), alpha=0.5) +
     theme_classic() +
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
           axis.title.x = element_blank()) +
     ylab("Normalized Expression value") #+ scale_y_log10()
-  ggsave(p, file=paste0(file_base1,".top20DEgenes.dotplot.pdf"), width=20,
+  ggsave(dot_plot, file=paste0(file_base1,".top20DEgenes.dotplot.pdf"), width=20,
          height=14, units="cm", ...)
-
+  list(volcano_plot, rank_plot, heatmap_de, dot_plot)
 }
 
 
