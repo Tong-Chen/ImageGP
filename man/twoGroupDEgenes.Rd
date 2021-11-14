@@ -36,9 +36,9 @@ This has no specific usages except make the table clearer.}
 
 \item{output_prefix}{A string as prefix of output files.}
 
-\item{...}{Additional parameters given to \code{\link{ggsave}}.}
+\item{normalized_counts}{a data matrix of normalized counts or an object return by \link{deseq2normalizedExpr}. Default NULL.}
 
-\item{Specify}{a data matrix of normalized counts. Default NULL.}
+\item{...}{Additional parameters given to \code{\link{ggsave}}.}
 }
 \description{
 DE genes analysis for two groups.
