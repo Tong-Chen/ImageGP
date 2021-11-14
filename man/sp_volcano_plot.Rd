@@ -21,7 +21,7 @@ sp_volcano_plot(
   point_label_var = NULL,
   log2fc_symmetry = TRUE,
   alpha = NA,
-  point_size = NA,
+  point_size = NULL,
   extra_ggplot2_cmd = NULL,
   filename = NULL,
   xtics_angle = 0,
