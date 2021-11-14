@@ -19,7 +19,7 @@ sp_pcoa(
   shape_variable_order = NULL,
   size_variable = NULL,
   size_variable_order = NULL,
-  label_variable = FALSE,
+  label_variable = NULL,
   legend.position = "right",
   draw_ellipse = "auto",
   manual_color_vector = NULL,
@@ -32,6 +32,8 @@ sp_pcoa(
   extra_ggplot2_cmd = NULL,
   check_significance = T,
   check_paired_significance = T,
+  facet_variable = NULL,
+  coord_fixed = T,
   ...
 )
 }
@@ -60,6 +62,9 @@ sample sizes (Wolda 1981, Krebs 1999, Anderson & Millar 2004),
 and Mountford (1962) and Raup-Crick indices for presence–absence data should be able
 to handle unknown (and variable) sample sizes.}
 
+\item{k}{the maximum dimension of the space which the data are to be
+    represented in; must be in \eqn{\{1, 2, \ldots, n-1\}}{{1, 2, \\dots, n-1}}.}
+
 \item{binary_dissimilarity_index}{Perform presence/absence standardization
 before computing \code{dissimilarity_index}. Default \code{FALSE}, accept \code{TRUE}.}
 
@@ -86,14 +91,16 @@ accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
 \item{size_variable}{The variable for point size. Optional,
 such as a number or a variable like \code{count} (one of column names), normally should be number column.}
 
-\item{label_variable}{The variable for text used to label points. Optional.}
+\item{label_variable}{The variable for text used to label points. Optional.
+Specially supplying \code{Row.names} would label sample with their names.}
 
 \item{legend.position}{Position of legend, accept top, bottom, left, right, none or c(0.8,0.8).}
 
 \item{draw_ellipse}{Default 'auto' means to enclose points in a polygon if one group with
 less than 4 points. If there are more than 4 points for all groups, confidence ellipses would be draw.
 Accept \verb{confidence ellipse} to draw confidence ellipses for all conditions even though they would
-not be draw.}
+not be draw.
+Accept \code{no} to remove ellipse or other polygens.}
 
 \item{manual_color_vector}{Manually set colors for each geom.
 Default NULL, meaning using ggplot2 default.
@@ -112,6 +119,16 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 \item{label_font_size}{Label font size. Default system default. Accept a number.
 Supplying numbers less than 5 to shrink fonts.}
 
+\item{type}{The type of ellipse.
+The default \code{"t"} assumes a multivariate t-distribution, and
+\code{"norm"} assumes a multivariate normal distribution.
+\code{"euclid"} draws a circle with the radius equal to \code{level},
+representing the euclidean distance from the center.
+This ellipse probably won't appear circular unless \code{coord_fixed()} is applied.}
+
+\item{level}{The level at which to draw an ellipse,
+or, if \code{type="euclid"}, the radius of the circle to be drawn.}
+
 \item{filename}{Output picture to given file.}
 
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
@@ -120,6 +137,12 @@ Supplying numbers less than 5 to shrink fonts.}
 as defined by measure space are equivalent for all groups.}
 
 \item{check_paired_significance}{Paired-check for each two groups.}
+
+\item{facet_variable}{Wrap plots by given column (one of column names should be specified).
+This is used to put multiple plot in one picture.}
+
+\item{coord_fixed}{When True (the default) ensures that one unit on the x-axis is
+the same length as one unit on the y-axis.}
 
 \item{...}{Parameters given to \code{sp_ggplot_layout}}
 }

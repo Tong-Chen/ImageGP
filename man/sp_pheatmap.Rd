@@ -94,12 +94,12 @@ Accept "ward.D", "ward.D2","single", "average" (=UPGMA),
 \item{clustering_distance_rows}{Clustering distance method for rows.
 Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".}
+"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)}
 
 \item{clustering_distance_cols}{Clustering distance method for cols.
 Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".}
+"morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)}
 
 \item{breaks}{A sequence of numbers that covers the range of values in mat and
 is one element longer than color vector. Used for mapping values to colors.
