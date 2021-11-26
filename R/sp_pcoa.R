@@ -293,9 +293,9 @@ sp_pcoa <- function(data,
     title <- paste0(
       "adonis R2: ",
       round(pcoa_adonis2$R2, 2),
-      "; adonis P-value: ",
+      "\nadonis P-value: ",
       round(pcoa_adonis2$`Pr(>F)`,6),
-      "; dispersion P-value: ",
+      "\ndispersion P-value: ",
       round(dispersion_test_p,6)
     )
 
