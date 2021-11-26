@@ -164,8 +164,8 @@ sp_pcoa <- function(data,
   data$Row.names <- row.names(metadata)
 
   data_colnames <- colnames(data)
-  print(data_colnames)
-  print(data)
+  #print(data_colnames)
+  #print(data)
 
   if (!sp.is.null(color_variable)) {
     if (sp.is.null(group_variable)) {
@@ -186,6 +186,7 @@ sp_pcoa <- function(data,
       stop(paste(shape_variable, 'must be column names of data!'))
     }
     data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+    data[[shape_variable]] <- as.factor(data[[shape_variable]])
     shapes <- generate_shapes(data, shape_variable)
   }
 
@@ -345,7 +346,7 @@ sp_pcoa <- function(data,
     title = title,
     ...
   )
-  
+
   if (coord_fixed){
     p <- p +  coord_fixed(1)
   }
