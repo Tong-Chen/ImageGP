@@ -20,6 +20,7 @@ sp_pcoa(
   size_variable = NULL,
   size_variable_order = NULL,
   label_variable = NULL,
+  label_variable_order = NULL,
   legend.position = "right",
   draw_ellipse = "auto",
   manual_color_vector = NULL,
