@@ -823,6 +823,115 @@ sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype",
         input_type = "distance_matrix", manual_color_vector="Set2", filename="pcoa.pdf") 
 ```
 
+
+```{r}
+data = "otuabundance.txt"
+metadata = "otuabundancephenodata.txt"
+shape_variable_order = "1,5"
+input_type = "normalized_OTUtable"
+dissimilarity_index = "bray"
+manual_color_vector = "Set3"
+binary_dissimilarity_index = FALSE
+data_transform = "auto"
+group_variable = "Management"
+color_variable = "Management"
+color_variable_order = "NULL"
+shape_variable = "Moisture"
+shape_variable_order = "1,5"
+size_variable = "A1"
+size_variable_order = "NULL"
+label_variable_order = "NULL"
+label_variable = "ID"
+legend.position = "right"
+draw_ellipse = "auto"
+manual_color_vector = "Set3"
+title = ""
+label_font_size = "NULL"
+type1 = "t"
+level = 0.85
+extra_ggplot2_cmd = "NULL"
+check_significance = TRUE
+check_paired_significance = TRUE
+outputprefix = "a0714af9-6ba4-4650-8ce1-3cbe678fccba"
+outputpictype = "pdf"
+facet_variable = "NULL"
+coord_fixed = TRUE
+width = 10
+height = 6.18
+saveppt = FALSE
+k = 3
+
+
+# If no ImagegP package, install it.
+library(ImageGP)
+library(RColorBrewer)
+library(vegan)
+library(dplyr)
+library(htmlwidgets)
+library(plotly)
+library(ggplot2)
+library(ggalt)
+library(ggrepel)
+library(pairwiseAdonis)
+
+
+debug = FALSE
+
+if (outputprefix == "") {
+  outputprefix = data
+}
+filename = paste0(outputprefix,  '.pcoa.', outputpictype)
+
+manual_color_vector = sp_string2vector(manual_color_vector)
+color_variable_order = sp_string2vector(color_variable_order)
+size_variable_order = sp_string2vector(size_variable_order)
+label_variable_order = sp_string2vector(label_variable_order)
+shape_variable_order = sp_string2vector(shape_variable_order)
+# sp_string2vector
+
+#sink("s.log", append=TRUE, split=TRUE)
+
+cat(sp_current_time(), "Starting...\n")
+
+sp_pcoa(
+  data = data,
+  metadata = metadata,
+  input_type = input_type,
+  dissimilarity_index = dissimilarity_index,
+  k = k,
+  binary_dissimilarity_index = binary_dissimilarity_index,
+  data_transform = data_transform,
+  group_variable = group_variable,
+  color_variable = color_variable,
+  color_variable_order = color_variable_order,
+  shape_variable = shape_variable,
+  shape_variable_order = shape_variable_order,
+  size_variable = size_variable,
+  size_variable_order = size_variable_order,
+  label_variable = label_variable,
+  legend.position = legend.position,
+  draw_ellipse = draw_ellipse,
+  manual_color_vector = manual_color_vector,
+  title = title,
+  label_font_size = label_font_size,
+  debug = debug,
+  type = type1,
+  width = width,
+  height = height,
+  saveppt = saveppt,
+  level = level,
+  filename = filename,
+  extra_ggplot2_cmd = extra_ggplot2_cmd,
+  check_significance = check_significance,
+  check_paired_significance = check_paired_significance,
+  facet_variable = facet_variable,
+  coord_fixed = coord_fixed
+)
+
+cat(sp_current_time(), "Success.\n")
+#sink()
+```
+
 ## scatter plot
 
 ```{r}
