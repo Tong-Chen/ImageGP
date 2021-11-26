@@ -71,6 +71,7 @@ sp_pcoa <- function(data,
                     size_variable = NULL,
                     size_variable_order = NULL,
                     label_variable = NULL,
+                    label_variable_order = NULL,
                     legend.position = 'right',
                     draw_ellipse = 'auto',
                     manual_color_vector = NULL,
@@ -163,7 +164,8 @@ sp_pcoa <- function(data,
   data$Row.names <- row.names(metadata)
 
   data_colnames <- colnames(data)
-
+  print(data_colnames)
+  print(data)
 
   if (!sp.is.null(color_variable)) {
     if (sp.is.null(group_variable)) {
@@ -193,6 +195,8 @@ sp_pcoa <- function(data,
     }
     data = sp_set_factor_order(data, size_variable, size_variable_order)
   }
+
+
 
   if (!sp.is.null(group_variable) &&
       group_variable != color_variable &&
@@ -243,6 +247,10 @@ sp_pcoa <- function(data,
   }
 
   if (!sp.is.null(label_variable)) {
+	# For cloud platform usages.
+    if (!(label_variable %in% data_colnames)) {
+      label_variable = "Row.names"
+    }
     label_variable_en = sym(label_variable)
     library(ggrepel)
     p <-
@@ -337,8 +345,10 @@ sp_pcoa <- function(data,
     title = title,
     ...
   )
-
-  p <- p +  coord_fixed(1)
+  
+  if (coord_fixed){
+    p <- p +  coord_fixed(1)
+  }
 
   if (debug) {
     argg <- c(as.list(environment()), list(...))
