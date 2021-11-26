@@ -928,7 +928,6 @@ sp_pcoa(
   coord_fixed = coord_fixed
 )
 
-cat(sp_current_time(), "Success.\n")
 #sink()
 ```
 

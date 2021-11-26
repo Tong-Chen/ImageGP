@@ -205,7 +205,7 @@ sp_pcoa <- function(data,
     if (!(group_variable %in% data_colnames)) {
       stop(paste(group_variable, 'must be column names of data!'))
     }
-    data = sp_set_factor_order(data, group_variable, group_variable_order)
+    #data = sp_set_factor_order(data, group_variable, group_variable_order)
   }
 
   if (draw_ellipse == 'auto') {
@@ -221,12 +221,12 @@ sp_pcoa <- function(data,
 
   group_variable_en = sym(group_variable)
 
-  p <- ggplot(data, aes(x = PCoA1, y = PCoA2)) +
+  p <- ggplot(data, aes(x = PCoA1, y = PCoA2, group = !!group_variable_en)) +
     labs(
       x = paste("PCoA 1 (", eig_percent[1], "%)", sep = ""),
       y = paste("PCoA 2 (", eig_percent[2], "%)", sep = ""),
       title = title
-    ) + geom_point(aes(group = !!group_variable_en))
+    ) + geom_point()
 
   if (!sp.is.null(color_variable)) {
     color_variable_en = sym(color_variable)
