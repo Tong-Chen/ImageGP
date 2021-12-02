@@ -125,7 +125,9 @@ sp_upsetview <- function (data,
 
   nsets = dim(data)[2] - 1
   
-  
+  if(nsets>10){
+  	stop("Your fileformat maybe wrong. It is almost meaningless for interactions among more than 10 sets.")
+  } 
 
   if (keep_empty) {
     keep_empty = 'on'
