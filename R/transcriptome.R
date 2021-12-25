@@ -416,6 +416,7 @@ twoGroupDEgenes <- function
       normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
     }
   }
+  normalized_counts <- as.data.frame(normalized_counts)
 
 
   baseA <- normalized_counts[, colData(dds)[[design]] == groupA]
