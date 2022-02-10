@@ -518,6 +518,9 @@ twoGroupDEgenes <- function
 
   res_de_top20 <- c(res_de_up_top20_id, res_de_dw_top20_id)
 
+  res_de_top20_type <- data.frame(Type=c(rep("UP", length(res_de_up_top20_id)),
+                                         rep("DW", length(res_de_dw_top20_id))),
+                                  row.names = c(res_de_up_top20_id, res_de_dw_top20_id))
 
   res_de_top20_expr <- normalized_counts[res_de_top20,c(colData(dds)[[design]] == groupB |
                                                         colData(dds)[[design]] == groupA)]
@@ -534,14 +537,27 @@ twoGroupDEgenes <- function
   #                    filename=paste0(file_base1,".top20DEgenes.heatmap.pdf"))
   heatmap_de <- sp_pheatmap(res_de_top20_expr, cluster_rows=T, scale="row",
                     annotation_col=sample, xtics_angle=90,
+                    cluster_cols = T,
+                    cutree_rows = 2,
+                    anno_cutree_rows = T,
                     filename=paste0(file_base1,".top20DEgenes.heatmap.pdf"))
 
   res_de_top20_expr2 <- data.frame(Gene=rownames(res_de_top20_expr), res_de_top20_expr)
-  res_de_top20_expr2 <- reshape2::melt(res_de_top20_expr2, id=c("Gene"))
+  res_de_top20_expr2 <- cbind(res_de_top20_expr2, res_de_top20_type)
+  res_de_top20_expr2 <- reshape2::melt(res_de_top20_expr2, id=c("Gene", "Type"))
 
-  colnames(res_de_top20_expr2) <- c("Gene", "Sample", "Expression")
-  print(res_de_top20)
-  res_de_top20_expr2$Gene <- factor(res_de_top20_expr2$Gene, levels=res_de_top20,
+  colnames(res_de_top20_expr2) <- c("Gene", "Type", "Sample", "Expression")
+  #print(res_de_top20_expr2)
+
+  res_de_top20_expr2_gene_level <- res_de_top20_expr2 %>%
+    select(Gene, Type, Expression) %>%
+    group_by(Type, Gene) %>%
+    summarise(mean=mean(Expression)) %>%
+    ungroup() %>%
+    arrange(Type, mean)
+  res_de_top20_expr2_gene_level <- res_de_top20_expr2_gene_level$Gene
+
+  res_de_top20_expr2$Gene <- factor(res_de_top20_expr2$Gene, levels=res_de_top20_expr2_gene_level,
                                     ordered = T)
 
   res_de_top20_expr2$Group <- sample[match(res_de_top20_expr2$Sample, rownames(sample)),design]
