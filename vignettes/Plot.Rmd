@@ -41,7 +41,13 @@ sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols =
 
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
             correlation_plot = "row", clustering_distance_rows="cao",
-            clustering_distance_cols = "minkowski")
+            clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
+            anno_cutree_cols = T)
+
+sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
+            correlation_plot = "row", clustering_distance_rows="cao",
+            clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
+            filename = "pheatmap.pdf")
 ```
 
 
@@ -95,6 +101,11 @@ annotation_col = data.frame(Count=c(1,2,4,8,16,32), row.names=colnames(exprTable
 
 sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
             annotation_row = annotation_row, annotation_col = annotation_col)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T)
 ```
 
 Reorder branches

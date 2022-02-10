@@ -119,6 +119,8 @@ draw_colnames_custom <-
 #' @param cluster_cols Hieratical cluster for columns. Default FALSE, accept TRUE.
 #' When there are less than 3 columns or more than 5000 columns, this parameter
 #' would always be set to FALSE.
+#' @param anno_cutree_cols Add column tree-cut results as column annotation.
+#' @param anno_cutree_rows Add row tree-cut results as row annotation.
 #' @param cluster_cols_variable Reorder branch order of clustered columns by given variable. (Test only)
 #' @param cluster_rows_variable Reorder branch order of clustered rows by given variable. (Test only)
 #' @param remove_cluster_cols_variable_in_annocol Do not show `cluster_cols_variable` in column annotation.
@@ -222,6 +224,8 @@ sp_pheatmap <- function(data,
                         manual_annotation_colors_sidebar = NULL,
                         cutree_cols = NA,
                         cutree_rows = NA,
+                        anno_cutree_cols = F,
+                        anno_cutree_rows = F,
                         kclu = NA,
                         ytics = TRUE,
                         xtics = TRUE,
@@ -662,6 +666,39 @@ sp_pheatmap <- function(data,
     }
   }
 
+  if (!is.na(cutree_rows)){
+    if(mode(cluster_rows_results) != "logical"){
+      data_row_cluster = as.data.frame(cutree(cluster_rows_results, cutree_rows))
+      colnames(data_row_cluster) <- "Row_cluster"
+      data_row_cluster$Row_cluster <- paste0("C", data_row_cluster$Row_cluster)
+    }
+  }
+
+  if (anno_cutree_rows){
+    if(is.na(annotation_row)){
+      annotation_row = data_row_cluster
+    } else {
+      print(annotation_row)
+      print(data_row_cluster)
+      annotation_row = cbind(annotation_row, data_row_cluster)
+    }
+  }
+
+  if (!is.na(cutree_cols)){
+    if(mode(cluster_cols_results) != "logical"){
+      data_col_cluster = as.data.frame(cutree(cluster_cols_results, cutree_cols))
+      colnames(data_col_cluster) <- "Col_cluster"
+      data_col_cluster$Col_cluster <- paste0("C", data_col_cluster$Col_cluster)
+    }
+  }
+
+  if (anno_cutree_cols){
+    if(is.na(annotation_col)){
+      annotation_col = data_col_cluster
+    } else {
+      annotation_col = cbind(annotation_col, data_col_cluster)
+    }
+  }
 
   if(!is.na(filename)){
 
@@ -669,10 +706,8 @@ sp_pheatmap <- function(data,
     sp_writeTable(data_order, file = paste0(filename, ".reordered.txt"))
 
     if (!is.na(cutree_rows)){
-      if(mode(cluster_rows_results) == "logical"){
-        data_row_cluster = data.frame(cutree(cluster_rows_results, cutree_rows))
-        colnames(data_row_cluster) <- "Cluster"
-        data_row_cluster <- data_row_cluster[row_order, ]
+      if(mode(cluster_rows_results) != "logical"){
+        data_row_cluster <- data_row_cluster[row_order, ,drop=F]
         sp_writeTable(
           data_row_cluster,
           file = paste0(filename, ".row_cluster.txt")
@@ -681,10 +716,8 @@ sp_pheatmap <- function(data,
     }
 
     if (!is.na(cutree_cols)){
-      if(mode(cluster_cols_results) == "logical"){
-        data_col_cluster = data.frame(cutree(cluster_cols_results, cutree_cols))
-        colnames(data_col_cluster) <- "Cluster"
-        data_col_cluster <- data_col_cluster[col_order, ]
+      if(mode(cluster_cols_results) != "logical"){
+        data_col_cluster <- data_col_cluster[col_order, , drop=F]
         sp_writeTable(
           data_col_cluster,
           file = paste0(filename, ".col_cluster.txt")
