@@ -50,7 +50,7 @@ draw_colnames_custom <-
     coord = find_coordinates(length(coln),  gaps)
     x = coord$coord - 0.5 * coord$size
 
-    vjust <- 0
+    vjust <- 0.5
     hjust <- 0.5
 
     if (xtics_angle == 90) {
@@ -69,8 +69,8 @@ draw_colnames_custom <-
       vjust <- 0
       hjust <- 0.5
     } else {
-      vjust <- .5
-      hjust <- 1
+      vjust <- 1
+      hjust <- 0.5
     }
     #else if (xtics_angle == 90) {
     #  hjust <- 1
@@ -664,16 +664,34 @@ sp_pheatmap <- function(data,
 
 
   if(!is.na(filename)){
+
     data_order = data[row_order, col_order]
-    data2 = data.frame(ID = rownames(data_order), data_order)
-    write.table(
-      data2,
-      file = paste0(filename, ".reordered.txt"),
-      sep = "\t",
-      quote = F,
-      col.names = T,
-      row.names = F
-    )
+    sp_writeTable(data_order, file = paste0(filename, ".reordered.txt"))
+
+    if (!is.na(cutree_rows)){
+      if(mode(cluster_rows_results) == "logical"){
+        data_row_cluster = data.frame(cutree(cluster_rows_results, cutree_rows))
+        colnames(data_row_cluster) <- "Cluster"
+        data_row_cluster <- data_row_cluster[row_order, ]
+        sp_writeTable(
+          data_row_cluster,
+          file = paste0(filename, ".row_cluster.txt")
+        )
+      }
+    }
+
+    if (!is.na(cutree_cols)){
+      if(mode(cluster_cols_results) == "logical"){
+        data_col_cluster = data.frame(cutree(cluster_cols_results, cutree_cols))
+        colnames(data_col_cluster) <- "Cluster"
+        data_col_cluster <- data_col_cluster[col_order, ]
+        sp_writeTable(
+          data_col_cluster,
+          file = paste0(filename, ".col_cluster.txt")
+        )
+      }
+    }
+
   }
 
 
