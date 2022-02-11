@@ -774,7 +774,7 @@ sp_pheatmap <- function(data,
   if (label_col_cluster_boundary) {
     # no reorder needed
     data_col_cluster <- data_col_cluster[col_order, , drop = F]
-    labels_col = data.frame(ID = colnames(data_col_cluster), data_col_cluster)  %>%
+    labels_col = data.frame(ID = rownames(data_col_cluster), data_col_cluster)  %>%
       group_by(Col_cluster) %>% slice_head(n=1) %>% ungroup()
 
     labels_col = data.frame(ID=colnames(data)) %>%
