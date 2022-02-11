@@ -225,7 +225,7 @@ sp_histogram <- function(data ,
       y_label = "Count"
     } else if (yaxis_statistics == "count/sum(count)") {
       y_label = "Frequency"
-    } else if (yaxis_statistics  == "density") {
+    } else if (yaxis_statistics  == "density" || plot_type == "density_line") {
       y_label = "Density"
     }
   }
