@@ -738,25 +738,21 @@ sp_pheatmap <- function(data,
 
     sp_writeTable(data_order, file = paste0(filename, ".reordered.txt"))
 
-    if (!is.na(cutree_rows)) {
-      if (mode(cluster_rows_results) != "logical") {
+    if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
         data_row_cluster <- data_row_cluster[row_order, , drop = F]
         sp_writeTable(data_row_cluster,
                       file = paste0(filename, ".row_cluster.txt"))
-      }
     }
 
-    if (!is.na(cutree_cols)) {
-      if (mode(cluster_cols_results) != "logical") {
+    if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical") {
         data_col_cluster <- data_col_cluster[col_order, , drop = F]
         sp_writeTable(data_col_cluster,
                       file = paste0(filename, ".col_cluster.txt"))
-      }
     }
 
   }
 
-  if (label_row_cluster_boundary) {
+  if (!is.na(cutree_rows) && label_row_cluster_boundary) {
     # no reorder needed
     data_row_cluster <- data_row_cluster[row_order, , drop = F]
     labels_row = data.frame(ID = rownames(data_row_cluster), data_row_cluster)  %>%
@@ -771,7 +767,7 @@ sp_pheatmap <- function(data,
 
   }
 
-  if (label_col_cluster_boundary) {
+  if (!is.na(cutree_cols) && label_col_cluster_boundary) {
     # no reorder needed
     data_col_cluster <- data_col_cluster[col_order, , drop = F]
     labels_col = data.frame(ID = rownames(data_col_cluster), data_col_cluster)  %>%
