@@ -55,7 +55,7 @@ draw_colnames_custom <-
 
     if (xtics_angle == 90) {
       hjust <- 1
-      vjust <- 0.5
+      vjust <- 0
     } else if (xtics_angle >= 180) {
       hjust <- 0.5
       vjust <- -0.5
@@ -66,11 +66,11 @@ draw_colnames_custom <-
       hjust <- 0.5
       vjust <- 0
     } else if (xtics_angle == 0) {
-      vjust <- 0
+      vjust <- 1
       hjust <- 0.5
     } else {
       vjust <- 1
-      hjust <- 0.5
+      hjust <- 1
     }
     #else if (xtics_angle == 90) {
     #  hjust <- 1
