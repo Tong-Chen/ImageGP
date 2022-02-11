@@ -752,7 +752,7 @@ sp_pheatmap <- function(data,
 
   }
 
-  if (!is.na(cutree_rows) && label_row_cluster_boundary) {
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical" && label_row_cluster_boundary) {
     # no reorder needed
     data_row_cluster <- data_row_cluster[row_order, , drop = F]
     labels_row = data.frame(ID = rownames(data_row_cluster), data_row_cluster)  %>%
@@ -767,7 +767,7 @@ sp_pheatmap <- function(data,
 
   }
 
-  if (!is.na(cutree_cols) && label_col_cluster_boundary) {
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical" && label_col_cluster_boundary) {
     # no reorder needed
     data_col_cluster <- data_col_cluster[col_order, , drop = F]
     labels_col = data.frame(ID = rownames(data_col_cluster), data_col_cluster)  %>%
