@@ -698,16 +698,14 @@ sp_pheatmap <- function(data,
     }
   }
 
-  if (!is.na(cutree_rows)) {
-    if (mode(cluster_rows_results) != "logical") {
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
       data_row_cluster = as.data.frame(cutree(cluster_rows_results, cutree_rows))
       colnames(data_row_cluster) <- "Row_cluster"
       data_row_cluster$Row_cluster <-
         paste0("C", data_row_cluster$Row_cluster)
-    }
   }
 
-  if (anno_cutree_rows) {
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical" && anno_cutree_rows) {
     if (is.na(annotation_row)) {
       annotation_row = data_row_cluster
     } else {
@@ -715,16 +713,14 @@ sp_pheatmap <- function(data,
     }
   }
 
-  if (!is.na(cutree_cols)) {
-    if (mode(cluster_cols_results) != "logical") {
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical") {
       data_col_cluster = as.data.frame(cutree(cluster_cols_results, cutree_cols))
       colnames(data_col_cluster) <- "Col_cluster"
       data_col_cluster$Col_cluster <-
         paste0("C", data_col_cluster$Col_cluster)
-    }
   }
 
-  if (anno_cutree_cols) {
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical" && anno_cutree_cols) {
     if (is.na(annotation_col)) {
       annotation_col = data_col_cluster
     } else {
