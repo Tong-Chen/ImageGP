@@ -775,7 +775,7 @@ sp_pheatmap <- function(data,
     # no reorder needed
     data_col_cluster <- data_col_cluster[col_order, , drop = F]
     labels_col = data.frame(ID = colnames(data_col_cluster), data_col_cluster)  %>%
-      group_by(col_cluster) %>% slice_head(n=1) %>% ungroup()
+      group_by(Col_cluster) %>% slice_head(n=1) %>% ungroup()
 
     labels_col = data.frame(ID=colnames(data)) %>%
       mutate(label = case_when(
