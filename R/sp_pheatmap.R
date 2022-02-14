@@ -422,8 +422,13 @@ sp_pheatmap <- function(data,
                   "minkowski")
 
   if (scale == "row") {
-    data_sd <- apply(data, 1, sd)
-    data <- data[data_sd != 0,]
+    if(ncol(data)>1){
+      data_sd <- apply(data, 1, sd)
+      data <- data[data_sd != 0,]
+    } else {
+      print("The scale parameter will be ignored.")
+    }
+
   }
 
   if (correlation_plot  %in% c("row", "Row")) {
@@ -468,10 +473,13 @@ sp_pheatmap <- function(data,
 
   #print(data)
   # filter abnormal lines
-  data_sd <- apply(data, 1, sd)
-  if (any(data_sd == 0)) {
-    stop("Wrong correlation method for this type of data. Please choose another method.")
+  if(ncol(data)>1){
+    data_sd <- apply(data, 1, sd)
+    if (any(data_sd == 0)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
   }
+
 
 
 
