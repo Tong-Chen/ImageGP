@@ -959,7 +959,7 @@ WGCNA_saveModuleAndMe <-
       row.names = F
     )
 
-    if (ncol(MEs_col) < 3) {
+    if (ncol(MEs_col) < 4) {
       return(MEs_col)
     }
 
@@ -1385,6 +1385,7 @@ WGCNA_moduleTraitPlot <-
     annotation_row = data.frame(Module=module_name, row.names = module_name)
     module_name_without_me = substring(module_name,3)
     names(module_name_without_me) = module_name
+    #print(as.data.frame(modTraitCor))
     sp_pheatmap(data=as.data.frame(modTraitCor), annotation_row = annotation_row,
                 display_numbers = textMatrix,
                 manual_annotation_colors_sidebar = list(Module=module_name_without_me),
