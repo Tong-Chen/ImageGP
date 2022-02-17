@@ -88,6 +88,11 @@ sp_pheatmap(exprTable, cluster_rows = T, logv="log2", manual_color_vector="YlOrR
 ### Heatmap add side color bars
 
 ```{r}
+library(dplyr)
+library(ImageGP)
+library(pheatmap)
+library(RColorBrewer)
+library(grid)
 exprTable <- read.table("exprTable.txt", sep="\t", row.names=1, header=T)
 # Row annotation
 # Can be a dataframe or a file
@@ -106,6 +111,16 @@ sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
             annotation_row = annotation_row, annotation_col = annotation_col,
             cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
             anno_cutree_cols = T)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = F,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T, label_row_cluster_boundary = T)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T, label_every_n_rowitems = 3)
 ```
 
 Reorder branches
@@ -810,11 +825,12 @@ suppressMessages(library("ggrepel"))
 suppressMessages(library("ggpubr"))
 suppressMessages(library("vegan"))
 suppressMessages(library("ggalt"))
+# devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
 suppressMessages(library("pairwiseAdonis"))
 
 pcoa_data = "pcoa.data"
 group_pcoa_data = "group_pcoa.data"
-sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", input_type = "distance_matrix") 
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", input_type = "distance_matrix", filename = "cpcoa.pdf") 
 
 sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", draw_ellipse = "no", input_type = "distance_matrix")
 
@@ -834,6 +850,13 @@ sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype",
         input_type = "distance_matrix", manual_color_vector="Set2", filename="pcoa.pdf") 
 ```
 
+```{r}
+pcoas <- sp_readTable("cpcoa.pdf.pcoas.txt", row.names = NULL)
+head(pcoas)
+
+sp_histogram(pcoas, melted = T, xvariable = "PCoA2", group_variable = "genotype", 
+             plot_type = "density_line")
+```
 
 ```{r}
 data = "otuabundance.txt"
