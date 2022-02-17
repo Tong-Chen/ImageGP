@@ -218,6 +218,7 @@ sp_pheatmap <- function(data,
                         annotation_col = NULL,
                         cluster_rows = FALSE,
                         cluster_cols = FALSE,
+                        display_numbers = F,
                         cluster_cols_variable = NULL,
                         cluster_rows_variable = NULL,
                         remove_cluster_cols_variable_in_annocol = FALSE,
@@ -509,6 +510,9 @@ sp_pheatmap <- function(data,
       height = height + 4
     }
 
+    if (all(class(display_numbers) == "logical") & display_numbers){
+      width = width * 2
+    }
 
     if (width < 8) {
       width = 8
@@ -856,6 +860,7 @@ sp_pheatmap <- function(data,
     filename = filename,
     width = width,
     height = height,
+    display_numbers = display_numbers,
     ...
   )
 
