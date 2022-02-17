@@ -499,6 +499,7 @@ twoGroupDEgenes <- function
                                     paste(groupA,"UP"),
                              ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
                                     paste(groupB,"UP"), "NoDiff")) , "NoDiff")
+
   res_output$level <- factor(res_output$level, levels = c(paste(groupA,"UP"),
                                                           paste(groupB,"UP"), "NoDiff"),
                              ordered = T)
