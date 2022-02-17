@@ -510,7 +510,7 @@ sp_pheatmap <- function(data,
       height = height + 4
     }
 
-    if (all(class(display_numbers) == "logical") & display_numbers){
+    if (all(class(display_numbers) == "logical") && display_numbers){
       width = width * 2
     }
 
