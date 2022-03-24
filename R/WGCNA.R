@@ -339,7 +339,7 @@ dataFilter <-
 #' @param rmVarZero Default TRUE. Remove genes with variance as 0. Normally for PCA or
 #' correlation analysis.
 #' @param noLessThan Specify the lowest number of genes to be kept. Default `NULL` meaning no lower limit.
-#' @param keep_filtere_as_others Get sums of all filtered items as an new item - Others. Default FALSE.
+#' @param keep_filtered_as_others Get sums of all filtered items as an new item - Others. Default FALSE.
 
 #' @return A dataframe.
 #' @export
@@ -356,7 +356,7 @@ dataFilter2 <-
            rmVarZero = T,
            noLessThan = NULL,
            statistical_value_type = mad,
-           keep_filtere_as_others = F) {
+           keep_filtered_as_others = F) {
     if(top_n == 1) {
       return(datExpr)
     }
@@ -395,24 +395,28 @@ dataFilter2 <-
       minimal_threshold <- m.mad.sorted[top_n]
     }
 
-    datExpr <- datExpr[which(m.mad >= minimal_threshold), ]
+    datExpr2 <- datExpr[which(m.mad >= minimal_threshold), ]
 
-    if(keep_filtere_as_others){
+    if(nrow(datExpr2)==0){
+      stop("ALl data are filtered. Please relax the filtering threshold.")
+    }
+
+    if(keep_filtered_as_others){
       datExprFiltered = datExpr[which(m.mad < minimal_threshold), ]
       if(nrow(datExprFiltered)>0){
         others <- colMeans(datExprFiltered)
-        datExpr <- rbind(datExpr, others)
-        rownames(datExpr)[nrow(datExpr)] = "Others"
+        datExpr2 <- rbind(datExpr2, others)
+        rownames(datExpr2)[nrow(datExpr2)] = "Others"
       }
-
     }
+
 
     if (rmVarZero) {
-      m.var <- apply(datExpr, 1, var)
-      datExpr <- datExpr[which(m.var > 0), ]
+      m.var <- apply(datExpr2, 1, var)
+      datExpr2 <- datExpr2[which(m.var > 0), ]
     }
 
-    return(datExpr)
+    return(datExpr2)
   }
 
 
