@@ -264,7 +264,8 @@ WGCNA_dataCheck <- function(datExpr, ...) {
 #' all genes).
 #' @param rmVarZero Default TRUE. Remove genes with variance as 0. Normally for PCA or
 #' correlation analysis.
-#' @param noLessThan Specify the lowest number of genes to be kept. Default `NULL` meaining no lower limit.
+#' @param noLessThan Specify the lowest number of genes to be kept. Default `NULL` meaning no lower limit.
+#' @param value_type Specify the way for statistical computation. Default mad, accept mean, var.
 #'
 #' @return A dataframe.
 #' @export
@@ -279,11 +280,23 @@ dataFilter <-
            minimal_mad = NULL,
            top_mad_n = 0.75,
            rmVarZero = T,
-           noLessThan = NULL) {
-    m.mad <- apply(datExpr, 1, mad)
+           noLessThan = NULL,
+           value_type = mad) {
+    if(mode(value_type) == "character"){
+      value_type = switch(
+        value_type,
+        mean = mean,
+        var = var,
+        mad = mad,
+        median = median,
+        sum = sum
+      )
+    }
+
+    m.mad <- apply(datExpr, 1, value_type)
 
     if (!sp.is.null(minimal_mad)) {
-      datExprVar <- datExpr[which(m.mda > minimal_mad), ]
+      datExpr <- datExpr[which(m.mad > minimal_mad), ]
     } else {
       datExpr <- datExpr[order(m.mad, decreasing = T), ]
       nGenes <- nrow(datExpr)
@@ -303,6 +316,95 @@ dataFilter <-
         top_mad_n = nGenes
       }
       datExpr <- datExpr[1:top_mad_n, ]
+    }
+
+    if (rmVarZero) {
+      m.var <- apply(datExpr, 1, var)
+      datExpr <- datExpr[which(m.var > 0), ]
+    }
+
+    return(datExpr)
+  }
+
+#' Filter low variance genes by given minimal \code{\link{mad}} or \code{\link{var}} or
+#' other statistical value or keep top
+#' number/percent genes with bigger variances.
+#'
+#' @inheritParams WGCNA_dataCheck
+#' @param statistical_value_type Specify the way for statistical computation. Default mad, accept mean, var, sum, median.
+#' @param minimal_threshold Minimal allowed statistical value.
+#' @param top_n An integer larger than 1 will be used to get top x genes (like top 5000).
+#' A float number less than 1 will be used to get top x fraction genes (like top 0.7 of
+#' all genes).
+#' @param rmVarZero Default TRUE. Remove genes with variance as 0. Normally for PCA or
+#' correlation analysis.
+#' @param noLessThan Specify the lowest number of genes to be kept. Default `NULL` meaning no lower limit.
+#' @param keep_filtere_as_others Get sums of all filtered items as an new item - Others. Default FALSE.
+
+#' @return A dataframe.
+#' @export
+#'
+#' @examples
+#'
+#' df = generateAbundanceDF(nSample=30, nGrp=3)
+#' dataFilter(df)
+#'
+dataFilter2 <-
+  function(datExpr,
+           minimal_threshold = NULL,
+           top_n = 0.75,
+           rmVarZero = T,
+           noLessThan = NULL,
+           statistical_value_type = mad,
+           keep_filtere_as_others = F) {
+    if(top_n == 1) {
+      return(datExpr)
+    }
+
+    nGenes <- nrow(datExpr)
+
+    if (top_n >= nGenes) {
+      return(datExpr)
+    }
+
+    if(mode(statistical_value_type) == "character"){
+      statistical_value_type = switch(
+        statistical_value_type,
+        mean = mean,
+        var = var,
+        mad = mad,
+        median = median,
+        sum = sum
+      )
+    }
+
+    m.mad <- apply(datExpr, 1, statistical_value_type)
+
+    if (sp.is.null(minimal_threshold)) {
+      m.mad.sorted <- sort(m.mad, decreasing = T)
+
+      if (top_n < 1) {
+        top_n = ceiling(nGenes * top_n)
+      }
+
+      if (!sp.is.null(noLessThan)) {
+        if (top_n < noLessThan) {
+          top_n = noLessThan
+        }
+      }
+      minimal_threshold <- m.mad.sorted[top_n]
+    }
+
+    datExpr <- datExpr[which(m.mad >= minimal_threshold), ]
+
+    if(keep_filtere_as_others){
+      datExprFiltered = datExpr[which(m.mad < minimal_threshold), ]
+      if(nrow(datExprFiltered)>0){
+        others <- colMeans(datExprFiltered)
+        datExpr <- rbind(datExpr, others)
+        rownames(datExpr)[nrow(datExpr)] = "Others"
+      }
+
     }
 
     if (rmVarZero) {
@@ -959,7 +1061,7 @@ WGCNA_saveModuleAndMe <-
       row.names = F
     )
 
-    if (ncol(MEs_col) < 3) {
+    if (ncol(MEs_col) < 4) {
       return(MEs_col)
     }
 
@@ -1258,7 +1360,7 @@ WGCNA_hubgene <- function(cyt,
     nodeTotalWeight[with(nodeTotalWeight, order(Module1,-weight)), ]
   #head(nodeTotalWeight)
 
-  nodeTotalWeightTop20 = nodeTotalWeight %>% dplyr::group_by(Module1) %>% dplyr::top_n(top_hub_n, weight)
+  nodeTotalWeightTop20 = nodeTotalWeight %>% dplyr::group_by(Module1) %>% dplyr::top_mad_n(top_hub_n, weight)
 
   colnames(edgeData1) <- c("Source", "Target", "Correlation")
   hub_edgeData = edgeData1[(edgeData1$Source %in% nodeTotalWeightTop20$Node1) &
@@ -1385,6 +1487,7 @@ WGCNA_moduleTraitPlot <-
     annotation_row = data.frame(Module=module_name, row.names = module_name)
     module_name_without_me = substring(module_name,3)
     names(module_name_without_me) = module_name
+    #print(as.data.frame(modTraitCor))
     sp_pheatmap(data=as.data.frame(modTraitCor), annotation_row = annotation_row,
                 display_numbers = textMatrix,
                 manual_annotation_colors_sidebar = list(Module=module_name_without_me),

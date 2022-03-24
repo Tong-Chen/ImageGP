@@ -1,4 +1,5 @@
 
+
 #' Pheatmap function only for inner usages
 #'
 #' @param n Nothing
@@ -50,23 +51,26 @@ draw_colnames_custom <-
     coord = find_coordinates(length(coln),  gaps)
     x = coord$coord - 0.5 * coord$size
 
-    vjust <- 0
+    vjust <- 0.5
     hjust <- 0.5
 
     if (xtics_angle == 90) {
       hjust <- 1
-      vjust <- 0.5
+      vjust <- 0
     } else if (xtics_angle >= 180) {
       hjust <- 0.5
       vjust <- -0.5
     } else if (xtics_angle >= 200) {
       hjust <- 0.5
       vjust <- -1
+    } else if (xtics_angle == 250) {
+      hjust <- 0.5
+      vjust <- 0
     } else if (xtics_angle == 0) {
       vjust <- 1
       hjust <- 0.5
     } else {
-      vjust <- .5
+      vjust <- 1
       hjust <- 1
     }
     #else if (xtics_angle == 90) {
@@ -116,6 +120,20 @@ draw_colnames_custom <-
 #' @param cluster_cols Hieratical cluster for columns. Default FALSE, accept TRUE.
 #' When there are less than 3 columns or more than 5000 columns, this parameter
 #' would always be set to FALSE.
+#' @param anno_cutree_cols Add column tree-cut results as column annotation.
+#' @param anno_cutree_rows Add row tree-cut results as row annotation.
+#' @param label_row_cluster_boundary Only display labels of row cluster boundary (w)
+#' (the first item in cluster start).
+#' @param label_col_cluster_boundary Only display labels of column cluster boundary (x)
+#' (the first item in cluster start).
+#' @param label_every_n_rowitems Label every n row items (n>1).
+#' (Default 1 means labeling all row items. Supplying a large number when there are many rows to
+#' label only few rows. For a data matrix with 1000 rows, giving 10 here,
+#' will only label 10 genes, the 1st, 11st, 21st, ... 91st) (y)
+#' @param label_every_n_colitems Label every n column items (n>1) (Z)
+#' (Default 1 means labeling all column items. Supplying a large number when there are many columns to
+#' label only few columns. For a data matrix with 1000 columns, giving 10 here,
+#' will only label 10 genes, the 1st, 11st, 21st, ... 91st)
 #' @param cluster_cols_variable Reorder branch order of clustered columns by given variable. (Test only)
 #' @param cluster_rows_variable Reorder branch order of clustered rows by given variable. (Test only)
 #' @param remove_cluster_cols_variable_in_annocol Do not show `cluster_cols_variable` in column annotation.
@@ -126,11 +144,11 @@ draw_colnames_custom <-
 #' @param clustering_distance_rows Clustering distance method for rows.
 #' Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 #' "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".
+#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)
 #' @param clustering_distance_cols Clustering distance method for cols.
 #' Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 #' "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
-#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis".
+#'  "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)
 #' @param breaks A sequence of numbers that covers the range of values in mat and
 #' is one element longer than color vector. Used for mapping values to colors.
 #' Useful, if needed to map certain values to certain colors, to certain values.
@@ -147,6 +165,7 @@ draw_colnames_custom <-
 #' row correlation or column correlation.
 #' @param xtics_angle Rotation angle for x-axis value. Default 0.
 #' @inheritParams sp_boxplot
+#' @inheritParams dataFilter2
 #' @param fontsize Font size. Default 14.
 #' @param manual_annotation_colors_sidebar Annotation color. One can only specify color for each column of
 #' row-annotatation or col-annotation. For example,
@@ -193,6 +212,8 @@ draw_colnames_custom <-
 sp_pheatmap <- function(data,
                         filename = NA,
                         renameDuplicateRowNames = F,
+                        top_n = 1,
+                        statistical_value_type = mad,
                         logv = NULL,
                         log_add = 0,
                         scale = 'none',
@@ -200,6 +221,7 @@ sp_pheatmap <- function(data,
                         annotation_col = NULL,
                         cluster_rows = FALSE,
                         cluster_cols = FALSE,
+                        display_numbers = F,
                         cluster_cols_variable = NULL,
                         cluster_rows_variable = NULL,
                         remove_cluster_cols_variable_in_annocol = FALSE,
@@ -207,6 +229,10 @@ sp_pheatmap <- function(data,
                         clustering_method = 'complete',
                         clustering_distance_rows = 'pearson',
                         clustering_distance_cols = 'pearson',
+                        label_row_cluster_boundary = FALSE,
+                        label_col_cluster_boundary = FALSE,
+                        label_every_n_rowitems = 1,
+                        label_every_n_colitems = 1,
                         breaks = NA,
                         breaks_mid = NULL,
                         breaks_digits = 2,
@@ -219,6 +245,8 @@ sp_pheatmap <- function(data,
                         manual_annotation_colors_sidebar = NULL,
                         cutree_cols = NA,
                         cutree_rows = NA,
+                        anno_cutree_cols = F,
+                        anno_cutree_rows = F,
                         kclu = NA,
                         ytics = TRUE,
                         xtics = TRUE,
@@ -235,6 +263,8 @@ sp_pheatmap <- function(data,
     print(argg)
   }
 
+  labels_row = NULL
+  labels_col = NULL
 
   # Overwrite default draw_colnames with your own version
   assignInNamespace(x = "draw_colnames",
@@ -250,7 +280,7 @@ sp_pheatmap <- function(data,
       sp_readTable(data,
                    row.names = 1,
                    renameDuplicateRowNames = renameDuplicateRowNames)
-  } else if(class(data) != "data.frame"){
+  } else if (class(data) != "data.frame") {
     stop("Unknown input format for `data` parameter.")
   }
 
@@ -274,12 +304,14 @@ sp_pheatmap <- function(data,
     stop(paste(non_numeric_col, "contains non-numeric values."))
   }
 
+  data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
+
   if (!sp.is.null(logv)) {
     if (log_add == 0) {
       log_add = sp_determine_log_add(data)
     }
     # Transfer string to R code
-    data <- eval(parse(text=logv))(data + log_add)
+    data <- eval(parse(text = logv))(data + log_add)
   }
 
   if (!sp.is.null(manual_color_vector)) {
@@ -345,12 +377,14 @@ sp_pheatmap <- function(data,
         annotation_row[match(rownames(data), rownames(annotation_row)), , drop =
                          F]
     }
-    if(!sp.is.null(cluster_rows_variable)){
-      if (!cluster_rows_variable %in% colnames(annotation_row) ) {
-        stop(paste(
-          cluster_rows_variable,
-          'must be one of column names of row annotation matrix!'
-        ))
+    if (!sp.is.null(cluster_rows_variable)) {
+      if (!cluster_rows_variable %in% colnames(annotation_row)) {
+        stop(
+          paste(
+            cluster_rows_variable,
+            'must be one of column names of row annotation matrix!'
+          )
+        )
       }
     }
   } else {
@@ -365,12 +399,14 @@ sp_pheatmap <- function(data,
                          F]
     }
 
-    if(!sp.is.null(cluster_cols_variable)){
-      if (!cluster_cols_variable %in% colnames(annotation_col) ) {
-        stop(paste(
-          cluster_cols_variable,
-          'must be one of column names of column annotation matrix!'
-        ))
+    if (!sp.is.null(cluster_cols_variable)) {
+      if (!cluster_cols_variable %in% colnames(annotation_col)) {
+        stop(
+          paste(
+            cluster_cols_variable,
+            'must be one of column names of column annotation matrix!'
+          )
+        )
       }
     }
 
@@ -384,25 +420,41 @@ sp_pheatmap <- function(data,
   }
 
   cor_data = F
+  dist_method = c('euclidean',
+                  "manhattan",
+                  "maximum",
+                  "canberra",
+                  "binary",
+                  "minkowski")
 
-  if(scale == "row"){
-    data_sd <- apply(data, 1, sd)
-    data <- data[data_sd != 0, ]
+  if (scale == "row") {
+    if(ncol(data)>1){
+      data_sd <- apply(data, 1, sd)
+      data <- data[data_sd != 0,]
+    } else {
+      print("The scale parameter will be ignored.")
+    }
+
   }
 
-  if (correlation_plot  == "row" || correlation_plot  == "Row") {
+  if (correlation_plot  %in% c("row", "Row")) {
     if (clustering_distance_rows  == "pearson") {
       row_cor = cor(t(data))
     } else if (clustering_distance_rows  == "spearman") {
       row_cor = cor(t(data), method = "spearman")
     } else {
-      row_cor = as.data.frame(as.matrix(dist(data,
-                                             method = clustering_distance_rows)))
+      if (clustering_distance_rows %in% dist_method) {
+        row_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
+      } else {
+        row_cor = as.data.frame(as.matrix(
+          vegan::vegdist(data, method = clustering_distance_rows)
+        ))
+      }
     }
-    data = round(row_cor, 2)
+    data = round(row_cor, 3)
     annotation_col = annotation_row
     cor_data = T
-  } else if (correlation_plot == "col"  || correlation_plot  == "Column") {
+  } else if (correlation_plot %in% c("col", "Column")) {
     # Do not know why add this!
     # Comment out
     # data_mad <- apply(data, 1, mad)
@@ -412,13 +464,28 @@ sp_pheatmap <- function(data,
     } else if (clustering_distance_cols == "spearman") {
       col_cor = cor(data, method = "spearman")
     }  else {
-      col_cor = as.data.frame(as.matrix(dist(t(data),
-                                             method = clustering_distance_cols)))
+      if (clustering_distance_cols %in% dist_method) {
+        col_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
+      } else {
+        col_cor = as.data.frame(as.matrix(
+          vegan::vegdist(data, method = clustering_distance_rows)
+        ))
+      }
     }
-    data = round(col_cor, 2)
+    data = round(col_cor, 3)
     cor_data = T
     annotation_row = annotation_col
   }
+
+  #print(data)
+  # filter abnormal lines
+  if(ncol(data)>1){
+    data_sd <- apply(data, 1, sd)
+    if (any(data_sd == 0)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
+  }
+
 
 
 
@@ -430,23 +497,23 @@ sp_pheatmap <- function(data,
       width = width * 1.5
     }
 
-  if (class(annotation_row) == "data.frame") {
-    width = width + ncol(annotation_row)
-    width = width * 1.1
-  }
+    if (class(annotation_row) == "data.frame") {
+      width = width + ncol(annotation_row)
+      width = width * 1.1
+    }
 
-  if (class(annotation_col) == "data.frame") {
-    height = height + ncol(annotation_col)
-    width = width * 1.1
-  }
+    if (class(annotation_col) == "data.frame") {
+      height = height + ncol(annotation_col)
+      width = width * 1.1
+    }
 
-  if (cluster_rows) {
-    width = width + 4
-  }
+    if (cluster_rows) {
+      width = width + 4
+    }
 
-  if (cluster_cols) {
-    height = height + 4
-  }
+    if (cluster_cols) {
+      height = height + 4
+    }
 
 
     if (width < 8) {
@@ -467,6 +534,11 @@ sp_pheatmap <- function(data,
       height = 11 + (height - 20) / 5
     } else {
       height = 30
+    }
+
+    if (all(class(display_numbers) == "logical") && display_numbers){
+      width = width * 2
+      height = height * 1.2
     }
   }
 
@@ -545,11 +617,10 @@ sp_pheatmap <- function(data,
       }
     } else {
       if (!cor_data) {
-        dist_method = c('euclidean', "manhattan", "maximum", "canberra", "binary", "minkowski")
-        if (clustering_distance_rows %in% dist_method){
-        row_dist = dist(data, method = clustering_distance_rows)
+        if (clustering_distance_rows %in% dist_method) {
+          row_dist = dist(data, method = clustering_distance_rows)
         } else {
-          row_dist = vegdist(data, method = clustering_distance_rows)
+          row_dist = vegan::vegdist(data, method = clustering_distance_rows)
         }
       } else {
         row_cor = data
@@ -561,20 +632,20 @@ sp_pheatmap <- function(data,
     }
     cluster_rows_results = hclust(row_dist, method = clustering_method)
 
-    if(sp.is.null(cluster_rows_variable)){
-      sv = svd(data)$v[,1]
+    if (sp.is.null(cluster_rows_variable)) {
+      sv = svd(data)$v[, 1]
     } else {
       sv = annotation_row[[cluster_rows_variable]]
-      if(remove_cluster_rows_variable_in_annorow){
+      if (remove_cluster_rows_variable_in_annorow) {
         annotation_row[[cluster_rows_variable]] <- NULL
       }
-      if(length(annotation_row)==0){
+      if (length(annotation_row) == 0) {
         annotation_row = NULL
       }
     }
 
     #print(sv)
-    dend = reorder(as.dendrogram(cluster_rows_results), wts=sv)
+    dend = reorder(as.dendrogram(cluster_rows_results), wts = sv)
     cluster_rows_results <- as.hclust(dend)
     row_order = cluster_rows_results$order
   }
@@ -602,11 +673,10 @@ sp_pheatmap <- function(data,
       }
     } else {
       if (!cor_data) {
-        dist_method = c('euclidean', "manhattan", "maximum", "canberra", "binary", "minkowski")
-        if (clustering_distance_cols %in% dist_method){
+        if (clustering_distance_cols %in% dist_method) {
           col_dist = dist(t(data), method = clustering_distance_cols)
         } else {
-          col_dist = vegdist(t(data), method = clustering_distance_cols)
+          col_dist = vegan::vegdist(t(data), method = clustering_distance_cols)
         }
       } else {
         col_cor = data
@@ -617,27 +687,27 @@ sp_pheatmap <- function(data,
       }
     }
     cluster_cols_results = hclust(col_dist, method = clustering_method)
-    if(sp.is.null(cluster_cols_variable)){
-      sv = svd(data)$v[,1]
+    if (sp.is.null(cluster_cols_variable)) {
+      sv = svd(data)$v[, 1]
     } else {
       sv = annotation_col[[cluster_cols_variable]]
 
-      if(remove_cluster_cols_variable_in_annocol){
+      if (remove_cluster_cols_variable_in_annocol) {
         annotation_col[[cluster_cols_variable]] <- NULL
       }
-      if(length(annotation_col) == 0){
+      if (length(annotation_col) == 0) {
         annotation_col = NULL
       }
     }
 
-    dend = reorder(as.dendrogram(cluster_cols_results), wts=sv)
+    dend = reorder(as.dendrogram(cluster_cols_results), wts = sv)
     cluster_cols_results <- as.hclust(dend)
 
     col_order = cluster_cols_results$order
   }
 
 
-  if (correlation_plot!="None") {
+  if (correlation_plot != "None") {
     if (cluster_rows) {
       cluster_cols_results = cluster_rows_results
       col_order = row_order
@@ -647,19 +717,124 @@ sp_pheatmap <- function(data,
     }
   }
 
-
-  if(!is.na(filename)){
-    data_order = data[row_order, col_order]
-    data2 = data.frame(ID = rownames(data_order), data_order)
-    write.table(
-      data2,
-      file = paste0(filename, ".reordered.txt"),
-      sep = "\t",
-      quote = F,
-      col.names = T,
-      row.names = F
-    )
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
+      data_row_cluster = as.data.frame(cutree(cluster_rows_results, cutree_rows))
+      colnames(data_row_cluster) <- "Row_cluster"
+      data_row_cluster$Row_cluster <-
+        paste0("C", data_row_cluster$Row_cluster)
   }
+
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical" && anno_cutree_rows) {
+    if (is.na(annotation_row)) {
+      annotation_row = data_row_cluster
+    } else {
+      annotation_row = cbind(annotation_row, data_row_cluster)
+    }
+  }
+
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical") {
+      data_col_cluster = as.data.frame(cutree(cluster_cols_results, cutree_cols))
+      colnames(data_col_cluster) <- "Col_cluster"
+      data_col_cluster$Col_cluster <-
+        paste0("C", data_col_cluster$Col_cluster)
+  }
+
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical" && anno_cutree_cols) {
+    if (is.na(annotation_col)) {
+      annotation_col = data_col_cluster
+    } else {
+      annotation_col = cbind(annotation_col, data_col_cluster)
+    }
+  }
+
+  data_order = data[row_order, col_order]
+
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
+    data_row_cluster <- data_row_cluster[row_order, , drop = F]
+  }
+
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical") {
+    data_col_cluster <- data_col_cluster[col_order, , drop = F]
+  }
+
+  if (!is.na(filename)) {
+
+    sp_writeTable(data_order, file = paste0(filename, ".reordered.txt"))
+
+    if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
+        sp_writeTable(data_row_cluster,
+                      file = paste0(filename, ".row_cluster.txt"))
+    }
+
+    if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical") {
+        sp_writeTable(data_col_cluster,
+                      file = paste0(filename, ".col_cluster.txt"))
+    }
+
+  }
+
+  if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical" && label_row_cluster_boundary) {
+    # no reorder needed
+    #data_row_cluster <- data_row_cluster[row_order, , drop = F]
+    labels_row = data.frame(ID = rownames(data_row_cluster), data_row_cluster)  %>%
+      group_by(Row_cluster) %>% slice_head(n=1) %>% ungroup()
+
+    labels_row = data.frame(ID=rownames(data)) %>%
+      mutate(label = case_when(
+        ID %in% labels_row$ID ~ ID,
+        TRUE ~ ""))
+
+    labels_row = as.vector(labels_row$label)
+
+  }
+
+  if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical" && label_col_cluster_boundary) {
+    # no reorder needed
+    #data_col_cluster <- data_col_cluster[col_order, , drop = F]
+    labels_col = data.frame(ID = rownames(data_col_cluster), data_col_cluster)  %>%
+      group_by(Col_cluster) %>% slice_head(n=1) %>% ungroup()
+
+    labels_col = data.frame(ID=colnames(data)) %>%
+      mutate(label = case_when(
+        ID %in% labels_col$ID ~ ID,
+        TRUE ~ ""))
+
+    labels_col = as.vector(labels_col$label)
+  }
+
+  if (label_every_n_colitems > 1) {
+    # # no reorder needed
+    labels_col = data.frame(ID = colnames(data_order)) %>%
+      mutate(R = 1:n(),
+             label = case_when(R %% label_every_n_colitems == 1 ~ ID,
+                               #R == n() ~ ID,
+                               TRUE ~ "")) %>%
+      filter(label!="")
+
+    labels_col = data.frame(ID=colnames(data)) %>%
+      mutate(label = case_when(
+        ID %in% labels_col$ID ~ ID,
+        TRUE ~ ""))
+    labels_col = as.vector(labels_col$label)
+  }
+
+  if (label_every_n_rowitems > 1) {
+    # # no reorder needed
+    labels_row = data.frame(ID = rownames(data_order)) %>%
+      mutate(R = 1:n(),
+             label = case_when(R %% label_every_n_rowitems == 1 ~ ID,
+                               #R == n() ~ ID,
+                               TRUE ~ "")) %>%
+      filter(label!="")
+
+    labels_row = data.frame(ID=rownames(data)) %>%
+      mutate(label = case_when(
+        ID %in% labels_row$ID ~ ID,
+        TRUE ~ ""))
+    labels_row = as.vector(labels_row$label)
+  }
+
+
 
 
   gt <- pheatmap::pheatmap(
@@ -682,6 +857,8 @@ sp_pheatmap <- function(data,
     clustering_distance_cols = clustering_distance_cols ,
     show_rownames = ytics ,
     show_colnames = xtics ,
+    labels_row = labels_row,
+    labels_col = labels_col,
     main = title ,
     annotation_col = annotation_col,
     annotation_row = annotation_row,
@@ -690,10 +867,12 @@ sp_pheatmap <- function(data,
     filename = filename,
     width = width,
     height = height,
+    display_numbers = display_numbers,
     ...
   )
 
-  if (saveppt){
-  eoffice::topptx(gt, filename = paste0(filename,".pptx"))
+  if (saveppt) {
+    eoffice::topptx(gt, filename = paste0(filename, ".pptx"))
   }
+  gt
 }

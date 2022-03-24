@@ -8,13 +8,13 @@
 #' @param xvariable_order The order for x-axis when `xvariable`s are text. Default alphabetical order,
 #' accept a string like `c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC')`.
 #' @param yvariable_order The order for y-axis when `yvariable`s are text. Default alphabetical order,
-#' accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
+#' accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
 #' @param color_variable The variable for point color. Optional, such as `color` (one of column names).
 #' @param color_variable_order The order for color variable. Default alphabetical order,
-#' accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
+#' accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
 #' @param shape_variable The variable for point shape. Optional, such as `shape` (one of column names).
 #' @param shape_variable_order The order for shape variable. Default alphabetical order,
-#' accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
+#' accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').
 #' @inheritParams sp_manual_color_ggplot2
 #' @param log_variables Get log-transformed data for given variable. Default NULL, means no log10 transform.
 #' Accept a vector like `c('color')` (one or several of column names) to get (-1) * log10(color).
@@ -31,6 +31,7 @@
 #' @param jitter_text Make point labels not overlap. Default FALSE.
 #' @param title Title of picture. Default empty title.
 #' @param label_font_size Label font size. Default system default. Accept a number.
+#' Supplying numbers less than 5 to shrink fonts.
 #' @param scale_y_way The way to scale Y-axis like `scale_y_log10`, `coord_trans(y="log10")`,
 #' `scale_y_continuous(trans="log2")`, `coord_trans(y="log2")`.
 #' @param smooth_method The smooth method one wants to use, eg. auto, lm, glm, gam, loess, rlm.
@@ -50,6 +51,14 @@
 #' @export
 #' @examples
 #'
+#' library(plyr)
+#' library(ggplot2)
+#' library(grid)
+#' library(ggbeeswarm)
+#' library(ggrepel)
+#' library(htmlwidgets)
+#' library(plotly)
+#' library(ImageGP)
 #' scatter_test_data <- data.frame(Samp = letters[1:6], Color = sample(c("group1", "group2", "group3"),6,replace = TRUE),
 #' X_val = runif(6), Y_val = runif(6), Size = sample(4:20, size = 6),
 #' Shape = sample(c("cluster1","cluster2"),6,replace = TRUE))
@@ -155,10 +164,9 @@ sp_scatterplot <- function (data,
     if (!(shape_variable %in% data_colnames)) {
       stop(paste(shape_variable, 'must be column names of data!'))
     }
-    shape_level <- length(unique(data[[shape_variable]]))
-    shapes = (1:shape_level) %% 30
-
-    data = sp_set_factor_order(data, color_variable, color_variable_order)
+	  data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+	  data[[shape_variable]] <- as.factor(data[[shape_variable]])
+	  shapes <- generate_shapes(data, shape_variable)
   }
 
 
@@ -217,12 +225,10 @@ sp_scatterplot <- function (data,
 
   if (!sp.is.null(shape_variable)) {
     shape_variable_en = sym(shape_variable)
-    p <- p + aes(shape = !!shape_variable_en)
-
-    if (shape_level > 6) {
-      p <- p + scale_shape_manual(values = shapes)
+    p <- p + aes(shape = !!shape_variable_en) +
+      scale_shape_manual(values = shapes)
     }
-  }
+
 
 
   if (!sp.is.null(label_variable)) {

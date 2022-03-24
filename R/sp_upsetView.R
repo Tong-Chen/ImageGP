@@ -40,6 +40,7 @@
 #' @param queries_bar1 Specifies an intersection. Changes the column color.
 #' @param queries_bar1_color Input color. Specifies an intersection to use this color.
 #' @param pointsize Point size. Default 8.
+#' @param maxsets Maximum allowed number of sets. Default 100.
 #' @param keep_empty Keep empty intersections. Default FALSE. Accept TRUE to remove empty intersections.
 #' @inheritParams base_plot_save
 #' @param ... Other parameters given to `base_plot_save`
@@ -77,6 +78,7 @@ sp_upsetview <- function (data,
                           saveplot = NULL,
                           debug = FALSE,
                           saveppt = FALSE,
+						  maxsets = 100,
                           main_bar_color_vector = "gray23",
                           constantColor =T,
                           ...) {
@@ -125,7 +127,9 @@ sp_upsetview <- function (data,
 
   nsets = dim(data)[2] - 1
   
-  
+  if(nsets>maxsets){
+  	stop(paste0("Your fileformat maybe wrong. It is almost meaningless for interactions among more than ", maxsets, "sets."))
+  } 
 
   if (keep_empty) {
     keep_empty = 'on'

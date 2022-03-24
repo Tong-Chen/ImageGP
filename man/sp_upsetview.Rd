@@ -24,6 +24,7 @@ sp_upsetview(
   saveplot = NULL,
   debug = FALSE,
   saveppt = FALSE,
+  maxsets = 100,
   main_bar_color_vector = "gray23",
   constantColor = T,
   ...
@@ -58,6 +59,8 @@ sp_upsetview(
 \item{queries_bar1_color}{Input color. Specifies an intersection to use this color.}
 
 \item{saveplot}{Save plot to given file "a.pdf", "b.png".}
+
+\item{maxsets}{Maximum allowed number of sets. Default 100.}
 
 \item{...}{Other parameters given to \code{base_plot_save}}
 }

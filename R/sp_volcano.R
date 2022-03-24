@@ -1,3 +1,4 @@
+
 # Some useful keyboard shortcuts for package authoring:
 #
 #   Build and Reload Package:  'Ctrl + Shift + B'
@@ -77,7 +78,7 @@ sp_volcano_plot <-
            point_label_var = NULL,
            log2fc_symmetry = TRUE,
            alpha = NA,
-           point_size = NA,
+           point_size = NULL,
            extra_ggplot2_cmd = NULL,
            filename = NULL,
            xtics_angle = 0,
@@ -221,16 +222,18 @@ sp_volcano_plot <-
       ggplot(data = data, aes(x = !!log2fc_var_en, y = !!fdr_var_en,
                                color = !!status_col_var_en))
 
-    p <-
-      p + geom_point() + scale_color_manual(values = point_color_vector)
-
-    if (!is.na(point_size)) {
+    if(!sp.is.null(point_size)){
       if(is.numeric(point_size)){
-        p <- p + aes(size = point_size) + guides(size = F)
-      } else {
-        p <- p + aes(size = !!sym(point_size))
+        p <- p + geom_point(size=point_size)
+      }else{
+        p <- p + geom_point() + aes(size = !!sym(point_size))
       }
+    } else {
+      p <- p + geom_point()
     }
+
+    p <- p + scale_color_manual(values = point_color_vector)
+
 
     if (!is.na(alpha)) {
       p <- p + aes(alpha = alpha) + guides(alpha = F)
@@ -279,20 +282,23 @@ sp_volcano_plot <-
       }
       #print(head(data.l))
       if (dim(data.l)[1]>0){
+        #print("here")
         label_en = sym(point_label_var)
         checkAndInstallPackages(list(packages1=c("ggrepel")))
         suppressPackageStartupMessages(library(ggrepel))
         p <-
           p + geom_text_repel(
             data = data.l,
-            aes(
+            mapping = aes(
               x = !!log2fc_var_en,
               y = !!fdr_var_en,
               label = !!label_en
             ),
+            box.padding = unit(0.35, "lines"),
+            point.padding = unit(0.3, "lines"),
+            max.overlaps = 200,
             colour = "black",
-            show.legend = F,
-            min.segment.length = unit(0, 'lines')
+            show.legend = F
           )
       }
     }
@@ -335,7 +341,8 @@ sp_volcano_plot <-
                           title = title,
                           coordinate_flip = coordinate_flip,
                   ...)
-    p
+    return(p)
 
   }
+
 

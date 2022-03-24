@@ -1,5 +1,6 @@
 
 
+
 # Some useful keyboard shortcuts for package authoring:
 #
 #   Build and Reload Package:  'Ctrl + Shift + B'
@@ -49,6 +50,42 @@ checkAndInstallPackages <-
     suppressPackageStartupMessages(library(package_name, character.only = TRUE))
   }
 
+
+#' Extract same rows of two data.frame with same order.
+#'
+#' @param df1 Dataframe 1
+#' @param df2 Dataframe 2
+#' @param way `row-row (default)`: Extract same rows of two data.frame with same order.
+#'            `col-row`: Extarct same columns in df1 with rows in df2 and with same order
+#'
+#' @return A list in format like list(df1=df1, df2=df2)
+#' @export
+#'
+#' @examples
+#'
+#'
+match_two_df <- function(df1, df2, way="row-row"){
+  if (way == "row-row"){
+    df1_rownameL <- rownames(df1)
+    df2_rownameL <- rownames(df2)
+
+    common_rownameL <- intersect(df1_rownameL, df2_rownameL)
+
+    # 保证表达表样品与df2样品顺序和数目完全一致
+    df1 <- df1[common_rownameL,,drop=F]
+    df2 <- df2[common_rownameL,,drop=F]
+  } else {
+    df1_colnameL <- colnames(df1)
+    df2_rownameL <- rownames(df2)
+
+    common_rownameL <- intersect(df1_colnameL, df2_rownameL)
+
+    # 保证表达表样品与df2样品顺序和数目完全一致
+    df1 <- df1[,common_rownameL,drop=F]
+    df2 <- df2[common_rownameL,,drop=F]
+  }
+  return(list(df1=df1, df2=df2))
+}
 
 #' Get current time in strign format
 #'
@@ -166,6 +203,7 @@ sp_readTable <-
            comment = "",
            check.names = F,
            renameDuplicateRowNames = F,
+           stringsAsFactors = T,
            ...) {
     if (renameDuplicateRowNames) {
       data <- read.table(
@@ -176,6 +214,7 @@ sp_readTable <-
         quote = quote,
         comment = comment,
         check.names = check.names,
+        stringsAsFactors = stringsAsFactors,
         ...
       )
       if (!is.numeric(as.vector(data[, 1]))){
@@ -196,6 +235,7 @@ sp_readTable <-
           quote = quote,
           comment = comment,
           check.names = check.names,
+          stringsAsFactors = stringsAsFactors,
           ...
         )
     }
@@ -601,7 +641,7 @@ sp_set_factor_order <-
         variable_order <- sort(mixedToFloat(variable_order))
         data <- data[data[[variable]]>=variable_order[1] & data[[variable]]<=variable_order[2], ,drop=F]
         if(nrow(data)==0){
-          stop(paste0("No data avaiable after filtering by column <", variable, "> with <", 
+          stop(paste0("No data avaiable after filtering by column <", variable, "> with <",
                       paste(variable_order, collapse=","),">"))
         }
       }
@@ -875,6 +915,28 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted){
   invisible(list(data=data, wide_rownames=wide_rownames, wide_colnames=wide_colnames))
 }
 
+
+#' Generate shape symbols for large number of groups for ggplot2
+#'
+#' @param data A data frame
+#' @param shape_variable The variable treated as shape groups
+#'
+#' @return A vector contains all group symbols
+#' @export
+#'
+#' @examples
+#'
+#' # Not run
+#'
+generate_shapes <- function(data, shape_variable){
+  shape_level <- nlevels(data[[shape_variable]])
+  if (shape_level < 15){
+    shapes = (0:shape_level) %% 15
+  } else{
+    shapes = c(0:14,c((15:shape_level) %% 110 + 18))
+  }
+}
+
 #' Use showtext to load fonts
 #'
 #' @param font_path Specify font type. Give a path for one font type file
@@ -1086,6 +1148,7 @@ sp_ggplot_layout <-
       htmlwidgets::saveWidget(as.widget(plot_p), paste0(filename,".index.html"))
       }
     }
+    p
   }
 
 #' Get the x, y limits of a ggplot2 plot

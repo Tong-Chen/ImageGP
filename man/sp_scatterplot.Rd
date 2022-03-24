@@ -58,13 +58,13 @@ sp_scatterplot(
 accept a string like \code{c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC')}.}
 
 \item{yvariable_order}{The order for y-axis when \code{yvariable}s are text. Default alphabetical order,
-accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
+accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
 
 \item{color_variable_order}{The order for color variable. Default alphabetical order,
-accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
+accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
 
 \item{shape_variable_order}{The order for shape variable. Default alphabetical order,
-accept a string like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
+accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
 
 \item{manual_color_vector}{Manually set colors for each geom.
 Default NULL, meaning using ggplot2 default.
@@ -123,7 +123,8 @@ or represents group information to avoid point overlaps. Default FALSE.}
 
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
 
-\item{label_font_size}{Label font size. Default system default. Accept a number.}
+\item{label_font_size}{Label font size. Default system default. Accept a number.
+Supplying numbers less than 5 to shrink fonts.}
 
 \item{facet}{Wrap plots by given column. This is used to put multiple plot
 in one picture. Used when \code{melted} is FALSE, normally a string \code{set} (one of column names)

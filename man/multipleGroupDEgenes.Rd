@@ -12,6 +12,7 @@ multipleGroupDEgenes(
   log2FC = 1,
   dropCol = c("lfcSE", "stat"),
   output_prefix = "ehbio",
+  normalized_counts = NULL,
   ...
 )
 }
@@ -36,6 +37,8 @@ Other options \code{"ID", "baseMean", "log2FoldChange", "lfcSE", "stat", "pvalue
 This has no specific usages except make the table clearer.}
 
 \item{output_prefix}{A string as prefix of output files.}
+
+\item{normalized_counts}{a data matrix of normalized counts or an object return by \link{deseq2normalizedExpr}. Default NULL.}
 
 \item{...}{Additional parameters given to \code{\link{ggsave}}.}
 }
