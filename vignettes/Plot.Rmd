@@ -49,13 +49,20 @@ sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols =
             clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
             filename = "pheatmap.pdf")
 ```
-
+```{r}
+library(ImageGP)
+library(pheatmap)
+library(RColorBrewer)
+library(grid)
+sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T, top_n=0.9)
+```
 
 Save in PPT format
 
 ```{r}
 sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, saveppt = TRUE, filename = "pheatmap.pdf")
 
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = F, filename = "pheatmap.pdf")
 ```
 
 ```{r}

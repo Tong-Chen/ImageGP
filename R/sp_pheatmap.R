@@ -165,6 +165,7 @@ draw_colnames_custom <-
 #' row correlation or column correlation.
 #' @param xtics_angle Rotation angle for x-axis value. Default 0.
 #' @inheritParams sp_boxplot
+#' @inheritParams dataFilter2
 #' @param fontsize Font size. Default 14.
 #' @param manual_annotation_colors_sidebar Annotation color. One can only specify color for each column of
 #' row-annotatation or col-annotation. For example,
@@ -211,6 +212,8 @@ draw_colnames_custom <-
 sp_pheatmap <- function(data,
                         filename = NA,
                         renameDuplicateRowNames = F,
+                        top_n = 1,
+                        statistical_value_type = mad,
                         logv = NULL,
                         log_add = 0,
                         scale = 'none',
@@ -300,6 +303,8 @@ sp_pheatmap <- function(data,
   if (length(non_numeric_col) > 0) {
     stop(paste(non_numeric_col, "contains non-numeric values."))
   }
+
+  data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
 
   if (!sp.is.null(logv)) {
     if (log_add == 0) {
