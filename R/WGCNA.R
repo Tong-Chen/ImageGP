@@ -1364,7 +1364,7 @@ WGCNA_hubgene <- function(cyt,
     nodeTotalWeight[with(nodeTotalWeight, order(Module1,-weight)), ]
   #head(nodeTotalWeight)
 
-  nodeTotalWeightTop20 = nodeTotalWeight %>% dplyr::group_by(Module1) %>% dplyr::top_mad_n(top_hub_n, weight)
+  nodeTotalWeightTop20 = nodeTotalWeight %>% dplyr::group_by(Module1) %>% dplyr::top_n(top_hub_n, weight)
 
   colnames(edgeData1) <- c("Source", "Target", "Correlation")
   hub_edgeData = edgeData1[(edgeData1$Source %in% nodeTotalWeightTop20$Node1) &
