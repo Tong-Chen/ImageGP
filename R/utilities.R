@@ -863,7 +863,7 @@ sp_ggplot_facet <- function(p, facet_variable=NULL, facet_ncol=NULL, facet_nrow=
 #' @param xvariable Name for x-axis variable.
 #' @param melted `TRUE` for dealinig with long format matrix, the program will skip melt preprocess.
 #' Default `FALSE` for dealing with wide format matrix.
-#'
+#' @param ... Parameters given to \code{\link{dataFilter2}}.
 #' @return a A long format dataframe
 #' @importFrom reshape2 melt
 #' @export
@@ -875,7 +875,7 @@ sp_ggplot_facet <- function(p, facet_variable=NULL, facet_ncol=NULL, facet_nrow=
 #'
 #' ## End(Not run)
 #'
-sp_read_in_long_wide_matrix <- function(data, xvariable, melted){
+sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
   wide_rownames = NULL
   wide_colnames = NULL
   if (class(data) == "character") {
@@ -896,6 +896,9 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted){
           "For wide format data matrix, all elements except the first row and column must be numbers unless long format is used."
         )
       }
+
+      data <- dataFilter2(data, ...)
+
       data[[xvariable]] <- wide_rownames
       data <- reshape2::melt(data, id.vars = xvariable)
     } else {

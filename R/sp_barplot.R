@@ -6,6 +6,8 @@
 #'
 #' @param data Data frame or data file (with header line, the first column will
 #' not be treated as row names, tab separated).
+#' @param metadata Giving a metadata file with format specified in example
+#' to tell the group information for each sample.
 #' @param melted `TRUE` for dealing with long format matrix, the program will skip melt preprocess. If input is wide format matrix, this parameter should be set to `FALSE`.
 #' @param xvariable Name for x-axis variable (one of column names, should be specified
 #' when inputting long format matrix).
@@ -61,6 +63,7 @@
 #' ## End(Not run)
 #'
 sp_barplot <- function (data,
+                        metadata = NULL,
                         color_variable = NULL,
                         yvariable = NULL,
                         xvariable = NULL,
@@ -112,9 +115,15 @@ sp_barplot <- function (data,
       stop("For melted matrix, <xvariable> and <yvariable> should be supplied.")
     }
   } else {
+    if (!melted) {
+      if (sp.is.null(yvariable)) {
+        yvariable = "value"
+      }
+      if (sp.is.null(legend_variable)) {
+        color_variable = "variable"
+      }
+    }
     xvariable = 'xvariable'
-    yvariable = 'value'
-    color_variable = 'variable'
   }
 
   data <- sp_read_in_long_wide_matrix(data, xvariable, melted)

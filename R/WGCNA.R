@@ -352,8 +352,8 @@ dataFilter <-
 dataFilter2 <-
   function(datExpr,
            minimal_threshold = NULL,
-           top_n = 0.75,
-           rmVarZero = T,
+           top_n = 1,
+           rmVarZero = F,
            noLessThan = NULL,
            statistical_value_type = mad,
            keep_filtered_as_others = F) {
