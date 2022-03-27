@@ -232,8 +232,8 @@ sp_barplot <- function (data,
 
 
   if (!melted){
-    xvariable_order = wide_rownames
-    color_variable_order = wide_colnames
+    xvariable_order = wide_colnames
+    color_variable_order = wide_rownames
   }
 
   data = sp_set_factor_order(data, xvariable, xvariable_order)
