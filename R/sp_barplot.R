@@ -138,7 +138,7 @@ sp_barplot <- function (data,
   wide_colnames <- data$wide_colnames
   data <- data$data
 
-  if (!sp.is.null(metadata)) {
+  if (!sp.is.null(metadata) && metadata != "") {
     if (class(metadata) == "character") {
       metadata <- sp_readTable(metadata, row.names = NULL)
     } else if (!"data.frame" %in% class(data)) {
@@ -156,7 +156,7 @@ sp_barplot <- function (data,
     data[[matched_column[2]]] = data[[matched_column[1]]]
   }
 
-  print(data)
+  # print(data)
 
   data_colnames <- colnames(data)
 
