@@ -118,16 +118,16 @@ sp_barplot <- function (data,
       stop("For melted matrix, <xvariable> and <yvariable> should be supplied.")
     }
   } else {
-      if (sp.is.null(color_variable)) {
-        color_variable = "variable"
-      }
-      xvariable = 'xvariable'
+      #if (sp.is.null(color_variable)) {
+        color_variable = "xvariable"
+      #}
+      xvariable = 'variable'
       yvariable = "value"
   }
 
   #print(xvariable)
 
-  data <- sp_read_in_long_wide_matrix(data, xvariable, melted,
+  data <- sp_read_in_long_wide_matrix(data, color_variable, melted,
                                       top_n = top_n,
                                       statistical_value_type = statistical_value_type,
                                       keep_filtered_as_others = keep_filtered_as_others)
