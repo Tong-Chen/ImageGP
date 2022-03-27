@@ -280,7 +280,7 @@ sp_pheatmap <- function(data,
       sp_readTable(data,
                    row.names = 1,
                    renameDuplicateRowNames = renameDuplicateRowNames)
-  } else if (class(data) != "data.frame") {
+  } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
   }
 
@@ -497,12 +497,12 @@ sp_pheatmap <- function(data,
       width = width * 1.5
     }
 
-    if (class(annotation_row) == "data.frame") {
+    if ("data.frame" %in% class(data)) {
       width = width + ncol(annotation_row)
       width = width * 1.1
     }
 
-    if (class(annotation_col) == "data.frame") {
+    if ("data.frame" %in% class(data)) {
       height = height + ncol(annotation_col)
       width = width * 1.1
     }

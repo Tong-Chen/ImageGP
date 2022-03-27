@@ -136,13 +136,13 @@ sp_boxplot <- function(data,
       data <-
         melt(data, id.vars = c(ID_var, first_column_variable))
     }
-  } else if (class(data) == "data.frame") {
+  } else if ("data.frame" %in% class(data)) {
     if (!melted) {
       if (sp.is.null(xvariable)) {
         xvariable = colnames(data)[1]
       }
     }
-  } else if (class(data) != "data.frame") {
+  } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
   }
 
@@ -158,7 +158,7 @@ sp_boxplot <- function(data,
   if (!sp.is.null(metadata)) {
     if (class(metadata) == "character") {
       metadata <- sp_readTable(metadata, row.names = NULL)
-    } else if (class(metadata) != "data.frame") {
+    } else if (!"data.frame" %in% class(data)) {
       stop("Unknown input format for `metadata` parameter.")
     }
     # return(list(data=data, metadata=metadata))
@@ -170,6 +170,8 @@ sp_boxplot <- function(data,
     # return(list(data=data, metadata=metadata, matched_column=matched_column))
     data <-
       merge(data, metadata, by.x = matched_column[1], by.y = matched_column[2])
+
+    data[[matched_column[2]]] = data[[matched_column[1]]]
   }
 
   data_colnames <- colnames(data)
