@@ -497,12 +497,12 @@ sp_pheatmap <- function(data,
       width = width * 1.5
     }
 
-    if ("data.frame" %in% class(data)) {
+    if ("data.frame" %in% class(annotation_row)) {
       width = width + ncol(annotation_row)
       width = width * 1.1
     }
 
-    if ("data.frame" %in% class(data)) {
+    if ("data.frame" %in% class(annotation_col)) {
       height = height + ncol(annotation_col)
       width = width * 1.1
     }
