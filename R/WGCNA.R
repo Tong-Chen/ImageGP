@@ -405,7 +405,7 @@ dataFilter2 <-
     if(keep_filtered_as_others){
       datExprFiltered = datExpr[which(m.mad < minimal_threshold), ]
       if(nrow(datExprFiltered)>0){
-        others <- colMeans(datExprFiltered)
+        others <- colSums(datExprFiltered)
         datExpr2 <- rbind(datExpr2, others)
         rownames(datExpr2)[nrow(datExpr2)] = "Others"
       }
