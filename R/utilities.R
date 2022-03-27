@@ -896,21 +896,23 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
           "For wide format data matrix, all elements except the first row and column must be numbers unless long format is used."
         )
       }
-
+      # print(data)
       data <- dataFilter2(data, ...)
-
+      # print(data)
+      wide_rownames <- rownames(data)
       data[[xvariable]] <- wide_rownames
       data <- reshape2::melt(data, id.vars = xvariable)
     } else {
       data <- sp_readTable(data, row.names = NULL)
     }
   } else{
-    if(class(data) != "data.frame"){
+    if(!"data.frame" %in% class(data)) {
       stop("Unknown input format for `data` parameter.")
     }
     if (!melted) {
-      wide_rownames <- rownames(data)
       wide_colnames <- colnames(data)
+      data <- dataFilter2(data, ...)
+      wide_rownames <- rownames(data)
       data[[xvariable]] <- wide_rownames
       data <- reshape2::melt(data, id.vars = xvariable)
     }

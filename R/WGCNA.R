@@ -392,6 +392,7 @@ dataFilter2 <-
           top_n = noLessThan
         }
       }
+      print(top_n)
       minimal_threshold <- m.mad.sorted[top_n]
     }
 

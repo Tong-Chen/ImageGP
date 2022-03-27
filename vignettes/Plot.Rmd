@@ -54,7 +54,7 @@ library(ImageGP)
 library(pheatmap)
 library(RColorBrewer)
 library(grid)
-sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T, top_n=0.9)
+sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T, top_n=3)
 ```
 
 Save in PPT format
@@ -564,6 +564,48 @@ sp_barplot(data = bar_data, xvariable = "ID", yvariable = "Exper", color_variabl
 ```
 
 ```{r}
+library(dplyr)
+bar_test_data <- data.frame(ID = letters[1:4],Gene = letters[c(8,8,9,9,10,10,11,11)], Exper = runif(16))
+sp_barplot(data = bar_test_data, xvariable = "ID", yvariable = "Exper", color_variable = "Gene")
+
+```
+
+```{r}
+bar_test_data_wide <- reshape2::dcast(bar_test_data, ID~Gene, mean, fill=0)
+rownames(bar_test_data_wide) <- bar_test_data_wide$ID
+bar_test_data_wide <- bar_test_data_wide[,-1]
+head(bar_test_data_wide)
+
+```
+```{r}
+apply(bar_test_data_wide, 1, mad)
+```
+
+
+```{r}
+sp_barplot(data = bar_test_data_wide, melted = F, xvariable = "ID", yvariable = "Exper",
+           top_n = 0.4)
+
+```
+```{r}
+metadata <- data.frame(ID1=rownames(bar_test_data_wide), group=c("A","A","B","B"))
+
+sp_barplot(data = bar_test_data, xvariable = "ID", yvariable = "Exper", color_variable = "Gene",
+           metadata = metadata, facet_variable = "group")
+
+```
+
+
+```{r}
+metadata <- data.frame(ID1=colnames(bar_test_data_wide), group=c("A","B"))
+
+sp_barplot(data = bar_test_data_wide, melted = F, xvariable = "ID", yvariable = "Exper",
+           top_n = 2, metadata = metadata, facet_variable = "group")
+
+```
+
+
+```{r}
 library(tidyr)
 library(dplyr)
 bar_data = "bar.txt"
@@ -721,6 +763,7 @@ sp_boxplot(data, melted = T, xvariable = "Cluster", yvariable = "Expr", facet_va
 ```{r}
 library(ImageGP)
 library(stringr)
+library(ggplot2)
 enrichment_data <- "enrichment.data"
 
 sp_enrichment(data = enrichment_data, xvariable = "SampleGroup", 
@@ -732,6 +775,7 @@ sp_enrichment(data = enrichment_data, xvariable = "SampleGroup",
 ```{r}
 enrichment.data <- sp_readTable(enrichment_data) 
 head(enrichment.data)
+enrichment.data <- as.matrix(enrichment.data)
 sp_enrichment(data = enrichment.data, xvariable = "GeneRatio", yvariable = "Description",
               log10_transform_variable = "Qvalue", sqrt_transform_variable = "Count",
               shape_variable = "SampleGroup")
