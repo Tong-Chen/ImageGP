@@ -50,6 +50,7 @@
 #' @inheritParams sp_ggplot_facet
 #' @inheritParams sp_ggplot_layout
 #' @inheritParams sp_manual_color_ggplot2
+#' @inheritParams sp_diff_test
 #' @param ... Parametes given to `sp_ggplot_layout`
 #'
 #' @return A ggplot2 object
@@ -85,6 +86,8 @@ sp_boxplot <- function(data,
                        notch = FALSE,
                        par = NULL,
                        outlier = FALSE,
+                       statistical_method = "aov",
+                       statistical_threshold_for_letters = 0.05,
                        out_scale = 1.05,
                        legend.position = 'right',
                        manual_color_vector = NULL,
@@ -420,108 +423,23 @@ sp_boxplot <- function(data,
     if (!sp.is.null(group_variable_for_line)) {
       p <- p + ggnewscale::new_scale_color()
     }
-    # 代码修改自 amplicon包 microbiota/amplicon
-    # https://github.com/microbiota/amplicon/blob/master/R/alpha_boxplot.R
 
-    # data$combine_xvariable <- paste0(data[[variable]],"_",data[[xvariable]])
-    # model = aov(data[[value]] ~ data$combine_xvariable, data = data)
-    # if (length(unique(data[[xvariable]])) == 2) {
-    #   library(agricolae)
-    #   out = LSD.test(model, "data[[xvariable]]", p.adj = "none")
-    #   stat = out$groups
-    #   data$stat = stat[as.character(data$combine_xvariable), ]$groups
-    # } else{
-    #   Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
-    #   Tukey_HSD_table = as.data.frame(Tukey_HSD$`data$combine_xvariable`)
-    #   Tukey.levels = Tukey_HSD$`data$combine_xvariable`[, 4]
-    #   Tukey.labels = data.frame(multcompLetters(Tukey.levels)['Letters'])
-    #   Tukey.labels$group = rownames(Tukey.labels)
-    #   Tukey.labels = Tukey.labels[order(Tukey.labels$group),]
-    #   data$stat = Tukey.labels[as.character(data$combine_xvariable), ]$Letters
-    # }
-    #
-    # max=max(data[,c(value)])
-    # min=min(data[,value])
-    # x = data[,c('combine_xvariable',value)]
-    # y = x %>% group_by(combine_xvariable) %>% summarise_(Max=paste('max(',value,')',sep=""))
-    # y=as.data.frame(y)
-    # colnames(y) <- c("group","Max")
-    # rownames(y)=y$group
-    # data$y=y[as.character(data$combine_xvariable),]$Max + (max-min)*0.05
-    #
-    # x1=factor(data$combine_xvariable,levels=c(unique(data$combine_xvariable)))
-    # p <- ggplot(data, aes(x1,!!value_en))
-    #
-    # p <- p + geom_text(data=data, aes(x=combine_xvariable, y=y,
-    #                              color=!!xvariable_en, label=stat)) +
-    #   theme(axis.text.x=element_text(angle =90,vjust=0.3))
-
-    # if (xvariable != legend_variable) {
-    #   data$combine__grp__for__statistis_sp <-
-    #     paste(data[[xvariable]], data[[legend_variable]], sep = "___")
-    # } else {
-    #   data$combine__grp__for__statistis_sp <- data[[xvariable]]
-    # }
-    # if (!sp.is.null(facet_variable)) {
-    #   data$combine__grp__for__statistis_sp <-
-    #     paste(data$combine__grp__for__statistis_sp, data[[facet_variable]], sep = "___")
-    # }
-
-    group_variable_vector <- unique(c(xvariable, legend_variable, facet_variable))
+    group_variable_vector <- unique(c(xvariable, legend_variable))
     group_variable_vector <- group_variable_vector[!sapply(group_variable_vector, sp.is.null)]
-    #data2 <- data[,group_variable_vector]
     data$combine__grp__for__statistis_sp <- do.call(paste0, data[group_variable_vector])
 
-    formula = as.formula(paste(yvariable, "~", "combine__grp__for__statistis_sp"))
-    # model = aov(data[[yvariable]] ~ data[[xvariable]], data = data)
-    # print(formula)
-    model = aov(formula, data = data)
-    # print(model)
-	Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
-	# return(Tukey_HSD)
-	Tukey_HSD_table = as.data.frame(Tukey_HSD$combine__grp__for__statistis_sp)
-	suppressWarnings(sp_writeTable(Tukey_HSD_table, file = paste0(filename, ".significance.txt")))
+    dataList = sp_multiple_group_diff_test(data,
+               stat_value_variable=yvariable,
+               stat_group_variable="combine__grp__for__statistis_sp",
+               group_variable = facet_variable,
+               statistical_method = statistical_method,
+               statistical_threshold_for_letters = statistical_threshold_for_letters)
 
-    if (length(unique(data$combine__grp__for__statistis_sp)) == 2) {
-       library(agricolae)
-       out = LSD.test(model, "combine__grp__for__statistis_sp", p.adj = "none")
-       # print(out)
-       LSD.test_table = as.data.frame(out$statistics)
-       stat = out$groups
-       data$stat = stat[as.character(data$combine__grp__for__statistis_sp), ]$groups
-
-     } else{
-		# Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
-		# return(Tukey_HSD)
-		# Tukey_HSD_table = as.data.frame(Tukey_HSD$combine__grp__for__statistis_sp)
-		#print(Tukey_HSD$combine__grp__for__statistis_sp)
-
-		if (length(unique(data$combine__grp__for__statistis_sp)) == 2) {
-			Tukey.levels = Tukey_HSD$combine__grp__for__statistis_sp[, 4, drop=F]
-		} else {
-			Tukey.levels = Tukey_HSD$combine__grp__for__statistis_sp[, 4]
-		}
-
-		Tukey.labels = data.frame(multcompLetters(Tukey.levels)['Letters'])
-		Tukey.labels$group = rownames(Tukey.labels)
-		Tukey.labels = Tukey.labels[order(Tukey.labels$group), ]
-		data$stat = Tukey.labels[as.character(data$combine__grp__for__statistis_sp),]$Letters
-    }
-
-    max = max(data[, c(yvariable)])
-    min = min(data[, yvariable])
-    x = data[, c(xvariable, yvariable, "combine__grp__for__statistis_sp")]
-    y = x %>% group_by(combine__grp__for__statistis_sp) %>% summarise(Max =
-                                                                        max(!!yvariable_en))
-    y = as.data.frame(y)
-    # print(y)
-    colnames(y) <- c("group", "Max")
-    rownames(y) = y$group
-    data$y = y[as.character(data$combine__grp__for__statistis_sp),]$Max * 1.04
-    # print(data)
+    suppressWarnings(sp_writeTable(dataList$Tukey_HSD_table, file = paste0(filename,
+                                                                  ".significance.txt")))
 
     p <- p + geom_text(
-      data = data,
+      data = dataList$data,
       aes(
         x = !!xvariable_en,
         y = y,
@@ -535,7 +453,7 @@ sp_boxplot <- function(data,
     )
 
     p <- sp_manual_color_ggplot2(p,
-                                 data,
+                                 dataList$data,
                                  legend_variable,
                                  manual_color_vector)
   }

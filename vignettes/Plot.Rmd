@@ -631,7 +631,7 @@ sp_barplot(data = box_demo1_data, melted = F, ylim = c(20,40))
 ```{r}
 library(dplyr)
 box_demo2_data <- "exprTable.txt"
-sp_barplot(data = box_demo2_data, melted = F, bar_mode="fill", add_text=T)
+sp_barplot(data = box_demo2_data, melted = F, bar_mode="fill", add_text=T, metadata = "")
 ```
 
 ```{r}
@@ -696,7 +696,7 @@ library(dplyr)
 
 
 box_data = "box.data"
-sp_boxplot(data = box_data, melted=T, xvariable = "Gene", yvariable = "Expr", legend_variable="Group", statistics = T, violin_nb = F, violin=T, jitter_bp = T)
+sp_boxplot(data = box_data, melted=T, xvariable = "Gene", yvariable = "Expr", legend_variable="Group", statistics = T, violin_nb = F, violin=T, jitter_bp = T, facet_variable = "Gene")
 ```
 
 ```{r}
