@@ -174,7 +174,9 @@ sp_boxplot <- function(data,
     data <-
       merge(data, metadata, by.x = matched_column[1], by.y = matched_column[2])
 
-    data[[matched_column[2]]] = data[[matched_column[1]]]
+    if (matched_column[1]!=0){
+      data[[matched_column[2]]] = data[[matched_column[1]]]
+	}
   }
 
   data_colnames <- colnames(data)
