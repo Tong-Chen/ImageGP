@@ -1,4 +1,4 @@
-library(ImageGP)
+#library(ImageGP)
 library(multcompView)
 
 data <- sp_readTable("vegan.txt")
