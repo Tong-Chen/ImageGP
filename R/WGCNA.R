@@ -1777,7 +1777,7 @@ WGCNA_GeneModuleTraitCoorelation <-
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
       geneModuleMembership = as.data.frame(cor(datExpr, MEs_col, use = "p"))
-      nSamples <- nrow(datExpr)
+      nSamples <- nrow(traitData)
       MMPvalue = as.data.frame(WGCNA::corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
     } else {
       # 关联样品性状的二元变量时，设置
@@ -1842,8 +1842,8 @@ WGCNA_GeneModuleTraitCoorelation <-
                 'xls',
                 sep = ".")
         gene_trait_module_cor <-
-          cbind(geneModuleMembership = geneModuleMembership[moduleGenes,  module_column],
-                geneTraitCor = geneTraitCor[moduleGenes,  pheno_column])
+          cbind(geneModuleMembership = geneModuleMembership[moduleGenes,  module_column,drop=F],
+                geneTraitCor = geneTraitCor[moduleGenes,  pheno_column, drop=F])
         gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
         write.table(
           gene_trait_module_cor,
