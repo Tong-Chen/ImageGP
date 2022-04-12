@@ -1635,6 +1635,7 @@ WGCNA_ModuleGeneTraitHeatmap <-
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
       geneTraitCor = as.data.frame(cor(datExpr, traitData, use = "p"))
+      nSamples <- nrow(traitData)
       geneTraitP = as.data.frame(WGCNA::corPvalueStudent(as.matrix(geneTraitCor), nSamples))
     } else {
       geneTraitCorA = WGCNA::bicorAndPvalue(datExpr, traitData, robustY = robustY)
@@ -1776,6 +1777,7 @@ WGCNA_GeneModuleTraitCoorelation <-
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
       geneModuleMembership = as.data.frame(cor(datExpr, MEs_col, use = "p"))
+      nSamples <- nrow(datExpr)
       MMPvalue = as.data.frame(WGCNA::corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
     } else {
       # 关联样品性状的二元变量时，设置
