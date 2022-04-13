@@ -1842,9 +1842,10 @@ WGCNA_GeneModuleTraitCoorelation <-
                 'xls',
                 sep = ".")
         gene_trait_module_cor <-
-          cbind(geneModuleMembership = geneModuleMembership[moduleGenes,  module_column,drop=F],
-                geneTraitCor = geneTraitCor[moduleGenes,  pheno_column, drop=F])
-        gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
+          data.frame(ID=rownames(geneModuleMembership[moduleGenes,  module_column,drop=F]),
+            geneModuleMembership = geneModuleMembership[moduleGenes,  module_column],
+                geneTraitCor = geneTraitCor[moduleGenes,  pheno_column])
+        #gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
         write.table(
           gene_trait_module_cor,
           file = file,
