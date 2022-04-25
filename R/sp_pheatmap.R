@@ -360,7 +360,7 @@ sp_pheatmap <- function(data,
             seq(summary_v[5], summary_v[6], length = color_length / 4 -
                   1)
           ))
-        legend_breaks <- summary_v
+        legend_breaks <- unique(summary_v)
       } else {
         breaks_mid <- as.numeric(breaks_mid)
         breaks <- unique(c(
@@ -368,7 +368,7 @@ sp_pheatmap <- function(data,
               length = color_length / 2),
           seq(breaks_mid, summary_v[6], length = color_length / 2 - 1)
         ))
-        legend_breaks <- c(summary_v[1], breaks_mid, summary_v[6])
+        legend_breaks <- unique(c(summary_v[1], breaks_mid, summary_v[6]))
       }
     } else {
       legend_breaks <- breaks
@@ -383,7 +383,7 @@ sp_pheatmap <- function(data,
 
     if (breaks_digits) {
       legend_breaks <-
-        as.numeric(prettyNum(legend_breaks, digits = breaks_digits))
+        unique(as.numeric(prettyNum(legend_breaks, digits = breaks_digits)))
     }
     legend_labels <- legend_breaks
 

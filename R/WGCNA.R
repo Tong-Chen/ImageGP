@@ -1518,10 +1518,11 @@ WGCNA_moduleTraitPlot <-
       c("Module", "Trait", "PersonCorrelationValue")
     modTraitPMelt = as.data.frame(modTraitP)
     write.table(
-      modTraitPMelt,
+      data.frame(ID = rownames(modTraitPMelt), modTraitPMelt),
       file = paste0(prefix, ".module_trait_correlationPvalue.xls"),
       sep = "\t",
-      quote = F
+      quote = F,
+      row.names = F
     )
     modTraitPMelt$ID = rownames(modTraitP)
     modTraitPMelt = reshape2::melt(modTraitPMelt)
