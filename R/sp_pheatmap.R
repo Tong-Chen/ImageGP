@@ -311,7 +311,7 @@ sp_pheatmap <- function(data,
 
   data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
 
-  if ("character" %in% class(display_numbers)) {
+  if ("character" %in% class(display_numbers) && display_numbers!="NULL" && display_numbers!="") {
     display_numbers <-
       sp_readTable(display_numbers,
                    row.names = 1,
