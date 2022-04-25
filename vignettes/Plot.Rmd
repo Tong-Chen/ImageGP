@@ -53,6 +53,10 @@ sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols =
 ```{r}
 sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "exprTable2.txt")
 
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "NULL")
+
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "")
+
 #sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = b)
 ```
 

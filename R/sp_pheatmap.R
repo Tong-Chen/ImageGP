@@ -311,7 +311,8 @@ sp_pheatmap <- function(data,
 
   data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
 
-  if ("character" %in% class(display_numbers) && display_numbers!="NULL" && display_numbers!="") {
+  if ("character" %in% class(display_numbers)) {
+    if (display_numbers!="NULL" && display_numbers!="") {
     display_numbers <-
       sp_readTable(display_numbers,
                    row.names = 1,
@@ -320,6 +321,9 @@ sp_pheatmap <- function(data,
     display_numbers <- display_numbers[rownames(data), colnames(data), drop=F]
     display_numbers[is.na(display_numbers)] <- ''
     display_numbers <- sapply(display_numbers, stringr::str_replace, "\\\\n","\n")
+    } else {
+      display_numbers = FALSE
+    }
   }
 
   if (!sp.is.null(logv)) {
@@ -555,7 +559,7 @@ sp_pheatmap <- function(data,
     if (("logical" %in% class(display_numbers) && display_numbers) ||
          'data.frame' %in% class(display_numbers) ||
          'matrix' %in% class(display_numbers)){
-      width = width * 3
+      width = width * 2
       height = height * 1.2
     }
   }
