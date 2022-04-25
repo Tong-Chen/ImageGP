@@ -499,7 +499,7 @@ sp_pheatmap <- function(data,
 
   #print(data)
   # filter abnormal lines
-  if(ncol(data)>1){
+  if(ncol(data)>1 && nrow(data)>1){
     data_sd <- apply(data, 1, sd)
     if (any(data_sd == 0)) {
       stop("Wrong correlation method for this type of data. Please choose another method.")
