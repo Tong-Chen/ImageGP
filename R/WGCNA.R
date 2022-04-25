@@ -347,7 +347,7 @@ dataFilter <-
 #' @examples
 #'
 #' df = generateAbundanceDF(nSample=30, nGrp=3)
-#' dataFilter(df)
+#' dataFilter2(df)
 #'
 dataFilter2 <-
   function(datExpr,
