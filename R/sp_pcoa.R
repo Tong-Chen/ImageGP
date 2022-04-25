@@ -162,6 +162,7 @@ sp_pcoa <- function(data,
   data <- cbind(pcoa_points, metadata)
 
   data$Row.names <- row.names(metadata)
+  rownames(data) <- data$Row.names
 
   data_colnames <- colnames(data)
   #print(data_colnames)
@@ -220,6 +221,14 @@ sp_pcoa <- function(data,
   library(ggplot2)
 
   group_variable_en = sym(group_variable)
+
+  if (!sp.is.null(filename)) {
+    sp_writeTable(
+      data,
+      file = paste0(filename, ".pcoas.txt"),
+      keep_rownames = F
+    )
+  }
 
   p <- ggplot(data, aes(x = PCoA1, y = PCoA2, group = !!group_variable_en)) +
     labs(

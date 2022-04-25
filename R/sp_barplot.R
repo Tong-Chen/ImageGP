@@ -39,8 +39,10 @@
 #' @param ytics Display ytics. Default FALSE.
 #' @param add_text 	Add text to bar. Default FALSE.
 #' @inheritParams sp_load_font
+#' @inheritParams sp_boxplot
 #' @inheritParams sp_ggplot_layout
 #' @inheritParams sp_manual_fill_ggplot2
+#' @inheritParams dataFilter2
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
@@ -61,6 +63,7 @@
 #' ## End(Not run)
 #'
 sp_barplot <- function (data,
+                        metadata = NULL,
                         color_variable = NULL,
                         yvariable = NULL,
                         xvariable = NULL,
@@ -68,6 +71,9 @@ sp_barplot <- function (data,
                         title = NULL,
                         x_label = NULL,
                         y_label = NULL,
+                        top_n = 1,
+                        statistical_value_type = sum,
+                        keep_filtered_as_others = TRUE,
                         color_variable_order = NULL,
                         xvariable_order = NULL,
                         y_add = 0,
@@ -112,18 +118,46 @@ sp_barplot <- function (data,
       stop("For melted matrix, <xvariable> and <yvariable> should be supplied.")
     }
   } else {
-    xvariable = 'xvariable'
-    yvariable = 'value'
-    color_variable = 'variable'
+      #if (sp.is.null(color_variable)) {
+        color_variable = "xvariable"
+      #}
+      xvariable = 'variable'
+      yvariable = "value"
   }
 
-  data <- sp_read_in_long_wide_matrix(data, xvariable, melted)
+  #print(xvariable)
+
+  data <- sp_read_in_long_wide_matrix(data, color_variable, melted,
+                                      top_n = top_n,
+                                      statistical_value_type = statistical_value_type,
+                                      keep_filtered_as_others = keep_filtered_as_others)
 
   #print(data)
 
   wide_rownames <- data$wide_rownames
   wide_colnames <- data$wide_colnames
   data <- data$data
+
+  if (!sp.is.null(metadata) && metadata != "") {
+    if (class(metadata) == "character") {
+      metadata <- sp_readTable(metadata, row.names = NULL)
+    } else if (!"data.frame" %in% class(data)) {
+      stop("Unknown input format for `metadata` parameter.")
+    }
+
+    matched_column <-
+      get_matched_columns_based_on_value(data, metadata,
+                                         only_allow_one_match =
+                                           T)
+
+    # return(list(data=data, metadata=metadata, matched_column=matched_column))
+    data <-
+      merge(data, metadata, by.x = matched_column[1], by.y = matched_column[2])
+    data[[matched_column[2]]] = data[[matched_column[1]]]
+  }
+
+  # print(data)
+
   data_colnames <- colnames(data)
 
   if (!(xvariable %in% data_colnames &&
@@ -198,8 +232,8 @@ sp_barplot <- function (data,
 
 
   if (!melted){
-    xvariable_order = wide_rownames
-    color_variable_order = wide_colnames
+    xvariable_order = wide_colnames
+    color_variable_order = wide_rownames
   }
 
   data = sp_set_factor_order(data, xvariable, xvariable_order)

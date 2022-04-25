@@ -1,0 +1,56 @@
+```{r}
+library(ImageGP)
+library(WGCNA)
+library(aplot)
+library(pheatmap)
+library(grid)
+suppressPackageStartupMessages(library(ImageGP))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(WGCNA))
+suppressPackageStartupMessages(library(aplot))
+# suppressPackageStartupMessages(library(GGally))
+# suppressPackageStartupMessages(library(ggmatrix))
+suppressPackageStartupMessages(library(RColorBrewer))
+suppressPackageStartupMessages(library(grid))
+suppressPackageStartupMessages(library(pheatmap))
+expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
+group <- sp_readTable(file="TraitsClean.txt", row.names=1, header=T)
+WGCNA_onestep("LiverFemaleClean.txt", "TraitsClean.txt", prefix="wgcna_ehbio")
+
+exprMat = "LiverFemaleClean.txt"
+           traitData = "TraitsClean.txt"
+           categoricalTrait = NULL
+           prefix = "ehbio"
+           corType = "bicor"
+           corType = "pearson"
+           networkType = "signed"
+           maxPower = NULL
+           maxBlockSize = NULL
+           top_mad_n = 0.75
+           rmVarZero = T
+           minimal_mad = NULL
+           thresholdZ.k = -2.5
+           TOM_plot = NULL
+           top_hub_n = 20
+           removeOutlier = F
+           RsquaredCut = 0.85
+           minModuleSize = NULL
+           mergeCutHeight = 0.2
+           numericLabels = TRUE
+           pamRespectsDendro = FALSE
+           saveTOMs = TRUE
+           maxPOutliers = NULL
+           loadTOM = TRUE
+           TOMDenom = "min"
+           deepSplit = 1
+           stabilityCriterion = "Individual fraction"
+           verbose = 0
+           os_system = NULL
+           randomSeed = 11521
+           dynamicCutPlot = TRUE
+           power_min = NULL
+           up_color = c("red", "white", "blue")
+           down_color = c("green", "white")
+```

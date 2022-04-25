@@ -51,6 +51,14 @@
 #' @export
 #' @examples
 #'
+#' library(plyr)
+#' library(ggplot2)
+#' library(grid)
+#' library(ggbeeswarm)
+#' library(ggrepel)
+#' library(htmlwidgets)
+#' library(plotly)
+#' library(ImageGP)
 #' scatter_test_data <- data.frame(Samp = letters[1:6], Color = sample(c("group1", "group2", "group3"),6,replace = TRUE),
 #' X_val = runif(6), Y_val = runif(6), Size = sample(4:20, size = 6),
 #' Shape = sample(c("cluster1","cluster2"),6,replace = TRUE))
@@ -115,7 +123,7 @@ sp_scatterplot <- function (data,
                             ...) {
   if (class(data) == "character") {
     data <- sp_readTable(data)
-  } else if (class(data) != "data.frame") {
+  } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
   }
 

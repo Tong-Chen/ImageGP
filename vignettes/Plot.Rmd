@@ -27,6 +27,7 @@ library(ImageGP)
 library(pheatmap)
 library(RColorBrewer)
 library(grid)
+library(stringr)
 sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 0, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 10, cluster_rows = T, cluster_cols = T)
@@ -41,15 +42,39 @@ sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols =
 
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
             correlation_plot = "row", clustering_distance_rows="cao",
-            clustering_distance_cols = "minkowski")
+            clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
+            anno_cutree_cols = T)
+
+sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
+            correlation_plot = "row", clustering_distance_rows="cao",
+            clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
+            filename = "pheatmap.pdf")
+```
+```{r}
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "exprTable2.txt")
+
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "NULL")
+
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "")
+
+#sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = b)
 ```
 
+
+```{r}
+library(ImageGP)
+library(pheatmap)
+library(RColorBrewer)
+library(grid)
+sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T, top_n=3)
+```
 
 Save in PPT format
 
 ```{r}
 sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, saveppt = TRUE, filename = "pheatmap.pdf")
 
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = F, filename = "pheatmap.pdf")
 ```
 
 ```{r}
@@ -82,6 +107,11 @@ sp_pheatmap(exprTable, cluster_rows = T, logv="log2", manual_color_vector="YlOrR
 ### Heatmap add side color bars
 
 ```{r}
+library(dplyr)
+library(ImageGP)
+library(pheatmap)
+library(RColorBrewer)
+library(grid)
 exprTable <- read.table("exprTable.txt", sep="\t", row.names=1, header=T)
 # Row annotation
 # Can be a dataframe or a file
@@ -95,6 +125,21 @@ annotation_col = data.frame(Count=c(1,2,4,8,16,32), row.names=colnames(exprTable
 
 sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
             annotation_row = annotation_row, annotation_col = annotation_col)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = F,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T, label_row_cluster_boundary = T)
+
+sp_pheatmap(exprTable, xtics_angle = 90, cluster_rows = T, cluster_cols = T,
+            annotation_row = annotation_row, annotation_col = annotation_col,
+            cutree_cols = 2, cutree_rows = 3, anno_cutree_rows = T,
+            anno_cutree_cols = T, label_every_n_rowitems = 3)
 ```
 
 Reorder branches
@@ -531,6 +576,48 @@ sp_barplot(data = bar_data, xvariable = "ID", yvariable = "Exper", color_variabl
 ```
 
 ```{r}
+library(dplyr)
+bar_test_data <- data.frame(ID = letters[1:4],Gene = letters[c(8,8,9,9,10,10,11,11)], Exper = runif(16))
+sp_barplot(data = bar_test_data, xvariable = "ID", yvariable = "Exper", color_variable = "Gene")
+
+```
+
+```{r}
+bar_test_data_wide <- reshape2::dcast(bar_test_data, ID~Gene, mean, fill=0)
+rownames(bar_test_data_wide) <- bar_test_data_wide$ID
+bar_test_data_wide <- bar_test_data_wide[,-1]
+head(bar_test_data_wide)
+
+```
+```{r}
+apply(bar_test_data_wide, 1, mad)
+```
+
+
+```{r}
+sp_barplot(data = bar_test_data_wide, melted = F, xvariable = "ID", yvariable = "Exper",
+           top_n = 0.4)
+
+```
+```{r}
+metadata <- data.frame(ID1=rownames(bar_test_data_wide), group=c("A","A","B","B"))
+
+sp_barplot(data = bar_test_data, xvariable = "ID", yvariable = "Exper", color_variable = "Gene",
+           metadata = metadata, facet_variable = "group")
+
+```
+
+
+```{r}
+metadata <- data.frame(ID1=colnames(bar_test_data_wide), group=c("A","B"))
+
+sp_barplot(data = bar_test_data_wide, melted = F, xvariable = "ID", yvariable = "Exper",
+           top_n = 2, metadata = metadata, facet_variable = "group")
+
+```
+
+
+```{r}
 library(tidyr)
 library(dplyr)
 bar_data = "bar.txt"
@@ -556,7 +643,7 @@ sp_barplot(data = box_demo1_data, melted = F, ylim = c(20,40))
 ```{r}
 library(dplyr)
 box_demo2_data <- "exprTable.txt"
-sp_barplot(data = box_demo2_data, melted = F, bar_mode="fill", add_text=T)
+sp_barplot(data = box_demo2_data, melted = F, bar_mode="fill", add_text=T, metadata = "")
 ```
 
 ```{r}
@@ -621,7 +708,7 @@ library(dplyr)
 
 
 box_data = "box.data"
-sp_boxplot(data = box_data, melted=T, xvariable = "Gene", yvariable = "Expr", legend_variable="Group", statistics = T, violin_nb = F, violin=T, jitter_bp = T)
+sp_boxplot(data = box_data, melted=T, xvariable = "Gene", yvariable = "Expr", legend_variable="Group", statistics = T, violin_nb = F, violin=T, jitter_bp = T, facet_variable = "Gene")
 ```
 
 ```{r}
@@ -688,6 +775,7 @@ sp_boxplot(data, melted = T, xvariable = "Cluster", yvariable = "Expr", facet_va
 ```{r}
 library(ImageGP)
 library(stringr)
+library(ggplot2)
 enrichment_data <- "enrichment.data"
 
 sp_enrichment(data = enrichment_data, xvariable = "SampleGroup", 
@@ -699,6 +787,7 @@ sp_enrichment(data = enrichment_data, xvariable = "SampleGroup",
 ```{r}
 enrichment.data <- sp_readTable(enrichment_data) 
 head(enrichment.data)
+enrichment.data <- as.matrix(enrichment.data)
 sp_enrichment(data = enrichment.data, xvariable = "GeneRatio", yvariable = "Description",
               log10_transform_variable = "Qvalue", sqrt_transform_variable = "Count",
               shape_variable = "SampleGroup")
@@ -799,11 +888,12 @@ suppressMessages(library("ggrepel"))
 suppressMessages(library("ggpubr"))
 suppressMessages(library("vegan"))
 suppressMessages(library("ggalt"))
+# devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
 suppressMessages(library("pairwiseAdonis"))
 
 pcoa_data = "pcoa.data"
 group_pcoa_data = "group_pcoa.data"
-sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", input_type = "distance_matrix") 
+sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", input_type = "distance_matrix", filename = "cpcoa.pdf") 
 
 sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype", draw_ellipse = "no", input_type = "distance_matrix")
 
@@ -823,6 +913,13 @@ sp_pcoa(data=pcoa_data, metadata = group_pcoa_data, color_variable = "genotype",
         input_type = "distance_matrix", manual_color_vector="Set2", filename="pcoa.pdf") 
 ```
 
+```{r}
+pcoas <- sp_readTable("cpcoa.pdf.pcoas.txt", row.names = NULL)
+head(pcoas)
+
+sp_histogram(pcoas, melted = T, xvariable = "PCoA2", group_variable = "genotype", 
+             plot_type = "density_line")
+```
 
 ```{r}
 data = "otuabundance.txt"
