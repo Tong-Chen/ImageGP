@@ -13,11 +13,11 @@
 #' @param log2fc_var Name of fold change column.
 #' @param fdr_var Name of FDR or p-value column.
 #' @param coordinate_flip Default FALSE meaning `log2fc_var` in `X-axis`. Specify `TRUE` to make `fdr_var` in `X-axis`.
-#' @param status_col_var Name of the column containining labels of gene expression status like `"No differnece", "UP-regulated", "Down-regulated"`. If exists, this column would be used to color each group of points. This parameter has higher priority than `significance_threshold`.
+#' @param status_col_var Name of the column containing labels of gene expression status like `"No differnece", "UP-regulated", "Down-regulated"`. If exists, this column would be used to color each group of points. This parameter has higher priority than `significance_threshold`.
 #' @param significance_threshold Set the threshold for defining DE genes in format like `c(pvalue,abs_log_fodchange)`. If this parameter is given, the program will generate `status_col_var` based on given thresholds.
 #' @param status_col_var_order Changing the order of status column values.
-#' Normally, the unique values of status column would be sorted alphabetically. For example, the order of `"No differnece", "UP-regulated", "Down-regulated"` would be `"Down-regulated", "No differnece", "UP-regulated"`. Here we can specify their order manually like `"UP-regulated", "Down-regulated", "No differnece"` to match the color specified below.
-#' @param point_color_vector Color vector. Defgault 'red, green, grey' for 'up, dw, nodiff'
+#' Normally, the unique values of status column would be sorted alphabetically. For example, the order of `"No difference", "UP-regulated", "Down-regulated"` would be `"Down-regulated", "No differnece", "UP-regulated"`. Here we can specify their order manually like `"UP-regulated", "Down-regulated", "No differnece"` to match the color specified below.
+#' @param point_color_vector Color vector. Default 'red, green, grey' for 'up, dw, nodiff'
 #' when `status_col_var` is not given. The order of color vector must match the order
 #' of levels of `status_col_var`.
 #' @param log10_transform_fdr Get `-log10(pvalue)` or `-log10(fdr)` for column given to `fdr_var`. Default FALSE, accept TRUE.
@@ -26,14 +26,14 @@
 #' @param point_label_var Name of columns containing labels for points (representing genes, proteins or OTUs) to be labeled. Points with `NA`,`-` or `` value in this column will not be labeled.
 #' @param point_size Point size. Default 0.8. Accept a number of name of one column.
 #' @param alpha Transparency of points (0-1). 0: opaque; 1: transparent.
-#' @param log2fc_symmetry Make coordiante axis symmetry to generate bettter visualization. Default TRUE.
+#' @param log2fc_symmetry Make coordinate axis symmetry to generate better visualization. Default TRUE.
 #' @param x_label Xlab label.Default "Log2 fold change".
 #' @param xintercept Default 'fc' to show fold change lines. This needs `significance_threshold`. Specify NULL to hide lines.
 #' @param yintercept Default 'fdr' to show fdr lines. This needs `significance_threshold`. Specify NULL to hide lines.
 #' @param y_label Ylab label.Default "Negative log10 transformed qvalue".
 #' @inheritParams sp_ggplot_add_vline_hline
 #' @inheritParams sp_ggplot_layout
-#' @param ... Parametes given to `sp_ggplot_layout`
+#' @param ... Parameters given to `sp_ggplot_layout`
 #'
 #' @return A ggplot2 object
 #' @export
