@@ -89,7 +89,7 @@ sp_pcoa <- function(data,
                     facet_variable = NULL,
                     coord_fixed = T,
                     ...) {
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     file <- data
     data <- sp_readTable(data, row.names = 1)
   } else if ('data.frame' %in% class(data) |

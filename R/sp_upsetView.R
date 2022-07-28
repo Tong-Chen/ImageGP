@@ -88,7 +88,7 @@ sp_upsetview <- function (data,
   }
 
   if (vennFormat == 0) {
-    if (class(data) == "character") {
+    if ("character" %in% class(data)) {
       data <- sp_readTable(data, row.names = NULL)
     } else if (class(data) != "data.frame") {
       stop("Unknown input format for `data` parameter.")
@@ -107,7 +107,7 @@ sp_upsetview <- function (data,
 
   } else {
     header = ifelse(vennFormat == 1, F, T)
-    if (class(data) == "character") {
+    if ("character" %in% class(data)) {
       data <- sp_readTable(data, row.names = NULL, header = header)
     } else if (class(data) != "data.frame") {
       stop("Unknown input format for `data` parameter.")

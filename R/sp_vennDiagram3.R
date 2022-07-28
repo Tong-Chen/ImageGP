@@ -54,7 +54,7 @@ sp_vennDiagram3 <- function (data,
     print(argg)
   }
 
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     data <- sp_readTable(data, row.names = NULL, header = header)
   } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")

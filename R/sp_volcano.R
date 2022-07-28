@@ -91,7 +91,7 @@ sp_volcano_plot <-
     options(warn = -1)
     options(scipen = 999)
 
-    if (class(data) == "character") {
+    if ("character" %in% class(data)) {
       data <- sp_readTable(data, row.names = NULL, stringsAsFactors=F)
     } else if (!"data.frame" %in% class(data)) {
       stop("Unknown input format for `data` parameter.")

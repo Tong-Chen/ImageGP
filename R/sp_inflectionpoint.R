@@ -20,7 +20,7 @@ sp_inflectionpoint <- function (data,
                                 ...)
 {
 
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     enhancer = sp_readTable(data, header = F)
   } else {
     enhancer <- data
