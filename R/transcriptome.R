@@ -120,14 +120,14 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
                paste(salmon_file[!exist_or_not], collapse="\n"), sep="\n"))
   }
 
-  if(!is.null(covariate)){
+  if(!sp.is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
     formula <- as.formula(paste("~", covariate,"+", design))
   } else {
     formula <- as.formula(paste("~", design))
   }
 
-  if (!is.null(tx2gene)){
+  if (!sp.is.null(tx2gene)){
     tx2gene <- read.table(tx2gene, header=T, row.names=NULL, sep="\t")
   }
   # 整合读入的salmon文件和transcript2gene文件
@@ -141,7 +141,7 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample, design=formula)
   print(paste("Read in", nrow(dds),"genes"))
 
-  if(is.null(filter)){
+  if(sp.is.null(filter)){
     filter = nrow(sample)/2
   }
 
@@ -189,7 +189,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
   data <- read.table(count_matrix_file, header=T, row.names=1, com='', quote='',
                      check.names=F, sep="\t", stringsAsFactors = F)
 
-  if(!is.null(covariate)){
+  if(!sp.is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
     formula <- as.formula(paste("~", covariate,"+", design))
   } else {
@@ -205,7 +205,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 
   print(paste("Read in", nrow(dds),"genes"))
 
-  if(is.null(filter)){
+  if(sp.is.null(filter)){
     filter = nrow(sample)/2
   }
 
@@ -257,7 +257,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
   normalized_counts_output = data.frame(id=rownames(normalized_counts), normalized_counts)
   if(savemat){
 	print("Output normalized counts")
-    write.table(normalized_counts_output, file=paste0(output_prefix,".DESeq2.normalized.xls"),
+    write.table(normalized_counts_output, file=paste0(output_prefix,".DESeq2.normalized.txt"),
                 quote=F, sep="\t", row.names=F, col.names=T)
   }
 
@@ -275,7 +275,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
     rlogMat_output = data.frame(id=rownames(rlogMat), rlogMat)
 	if(savemat) {
       print("Output rlog transformed normalized counts")
-      write.table(rlogMat_output, file=paste0(output_prefix,".DESeq2.normalized.rlog.xls"),
+      write.table(rlogMat_output, file=paste0(output_prefix,".DESeq2.normalized.rlog.txt"),
                  quote=F, sep="\t", row.names=F, col.names=T)
 	}
     normexpr$rlog <- rlogMat
@@ -295,7 +295,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
     if(savemat){
       print("Output vst transformed normalized counts")
-      write.table(vstMat_output, file=paste0(output_prefix,".DESeq2.normalized.vst.xls"),
+      write.table(vstMat_output, file=paste0(output_prefix,".DESeq2.normalized.vst.txt"),
                 quote=F, sep="\t", row.names=F, col.names=T)
 	}
 
@@ -356,6 +356,7 @@ normalizedExpr2DistribBoxplot <- function(normexpr, saveplot=NULL, ...) {
 #'
 #' @import ggplot2
 #' @import pheatmap
+#' @import dyplr
 #' @return NULL
 #' @export
 #'
@@ -404,7 +405,7 @@ twoGroupDEgenes <- function
   print(contrastV)
   res <- DESeq2::results(dds,  contrast=contrastV)
 
-  if (is.null(normalized_counts)){
+  if (sp.is.null(normalized_counts)){
     normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
   } else {
     name_nc <- names(normalized_counts)
@@ -451,7 +452,7 @@ twoGroupDEgenes <- function
   comp314 <- paste(groupA, "_vs_", groupB, sep=".")
 
   file_base <- paste(output_prefix, "DESeq2", comp314, sep=".")
-  file_base1 <- paste(file_base, "results.xls", sep=".")
+  file_base1 <- paste(file_base, "results.txt", sep=".")
 
   res_output <- res[, !(names(res) %in% dropCol), drop=F]
   write.table(res_output, file=file_base1, sep="\t", quote=F, row.names=F)
@@ -460,37 +461,37 @@ twoGroupDEgenes <- function
   res_de_up <- subset(res_de, res_de$log2FoldChange>=log2FC)
 
   file <- paste(output_prefix, "DESeq2",groupA, "_higherThan_", groupB,
-                'xls', sep=".")
+                'txt', sep=".")
   write.table(as.data.frame(res_de_up), file=file, sep="\t", quote=F, row.names=F)
 
   res_de_up_id <- subset(res_de_up, select=c("ID"))
   file <- paste(output_prefix, "DESeq2",groupA, "_higherThan_", groupB,
-                'id.xls', sep=".")
+                'id.txt', sep=".")
   write.table(as.data.frame(res_de_up_id), file=file, sep="\t",
               quote=F, row.names=F, col.names=F)
 
   if(dim(res_de_up_id)[1]>0) {
     res_de_up_id_l <- cbind(res_de_up_id, paste(groupA, "_higherThan_",groupB, sep="."))
     write.table(as.data.frame(res_de_up_id_l),
-                file=paste0(output_prefix,".DESeq2.all.DE"),
+                file=paste0(output_prefix,".DESeq2.all.DE.txt"),
                 sep="\t",quote=F, row.names=F, col.names=F, append=T)
   }
 
   res_de_dw <- subset(res_de, res_de$log2FoldChange<=(-1)*log2FC)
   file <- paste(output_prefix, "DESeq2",groupA, "_lowerThan_", groupB,
-                'xls', sep=".")
+                'txt', sep=".")
   write.table(as.data.frame(res_de_dw), file=file, sep="\t", quote=F, row.names=F)
 
   res_de_dw_id <- subset(res_de_dw, select=c("ID"))
   file <- paste(output_prefix, "DESeq2",groupA, "_lowerThan_", groupB,
-                'id.xls', sep=".")
+                'id.txt', sep=".")
   write.table(as.data.frame(res_de_dw_id), file=file, sep="\t",
               quote=F, row.names=F, col.names=F)
 
   if(dim(res_de_dw_id)[1]>0) {
     res_de_dw_id_l <- cbind(res_de_dw_id, paste(groupA, "_lowerThan_",groupB, sep="."))
     write.table(as.data.frame(res_de_dw_id_l),
-                file=paste0(output_prefix,".DESeq2.all.DE"),
+                file=paste0(output_prefix,".DESeq2.all.DE.txt"),
                 sep="\t",quote=F, row.names=F, col.names=F, append=T)
   }
 
@@ -625,7 +626,7 @@ multipleGroupDEgenes <- function(
     file.remove(paste0(output_prefix,".DESeq2.all.DE"))
   }
 
-  if(!is.null(comparePairFile)){
+  if(!sp.is.null(comparePairFile)){
     compare_data <- read.table(comparePairFile, sep="\t",
                                check.names=F, quote='', com='',
                                stringsAsFactors = F)
