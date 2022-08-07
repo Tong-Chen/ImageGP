@@ -83,7 +83,7 @@ sp_EulerDiagrams <- function (data,
 
   # library(eulerr)
   # 最基本的输入格式判断不能落下
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     data <- sp_readTable(data, row.names = NULL, header=T)
   } else if (class(data) != "data.frame") {
     stop("Unknown input format for `data` parameter.")

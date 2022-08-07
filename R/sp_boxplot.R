@@ -129,7 +129,7 @@ sp_boxplot <- function(data,
     }
   }
 
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     data <- sp_readTable(data, row.names = NULL)
     if (!melted) {
       first_column_variable <- colnames(data)[1]

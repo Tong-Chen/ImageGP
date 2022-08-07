@@ -60,7 +60,7 @@ shapiro.test2 <- function(data, threshold = 1000) {
 #' @param stat_group_variable The column represents the statistical group information.
 #' @param statistical_method Statistical method. For two groups, default <t.test>. For more than two groups, default <aov>.
 #' @param add_y Add positions for each statistical label.
-#' @param statistical_threshold_for_letters Threshold for treating as significane, default 0.05.
+#' @param statistical_threshold_for_letters Threshold for treating as significance, default 0.05.
 #' @return A list. list(data=data, a data frame with statistical information, Tukey_HSD=Tukey_HSD)
 #' @export
 #'

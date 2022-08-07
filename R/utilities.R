@@ -878,7 +878,7 @@ sp_ggplot_facet <- function(p, facet_variable=NULL, facet_ncol=NULL, facet_nrow=
 sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
   wide_rownames = NULL
   wide_colnames = NULL
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     if (!melted) {
       data <- sp_readTable(data, row.names = NULL)
       wide_rownames <- make.unique(as.vector(as.character(data[, 1])))

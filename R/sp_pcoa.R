@@ -29,6 +29,8 @@
 #' For `None`: No transformation would be performed.
 #' For `total`: Compute relative abundance of OTUs/Genes in each sample.
 #' For `hellinger`: square root of `method = "total"`.
+#' For `scale`: row scale.
+#' For `sqrt` and `log2`, just as the words.
 #' @param group_variable The variable for grouping points to generate normal data confidence ellipses. Optional.
 #' @param draw_ellipse Default 'auto' means to enclose points in a polygon if one group with
 #' less than 4 points. If there are more than 4 points for all groups, confidence ellipses would be draw.
@@ -87,7 +89,7 @@ sp_pcoa <- function(data,
                     facet_variable = NULL,
                     coord_fixed = T,
                     ...) {
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     file <- data
     data <- sp_readTable(data, row.names = 1)
   } else if ('data.frame' %in% class(data) |
@@ -129,6 +131,18 @@ sp_pcoa <- function(data,
       if (xam > 9) {
         data <- vegan::wisconsin(data)
       }
+    } else if (data_transform == "sqrt") {
+        data <- sqrt(data)
+    } else if (data_transform == "log2") {
+      log_add = sp_determine_log_add(data)
+      data <- data + log_add
+      data <- log2(data)
+    }  else if (data_transform == "scale") {
+      data <- data[var(data) != 0, ]
+      data_scale <- t(apply(data, 1, scale))
+      rownams(data_scale) <- rownames(data)
+      colnams(data_scale) <- colnames(data)
+      data <- data_scale
     } else if (data_transform != "None") {
       data <- vegan::decostand(data, method = data_transform)
     }

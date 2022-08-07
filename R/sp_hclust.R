@@ -29,7 +29,7 @@ sp_hclust <- function (data,
     argg <- c(as.list(environment()), list(...))
     print(argg)
   }
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
   datExpr <- sp_readTable(data, row.names = NULL)
   } else {
     datExpr <- data

@@ -21,7 +21,9 @@ Depends:
 Imports:
     ggplot2,
 	pheatmap,
-	grid
+	grid,
+	dplyr,
+    stringr
 Suggests:
     WGCNA,
     DESeq2,
@@ -33,7 +35,6 @@ Suggests:
     BiocParallel,
     cowplot,
     readr,
-    dplyr,
 	knitr,
 	VennDiagram,
 	UpSetR

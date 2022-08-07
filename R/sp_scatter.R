@@ -121,7 +121,7 @@ sp_scatterplot <- function (data,
                             scales = 'fixed',
                             scale_y_way = NULL,
                             ...) {
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     data <- sp_readTable(data)
   } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")

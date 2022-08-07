@@ -347,7 +347,7 @@ dataFilter <-
 #' @examples
 #'
 #' df = generateAbundanceDF(nSample=30, nGrp=3)
-#' dataFilter(df)
+#' dataFilter2(df)
 #'
 dataFilter2 <-
   function(datExpr,
@@ -1518,10 +1518,11 @@ WGCNA_moduleTraitPlot <-
       c("Module", "Trait", "PersonCorrelationValue")
     modTraitPMelt = as.data.frame(modTraitP)
     write.table(
-      modTraitPMelt,
+      data.frame(ID = rownames(modTraitPMelt), modTraitPMelt),
       file = paste0(prefix, ".module_trait_correlationPvalue.xls"),
       sep = "\t",
-      quote = F
+      quote = F,
+      row.names = F
     )
     modTraitPMelt$ID = rownames(modTraitP)
     modTraitPMelt = reshape2::melt(modTraitPMelt)
@@ -1635,6 +1636,7 @@ WGCNA_ModuleGeneTraitHeatmap <-
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
       geneTraitCor = as.data.frame(cor(datExpr, traitData, use = "p"))
+      nSamples <- nrow(traitData)
       geneTraitP = as.data.frame(WGCNA::corPvalueStudent(as.matrix(geneTraitCor), nSamples))
     } else {
       geneTraitCorA = WGCNA::bicorAndPvalue(datExpr, traitData, robustY = robustY)
@@ -1776,6 +1778,7 @@ WGCNA_GeneModuleTraitCoorelation <-
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
       geneModuleMembership = as.data.frame(cor(datExpr, MEs_col, use = "p"))
+      nSamples <- nrow(traitData)
       MMPvalue = as.data.frame(WGCNA::corPvalueStudent(as.matrix(geneModuleMembership), nSamples))
     } else {
       # 关联样品性状的二元变量时，设置
@@ -1840,9 +1843,10 @@ WGCNA_GeneModuleTraitCoorelation <-
                 'xls',
                 sep = ".")
         gene_trait_module_cor <-
-          cbind(geneModuleMembership = geneModuleMembership[moduleGenes,  module_column],
+          data.frame(ID=rownames(geneModuleMembership[moduleGenes,  module_column,drop=F]),
+            geneModuleMembership = geneModuleMembership[moduleGenes,  module_column],
                 geneTraitCor = geneTraitCor[moduleGenes,  pheno_column])
-        gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
+        #gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
         write.table(
           gene_trait_module_cor,
           file = file,

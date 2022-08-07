@@ -27,6 +27,7 @@ library(ImageGP)
 library(pheatmap)
 library(RColorBrewer)
 library(grid)
+library(stringr)
 sp_pheatmap("exprTable.txt", xtics_angle = 270, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 0, cluster_rows = T, cluster_cols = T)
 sp_pheatmap("exprTable.txt", xtics_angle = 10, cluster_rows = T, cluster_cols = T)
@@ -49,6 +50,17 @@ sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols =
             clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
             filename = "pheatmap.pdf")
 ```
+```{r}
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "exprTable2.txt")
+
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "NULL")
+
+sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "")
+
+#sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = b)
+```
+
+
 ```{r}
 library(ImageGP)
 library(pheatmap)

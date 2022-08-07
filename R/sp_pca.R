@@ -76,7 +76,7 @@ sp_pca <- function(data,
     print(argg)
   }
 
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     data <- sp_readTable(data, row.names = NULL)
     rownames_data <- make.unique(as.vector(data[, 1]))
     data <- data[, -1, drop = F]

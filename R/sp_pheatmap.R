@@ -56,16 +56,19 @@ draw_colnames_custom <-
 
     if (xtics_angle == 90) {
       hjust <- 1
-      vjust <- 0
+      vjust <- 0.5
     } else if (xtics_angle >= 180) {
       hjust <- 0.5
       vjust <- -0.5
     } else if (xtics_angle >= 200) {
       hjust <- 0.5
       vjust <- -1
-    } else if (xtics_angle == 250) {
-      hjust <- 0.5
-      vjust <- 0
+    } else if (xtics_angle == 270) {
+      hjust <- 0
+      vjust <- 0.5
+    } else if (xtics_angle == 45) {
+      vjust <- 1
+      hjust <- 1
     } else if (xtics_angle == 0) {
       vjust <- 1
       hjust <- 0.5
@@ -271,7 +274,7 @@ sp_pheatmap <- function(data,
                     value = "draw_colnames_custom",
                     ns = asNamespace("pheatmap"))
 
-  if (class(data) == "character") {
+  if ("character" %in% class(data)) {
     # if (sp.is.null(outputprefix)) {
     #   outputprefix = data
     #   filename = NA
@@ -283,6 +286,8 @@ sp_pheatmap <- function(data,
   } else if (!"data.frame" %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
   }
+
+
 
   #print(data)
   # if (sp.is.null(outputprefix)) {
@@ -305,6 +310,21 @@ sp_pheatmap <- function(data,
   }
 
   data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
+
+  if ("character" %in% class(display_numbers)) {
+    if (display_numbers!="NULL" && display_numbers!="") {
+    display_numbers <-
+      sp_readTable(display_numbers,
+                   row.names = 1,
+                   renameDuplicateRowNames = renameDuplicateRowNames)
+
+    display_numbers <- display_numbers[rownames(data), colnames(data), drop=F]
+    display_numbers[is.na(display_numbers)] <- ''
+    display_numbers <- sapply(display_numbers, stringr::str_replace, "\\\\n","\n")
+    } else {
+      display_numbers = FALSE
+    }
+  }
 
   if (!sp.is.null(logv)) {
     if (log_add == 0) {
@@ -340,7 +360,7 @@ sp_pheatmap <- function(data,
             seq(summary_v[5], summary_v[6], length = color_length / 4 -
                   1)
           ))
-        legend_breaks <- summary_v
+        legend_breaks <- unique(summary_v)
       } else {
         breaks_mid <- as.numeric(breaks_mid)
         breaks <- unique(c(
@@ -348,7 +368,7 @@ sp_pheatmap <- function(data,
               length = color_length / 2),
           seq(breaks_mid, summary_v[6], length = color_length / 2 - 1)
         ))
-        legend_breaks <- c(summary_v[1], breaks_mid, summary_v[6])
+        legend_breaks <- unique(c(summary_v[1], breaks_mid, summary_v[6]))
       }
     } else {
       legend_breaks <- breaks
@@ -363,7 +383,7 @@ sp_pheatmap <- function(data,
 
     if (breaks_digits) {
       legend_breaks <-
-        as.numeric(prettyNum(legend_breaks, digits = breaks_digits))
+        unique(as.numeric(prettyNum(legend_breaks, digits = breaks_digits)))
     }
     legend_labels <- legend_breaks
 
@@ -479,7 +499,7 @@ sp_pheatmap <- function(data,
 
   #print(data)
   # filter abnormal lines
-  if(ncol(data)>1){
+  if(ncol(data)>1 && nrow(data)>1){
     data_sd <- apply(data, 1, sd)
     if (any(data_sd == 0)) {
       stop("Wrong correlation method for this type of data. Please choose another method.")
@@ -536,7 +556,9 @@ sp_pheatmap <- function(data,
       height = 30
     }
 
-    if (all(class(display_numbers) == "logical") && display_numbers){
+    if (("logical" %in% class(display_numbers) && display_numbers) ||
+         'data.frame' %in% class(display_numbers) ||
+         'matrix' %in% class(display_numbers)){
       width = width * 2
       height = height * 1.2
     }
