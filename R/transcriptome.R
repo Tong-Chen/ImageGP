@@ -702,11 +702,15 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
 
   normalizedExpr2DistribBoxplot(normexpr,
                                 saveplot=paste(output_prefix, "DESeq2.normalizedExprDistrib.pdf", sep="."))
-
+  if (rlog){
   clusterSampleHeatmap2(normexpr$rlog,
                         cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
                         saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
-
+  } else {
+  clusterSampleHeatmap2(normexpr$vst,
+                        cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
+                        saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
+  }
 
   multipleGroupDEgenes(dds, comparePairFile=comparePairFile, design=design,
                        padj=padj, log2FC=log2FC, dropCol=dropCol,
