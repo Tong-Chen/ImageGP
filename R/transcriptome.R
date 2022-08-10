@@ -120,12 +120,6 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
                paste(salmon_file[!exist_or_not], collapse="\n"), sep="\n"))
   }
 
-  if(!sp.is.null(covariate)){
-    covariate <- paste(covariate, collapse="+")
-    formula <- as.formula(paste("~", covariate,"+", design))
-  } else {
-    formula <- as.formula(paste("~", design))
-  }
 
   if (!sp.is.null(tx2gene)){
     tx2gene <- read.table(tx2gene, header=T, row.names=NULL, sep="\t")
@@ -137,6 +131,17 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
                        quote='', check.names=F, sep="\t",
                        stringsAsFactors = T)
   sample <- sample[match(colnames(txi$counts), rownames(sample)),, drop=F]
+
+  if (sp.is.null(design)) {
+  	design = colnames(sample)[1]
+  }
+
+  if(!sp.is.null(covariate)){
+    covariate <- paste(covariate, collapse="+")
+    formula <- as.formula(paste("~", covariate,"+", design))
+  } else {
+    formula <- as.formula(paste("~", design))
+  }
 
   dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample, design=formula)
   print(paste("Read in", nrow(dds),"genes"))
@@ -189,16 +194,21 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
   data <- read.table(count_matrix_file, header=T, row.names=1, com='', quote='',
                      check.names=F, sep="\t", stringsAsFactors = F)
 
+
+  sample <- read.table(sampleFile, header=T, row.names=1, com='',
+                       quote='', check.names=F, sep="\t", stringsAsFactors = T)
+  sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
+
+
+  if (sp.is.null(design)) {
+  	design = colnames(sample)[1]
+  }
   if(!sp.is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
     formula <- as.formula(paste("~", covariate,"+", design))
   } else {
     formula <- as.formula(paste("~", design))
   }
-
-  sample <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t", stringsAsFactors = T)
-  sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
   dds <- DESeqDataSetFromMatrix(countData = data,
                                 colData = sample,  design=formula)
@@ -689,6 +699,14 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
                        tx2gene=NULL, filter=NULL, output_prefix='ehbio',
                        rlog=T, vst=F, comparePairFile=NULL, padj=0.05,
                        log2FC=1, dropCol=c("lfcSE", "stat")){
+
+  if (sp.is.null(design)) {
+    sample <- read.table(sampleFile, header=T, row.names=1, com='',
+                       quote='', check.names=F, sep="\t",
+                       stringsAsFactors = T)
+  	design = colnames(sample)[1]
+  }
+
   if(type == "salmon"){
     dds <- salmon2deseq(file, sampleFile, design, covariate=covariate,
                       tx2gene=tx2gene, filter=filter, rundeseq=T)
