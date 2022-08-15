@@ -250,7 +250,7 @@ sp_pcoa <- function(data,
   if (distance_algorithm != ""){
     analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
   }
-  analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
+
   if (dissimilarity_index == "euclidean"){
     analysis_label = "PCA"
   }
