@@ -119,6 +119,7 @@ sp_pcoa <- function(data,
   #   stop(paste(color_variable, 'must be column names of data!'))
   # }
 
+  distance_algorithm = ""
   if (input_type == "normalized_OTUtable" &&
       (!'dist' %in% class(data))) {
     data <- t(data)
@@ -149,6 +150,7 @@ sp_pcoa <- function(data,
 
     dist_matrix <- vegan::vegdist(data, method = dissimilarity_index,
                                   binary = binary_dissimilarity_index)
+    distance_algorithm <- dissimilarity_index
   } else {
     dist_matrix <- as.dist(data)
   }
@@ -244,10 +246,19 @@ sp_pcoa <- function(data,
     )
   }
 
+  analysis_label = "PCoA"
+  if (distance_algorithm != ""){
+    analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
+  }
+  analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
+  if (dissimilarity_index == "euclidean"){
+    analysis_label = "PCA"
+  }
+
   p <- ggplot(data, aes(x = PCoA1, y = PCoA2, group = !!group_variable_en)) +
     labs(
-      x = paste("PCoA 1 (", eig_percent[1], "%)", sep = ""),
-      y = paste("PCoA 2 (", eig_percent[2], "%)", sep = ""),
+      x = paste(analysis_label, "1 (", eig_percent[1], "%)", sep = ""),
+      y = paste(analysis_label, "2 (", eig_percent[2], "%)", sep = ""),
       title = title
     ) + geom_point()
 
