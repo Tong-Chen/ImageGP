@@ -465,6 +465,13 @@ twoGroupDEgenes <- function
   file_base1 <- paste(file_base, "results.txt", sep=".")
 
   res_output <- res[, !(names(res) %in% dropCol), drop=F]
+  res_output$level <- ifelse(res_output$padj<=padj,
+                       ifelse(res_output$log2FoldChange>=log2FC, paste(groupA,"UP"),
+                        ifelse(res_output$log2FoldChange<=log2FC*(-1),
+                               paste(groupB,"UP"), "NoDiff")) , "NoDiff")
+  res_output$level <- factor(res_output$level,
+                             levels = c(paste(sampleA,"UP"),paste(sampleB,"UP"), "NoDiff"))
+
   write.table(res_output, file=file_base1, sep="\t", quote=F, row.names=F)
 
   res_de <- res[res$padj<padj, !(names(res) %in% dropCol), drop=F]
@@ -715,6 +722,16 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
     dds <- readscount2deseq(file, sampleFile, design, covariate=covariate,
                       filter=filter, rundeseq=T)
   }
+
+  parameterDF = data.frame(
+        parameter=c("FDR_threshold","Log2FC_threshold"),
+        value=c(padj,log2FC))
+
+
+  write.table(parameterDF,
+                        file=paste0(output_prefix, ".parameters.tsv"),
+            quote=F, sep="\t", row.names=F, col.names=T)
+
 
   normexpr <- deseq2normalizedExpr(dds, output_prefix, rlog=rlog, vst=vst)
 
