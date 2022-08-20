@@ -130,6 +130,9 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t",
                        stringsAsFactors = T)
+  sample <- samle[,!grepl('fastq', colnames(sample))]
+
+
   sample <- sample[match(colnames(txi$counts), rownames(sample)),, drop=F]
 
   if (sp.is.null(design)) {
@@ -197,6 +200,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t", stringsAsFactors = T)
+  sample <- samle[,!grepl('fastq', colnames(sample))]
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
 
@@ -544,6 +548,8 @@ twoGroupDEgenes <- function
 
   sample = sample[sapply(sample, function(x) !is.logical(x))]
 
+  sample <- samle[,!grepl('fastq', colnames(sample))]
+
   sp_writeTable(sample, file=paste0(file_base1,".top20DEgenes.sample.txt"))
 
   # heatmap_de <- pheatmap::pheatmap(res_de_top20_expr, cluster_row=T, scale="row",
@@ -732,14 +738,25 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
 
   normalizedExpr2DistribBoxplot(normexpr,
                                 saveplot=paste(output_prefix, "DESeq2.normalizedExprDistrib.pdf", sep="."))
+
+  metadata = as.data.frame(colData(dds))
+
   if (rlog){
-  clusterSampleHeatmap2(normexpr$rlog,
+  clusterSampleHeatmap2(normexpr$rlog[1:500,],
                         cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
                         saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
+  sp_pca(normexpr$rlog[1:500,], metadata, color_variable=design, 
+		 shape_variable = design, 
+		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) + 
+								 aes(size=1) + guides(size = "none")
   } else {
-  clusterSampleHeatmap2(normexpr$vst,
+  clusterSampleHeatmap2(normexpr$vst[1:500,],
                         cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
                         saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
+  sp_pca(normexpr$vst[1:500,], metadata, color_variable=design, 
+		 shape_variable = design, 
+		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) + 
+								 aes(size=1) + guides(size = "none")
   }
 
   multipleGroupDEgenes(dds, comparePairFile=comparePairFile, design=design,
