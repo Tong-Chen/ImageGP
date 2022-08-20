@@ -465,12 +465,16 @@ twoGroupDEgenes <- function
   file_base1 <- paste(file_base, "results.txt", sep=".")
 
   res_output <- res[, !(names(res) %in% dropCol), drop=F]
+
   res_output$level <- ifelse(res_output$padj<=padj,
-                       ifelse(res_output$log2FoldChange>=log2FC, paste(groupA,"UP"),
-                        ifelse(res_output$log2FoldChange<=log2FC*(-1),
-                               paste(groupB,"UP"), "NoDiff")) , "NoDiff")
-  res_output$level <- factor(res_output$level,
-                             levels = c(paste(sampleA,"UP"),paste(sampleB,"UP"), "NoDiff"))
+                             ifelse(res_output$log2FoldChange>=log2FC,
+                                    paste(groupA,"UP"),
+                             ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
+                                    paste(groupB,"UP"), "NoDiff")) , "NoDiff")
+
+  res_output$level <- factor(res_output$level, levels = c(paste(groupA,"UP"),
+                                                          paste(groupB,"UP"), "NoDiff"),
+                             ordered = T)
 
   write.table(res_output, file=file_base1, sep="\t", quote=F, row.names=F)
 
@@ -512,15 +516,6 @@ twoGroupDEgenes <- function
                 sep="\t",quote=F, row.names=F, col.names=F, append=T)
   }
 
-  res_output$level <- ifelse(res_output$padj<=padj,
-                             ifelse(res_output$log2FoldChange>=log2FC,
-                                    paste(groupA,"UP"),
-                             ifelse(res_output$log2FoldChange<=(-1)*(log2FC),
-                                    paste(groupB,"UP"), "NoDiff")) , "NoDiff")
-
-  res_output$level <- factor(res_output$level, levels = c(paste(groupA,"UP"),
-                                                          paste(groupB,"UP"), "NoDiff"),
-                             ordered = T)
 
   #volcanoPlot(res_output, "log2FoldChange", "padj",
   #            "level", saveplot=paste0(file_base1,".volcano.pdf"), ...)
