@@ -130,7 +130,7 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   sample1 <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t",
                        stringsAsFactors = T)
-  sample1 <- sample1[,!grepl('fastq', colnames(sample1))]
+  sample1 <- sample1[,!grepl('fastq', colnames(sample1)),  drop=F]
 
 
   sample2 <- sample1[match(colnames(txi$counts), rownames(sample1)),, drop=F]
