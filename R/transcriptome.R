@@ -200,7 +200,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t", stringsAsFactors = T)
-  sample <- sample[,!grepl('fastq', colnames(sample))]
+  sample <- sample[,!grepl('fastq', colnames(sample)), drop=F]
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
 
@@ -548,7 +548,7 @@ twoGroupDEgenes <- function
 
   sample = sample[sapply(sample, function(x) !is.logical(x))]
 
-  sample <- sample[,!grepl('fastq', colnames(sample))]
+  sample <- sample[,!grepl('fastq', colnames(sample)),  drop=F]
 
   sp_writeTable(sample, file=paste0(file_base1,".top20DEgenes.sample.txt"))
 
