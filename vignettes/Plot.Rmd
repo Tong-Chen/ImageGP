@@ -60,6 +60,10 @@ sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = 
 #sp_pheatmap("exprTable.txt", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = b)
 ```
 
+```{r}
+sp_pheatmap("~/Desktop/20445bfd-237f-4400-b233-ef5dfc07663c.module_trait_correlation.xls", xtics_angle = 45, cluster_rows = T, cluster_cols = T, display_numbers = "")
+
+```
 
 ```{r}
 library(ImageGP)

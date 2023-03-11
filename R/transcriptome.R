@@ -127,16 +127,16 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   # 整合读入的salmon文件和transcript2gene文件
   txi <- tximport::tximport(salmon_file, type = "salmon", tx2gene = tx2gene)
 
-  sample <- read.table(sampleFile, header=T, row.names=1, com='',
+  sample1 <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t",
                        stringsAsFactors = T)
-  sample <- sample[,!grepl('fastq', colnames(sample))]
+  sample1 <- sample1[,!grepl('fastq', colnames(sample1)),  drop=F]
 
 
-  sample <- sample[match(colnames(txi$counts), rownames(sample)),, drop=F]
+  sample2 <- sample1[match(colnames(txi$counts), rownames(sample1)),, drop=F]
 
   if (sp.is.null(design)) {
-  	design = colnames(sample)[1]
+  	design = colnames(sample2)[1]
   }
 
   if(!sp.is.null(covariate)){
@@ -146,16 +146,16 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
     formula <- as.formula(paste("~", design))
   }
 
-  dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample, design=formula)
+  dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample2, design=formula)
   print(paste("Read in", nrow(dds),"genes"))
 
   if(sp.is.null(filter)){
-    filter = nrow(sample)/2
+    filter = nrow(sample2)/2
   }
 
   keep <- rowSums(DESeq2::counts(dds))>filter
   dds <- dds[keep,]
-  print(paste(nrow(dds),"genes remained after filtering of genes with all counts less than", nrow(sample)/2, "in all samples."))
+  print(paste(nrow(dds),"genes remained after filtering of genes with all counts less than", nrow(sample2)/2, "in all samples."))
 
   if(rundeseq){
     print("Perform DESeq on given datasets.")
@@ -200,7 +200,7 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=F, sep="\t", stringsAsFactors = T)
-  sample <- sample[,!grepl('fastq', colnames(sample))]
+  sample <- sample[,!grepl('fastq', colnames(sample)), drop=F]
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
 
@@ -548,7 +548,7 @@ twoGroupDEgenes <- function
 
   sample = sample[sapply(sample, function(x) !is.logical(x))]
 
-  sample <- sample[,!grepl('fastq', colnames(sample))]
+  sample <- sample[,!grepl('fastq', colnames(sample)),  drop=F]
 
   sp_writeTable(sample, file=paste0(file_base1,".top20DEgenes.sample.txt"))
 
