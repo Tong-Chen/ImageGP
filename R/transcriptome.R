@@ -640,8 +640,8 @@ multipleGroupDEgenes <- function(
   ...
 ){
 
-  if (file.exists(paste0(output_prefix,".DESeq2.all.DE"))) {
-    file.remove(paste0(output_prefix,".DESeq2.all.DE"))
+  if (file.exists(paste0(output_prefix,".DESeq2.all.DE.txt"))) {
+    file.remove(paste0(output_prefix,".DESeq2.all.DE.txt"))
   }
 
   if(!sp.is.null(comparePairFile)){
@@ -745,17 +745,17 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
   clusterSampleHeatmap2(normexpr$rlog[1:500,],
                         cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
                         saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
-  sp_pca(normexpr$rlog[1:500,], metadata, color_variable=design, 
-		 shape_variable = design, 
-		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) + 
+  sp_pca(normexpr$rlog[1:500,], metadata, color_variable=design,
+		 shape_variable = design,
+		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) +
 								 aes(size=1) + guides(size = "none")
   } else {
   clusterSampleHeatmap2(normexpr$vst[1:500,],
                         cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."),
                         saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
-  sp_pca(normexpr$vst[1:500,], metadata, color_variable=design, 
-		 shape_variable = design, 
-		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) + 
+  sp_pca(normexpr$vst[1:500,], metadata, color_variable=design,
+		 shape_variable = design,
+		 filename=paste(output_prefix, "DESeq2.pca.pdf", sep=".")) +
 								 aes(size=1) + guides(size = "none")
   }
 
