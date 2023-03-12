@@ -1846,6 +1846,7 @@ WGCNA_GeneModuleTraitCoorelation <-
           data.frame(ID=rownames(geneModuleMembership[moduleGenes,  module_column,drop=F]),
             geneModuleMembership = geneModuleMembership[moduleGenes,  module_column],
                 geneTraitCor = geneTraitCor[moduleGenes,  pheno_column])
+        gene_trait_module_cor <-  gene_trait_module_cor[order(gene_trait_module_cor$geneTraitCor, decreasing = T),]
         #gene_trait_module_cor = data.frame(ID = rownames(gene_trait_module_cor), gene_trait_module_cor)
         write.table(
           gene_trait_module_cor,

@@ -381,7 +381,7 @@ sp_boxplot <- function(data,
       stop(paste(group_variable_for_line, 'must be column names of data!'))
     }
     group_variable_for_line_en = sym(group_variable_for_line)
-
+    # 如果设置了line而没设置显示点，默认也要显示点
     if (!(jitter || jitter_bp)) {
       p <-
         p + geom_quasirandom(
