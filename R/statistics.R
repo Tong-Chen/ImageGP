@@ -64,9 +64,9 @@ shapiro.test2 <- function(data, threshold = 1000) {
 #' @return A list. list(data=data, a data frame with statistical information, Tukey_HSD=Tukey_HSD)
 #' @export
 #'
-#' @examples
+#' @examples NULL
 #'
-#‘ data <-
+#‘ data <- c()
 #'
 sp_diff_test <-
   function(data,
@@ -125,12 +125,14 @@ sp_diff_test <-
 #' @param group_variable The column represents the group information.
 #' The data would be split by this group and diff test would be performed within each group.
 #' @inheritParams sp_diff_test
-#' @param ... Other paramters givene to \link[sp_diff_test].
+#' @param ... Other parameters given to \link{sp_diff_test}.
 #'
 #' @return A list. list(data=data, a data frame with statistical information, Tukey_HSD=Tukey_HSD)
 #' @export
 #'
 #' @examples
+#' NULL
+#'
 sp_multiple_group_diff_test <-
   function(data,
            stat_value_variable,

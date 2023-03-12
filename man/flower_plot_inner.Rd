@@ -25,23 +25,23 @@ flower_plot_inner(
 \arguments{
 \item{sample}{A vector of sample names.
 
-Like\preformatted{c("Grp1", "Grp2", "Grp3")
-}}
+Like
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{c("Grp1", "Grp2", "Grp3")
+}\if{html}{\out{</div>}}}
 
 \item{total_num}{Number of total or specififc items for each group.
 
-like\preformatted{c(20, 30, 40)
-}}
+like
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{c(20, 30, 40)
+}\if{html}{\out{</div>}}}
 
 \item{core_num}{Number of items common to all groups.}
 
 \item{start}{Start position of first ellipse. Default 90 represents starting from 0 clock.}
 
-\item{a}{
-Vectors, radii of the ellypses along the two axes in user units.
-}
-
-\item{b}{
+\item{a, b}{
 Vectors, radii of the ellypses along the two axes in user units.
 }
 

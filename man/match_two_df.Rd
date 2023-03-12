@@ -22,5 +22,6 @@ Extract same rows of two data.frame with same order.
 }
 \examples{
 
+NULL
 
 }

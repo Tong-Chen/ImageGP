@@ -60,7 +60,7 @@
 #'
 #' @examples
 #'
-#'
+#' NULL
 #'
 #'
 sp_EulerDiagrams <- function (data,

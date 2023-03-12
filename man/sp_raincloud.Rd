@@ -78,5 +78,6 @@ A ggplot2 object
 raincloud
 }
 \examples{
+NULL
 
 }

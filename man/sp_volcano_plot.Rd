@@ -44,14 +44,14 @@ sp_volcano_plot(
 
 \item{coordinate_flip}{Default FALSE meaning \code{log2fc_var} in \code{X-axis}. Specify \code{TRUE} to make \code{fdr_var} in \code{X-axis}.}
 
-\item{status_col_var}{Name of the column containining labels of gene expression status like \verb{"No differnece", "UP-regulated", "Down-regulated"}. If exists, this column would be used to color each group of points. This parameter has higher priority than \code{significance_threshold}.}
+\item{status_col_var}{Name of the column containing labels of gene expression status like \verb{"No differnece", "UP-regulated", "Down-regulated"}. If exists, this column would be used to color each group of points. This parameter has higher priority than \code{significance_threshold}.}
 
 \item{significance_threshold}{Set the threshold for defining DE genes in format like \code{c(pvalue,abs_log_fodchange)}. If this parameter is given, the program will generate \code{status_col_var} based on given thresholds.}
 
 \item{status_col_var_order}{Changing the order of status column values.
-Normally, the unique values of status column would be sorted alphabetically. For example, the order of \verb{"No differnece", "UP-regulated", "Down-regulated"} would be \verb{"Down-regulated", "No differnece", "UP-regulated"}. Here we can specify their order manually like \verb{"UP-regulated", "Down-regulated", "No differnece"} to match the color specified below.}
+Normally, the unique values of status column would be sorted alphabetically. For example, the order of \verb{"No difference", "UP-regulated", "Down-regulated"} would be \verb{"Down-regulated", "No differnece", "UP-regulated"}. Here we can specify their order manually like \verb{"UP-regulated", "Down-regulated", "No differnece"} to match the color specified below.}
 
-\item{point_color_vector}{Color vector. Defgault 'red, green, grey' for 'up, dw, nodiff'
+\item{point_color_vector}{Color vector. Default 'red, green, grey' for 'up, dw, nodiff'
 when \code{status_col_var} is not given. The order of color vector must match the order
 of levels of \code{status_col_var}.}
 
@@ -65,7 +65,7 @@ of levels of \code{status_col_var}.}
 
 \item{point_label_var}{Name of columns containing labels for points (representing genes, proteins or OTUs) to be labeled. Points with \code{NA},\code{-} or `` value in this column will not be labeled.}
 
-\item{log2fc_symmetry}{Make coordiante axis symmetry to generate bettter visualization. Default TRUE.}
+\item{log2fc_symmetry}{Make coordinate axis symmetry to generate better visualization. Default TRUE.}
 
 \item{alpha}{Transparency of points (0-1). 0: opaque; 1: transparent.}
 
@@ -87,7 +87,7 @@ of levels of \code{status_col_var}.}
 
 \item{yintercept}{Default 'fdr' to show fdr lines. This needs \code{significance_threshold}. Specify NULL to hide lines.}
 
-\item{...}{Parametes given to \code{sp_ggplot_layout}}
+\item{...}{Parameters given to \code{sp_ggplot_layout}}
 }
 \value{
 A ggplot2 object

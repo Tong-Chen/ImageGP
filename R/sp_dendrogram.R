@@ -13,7 +13,7 @@
 #' @param legend_site Legend site. Optional, "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright", "right" and "center".
 #' @param ...
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples data<-matrix(rnorm(200),nrow = 50)

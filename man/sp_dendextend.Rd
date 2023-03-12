@@ -45,9 +45,6 @@ sp_dendextend(
 
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Hierarchical cluster diagram
 }

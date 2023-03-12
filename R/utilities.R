@@ -63,6 +63,7 @@ checkAndInstallPackages <-
 #'
 #' @examples
 #'
+#' NULL
 #'
 match_two_df <- function(df1, df2, way="row-row"){
   if (way == "row-row"){

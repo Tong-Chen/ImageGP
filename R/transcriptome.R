@@ -370,7 +370,7 @@ normalizedExpr2DistribBoxplot <- function(normexpr, saveplot=NULL, ...) {
 #'
 #' @import ggplot2
 #' @import pheatmap
-#' @import dyplr
+#' @import dplyr
 #' @return NULL
 #' @export
 #'

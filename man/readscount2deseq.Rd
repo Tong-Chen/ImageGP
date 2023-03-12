@@ -16,18 +16,22 @@ readscount2deseq(
 \arguments{
 \item{count_matrix_file}{A multiple column file with the first column as gene
 names (must be unique) and other columns as gene expression reads count in
-related samples.\preformatted{Gene untrt_N61311  untrt_N052611 ... trt_N61311  trt_N052611 ...
+related samples.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Gene untrt_N61311  untrt_N052611 ... trt_N61311  trt_N052611 ...
 GeneA  2 3 ... 10  20  ...
 GeneB  2 3 ... 100  220  ...
 GeneC  12 33 ... 10  20  ...
 GeneD  222 301 ... 10  20  ...
-}}
+}\if{html}{\out{</div>}}}
 
 \item{sampleFile}{A file containing at least two columns. The first column is sample name just
 like the first column of \code{salmon_file_list}. Other columns are sample attributes.
 Normally one of sample attributes should contain the group information each sample belongs to.
 
-One simple example (conditions represent group information)\preformatted{Samp    conditions
+One simple example (conditions represent group information)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Samp    conditions
 untrt_N61311    untrt
 untrt_N052611    untrt
 untrt_N080611    untrt
@@ -36,9 +40,11 @@ trt_N61311    trt
 trt_N052611    trt
 trt_N080611    trt
 trt_N061011    trt
-}
+}\if{html}{\out{</div>}}
 
-Another example (3rd column meaning samples from two batches)\preformatted{Samp    conditions  batch
+Another example (3rd column meaning samples from two batches)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Samp    conditions  batch
 untrt_N61311    untrt A
 untrt_N052611    untrt A
 untrt_N080611    untrt B
@@ -47,7 +53,7 @@ trt_N61311    trt A
 trt_N052611    trt A
 trt_N080611    trt B
 trt_N061011    trt B
-}}
+}\if{html}{\out{</div>}}}
 
 \item{design}{A column name from "sampleFile" like "conditions" in example.
 This will be used as group variable for DE tests. Currently only simple

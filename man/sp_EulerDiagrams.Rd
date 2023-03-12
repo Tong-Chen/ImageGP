@@ -71,7 +71,9 @@ order of each set.}
 a grid object
 }
 \description{
-When \code{format} is \code{items}, \code{data} examples are\preformatted{Items  Group
+When \code{format} is \code{items}, \code{data} examples are
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Items  Group
 g1	Set1
 g2	Set1
 a1	Set3
@@ -79,10 +81,12 @@ a3	Set1
 b4	Set1
 g1	Set2
 h1	Set4
-}
+}\if{html}{\out{</div>}}
 }
 \details{
-When \code{format} is \code{counts}, \code{data} examples are\preformatted{Intersection	Count
+When \code{format} is \code{counts}, \code{data} examples are
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Intersection	Count
 Set1&Set2	2
 Set1&Set3&Set4&Set5	1
 Set3&Set5	2
@@ -94,11 +98,11 @@ Set3	1
 Set5	1
 Set4&Set5	1
 Set4	2
-}
+}\if{html}{\out{</div>}}
 }
 \examples{
 
-
+NULL
 
 
 }

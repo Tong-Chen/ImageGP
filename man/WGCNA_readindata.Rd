@@ -24,19 +24,23 @@ rownames. The first row (sample names) must be unique among all columns and will
 treated as colnames. Columns should be separted by "TAB".
 
 The expression data can be log transformed FPKM/TPM/CPM, \code{\link[DESeq2]{vst}} or
-\code{\link[DESeq2]{rlog}} transformed value.\preformatted{ID Samp1 Samp2 ... SampX
+\code{\link[DESeq2]{rlog}} transformed value.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ID Samp1 Samp2 ... SampX
 Gene1  1.5 2.0 ... 10
 Gene2  1.2 4.0 ... 10
 .
 .
 .
 Gene3  2.5 2.0 ... 8
-}}
+}\if{html}{\out{</div>}}}
 
 \item{traitData}{Sample attribte data with first column as sample names and other
 columns as sample attributes. Specifically for categorical attributes, each
 attribute one column, \code{0} represents not belong to while \code{1} represents belonging to. Or
-one can give categorical attributes separately to "categoricalTrait".\preformatted{ID      WT      KO      OE Height Weight Diameter
+one can give categorical attributes separately to "categoricalTrait".
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ID      WT      KO      OE Height Weight Diameter
 samp1   1       0       0       1       2       3
 samp2   1       0       0       2       4       6
 samp3   0       1       0       10      20      50
@@ -44,19 +48,21 @@ samp4   0       1       0       15      30      80
 samp5   0       0       1       NA      9       8
 samp6   0       0       1       4       8       7
 
-}}
+}\if{html}{\out{</div>}}}
 
 \item{categoricalTrait}{Categorical attributes file with format described below.
 The program will transferred it to 0-1 matrix like them in "traitData".
 One can give only \code{traitData} or \code{categoricalTrait} or both (the program will
-bind them together).\preformatted{ID group family
+bind them together).
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{ID group family
 samp1 WT A
 samp2 WT B
 samp3 KO A
 samp4 KO B
 samp5 OE A
 samp6 OE B
-}}
+}\if{html}{\out{</div>}}}
 
 \item{sep}{the field separator character.  Values on each line of the
     file are separated by this character.  If \code{sep = ""} (the

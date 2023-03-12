@@ -31,7 +31,9 @@ reads count matrix file if "type=readscount" with format described in
 like the first column of \code{salmon_file_list}. Other columns are sample attributes.
 Normally one of sample attributes should contain the group information each sample belongs to.
 
-One simple example (conditions represent group information)\preformatted{Samp    conditions
+One simple example (conditions represent group information)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Samp    conditions
 untrt_N61311    untrt
 untrt_N052611    untrt
 untrt_N080611    untrt
@@ -40,9 +42,11 @@ trt_N61311    trt
 trt_N052611    trt
 trt_N080611    trt
 trt_N061011    trt
-}
+}\if{html}{\out{</div>}}
 
-Another example (3rd column meaning samples from two batches)\preformatted{Samp    conditions  batch
+Another example (3rd column meaning samples from two batches)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Samp    conditions  batch
 untrt_N61311    untrt A
 untrt_N052611    untrt A
 untrt_N080611    untrt B
@@ -51,7 +55,7 @@ trt_N61311    trt A
 trt_N052611    trt A
 trt_N080611    trt B
 trt_N061011    trt B
-}}
+}\if{html}{\out{</div>}}}
 
 \item{design}{A column name from "sampleFile" like "conditions" in example.
 This will be used as group variable for DE tests. Currently only simple
@@ -71,13 +75,15 @@ instead of transcript expression.
 A two-column file with the first column as transcript names and
 second column as gene names. Header line is required but column names do not matter.
 
-Below is an example of file contents.\preformatted{txname    gene
+Below is an example of file contents.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{txname    gene
 ENST00000456328    ENSG00000223972
 ENST00000450305    ENSG00000223972
 ENST00000488147    ENSG00000227232
 ENST00000619216    ENSG00000278267
 ENST00000473358    ENSG00000243485
-}}
+}\if{html}{\out{</div>}}}
 
 \item{filter}{Filter genes with low read counts. Default genes with total
 reads count lower than half of number of samples will be filtered out.
@@ -92,10 +98,12 @@ auto filter too. Check \url{https://www.bioconductor.org/packages/devel/bioc/vig
 
 \item{comparePairFile}{A file containing sample groups for comparing. Optional.
 If not given, the function will use \code{colData} information in \code{dds}
-and perform group compare for all possible combinations.\preformatted{groupA groupB
+and perform group compare for all possible combinations.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{groupA groupB
 groupA groupC
 groupC groupB
-}}
+}\if{html}{\out{</div>}}}
 
 \item{padj}{Multiple-test corrected p-value. Default 0.05.}
 
