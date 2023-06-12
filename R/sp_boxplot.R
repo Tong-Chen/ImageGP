@@ -382,6 +382,7 @@ sp_boxplot <- function(data,
     }
     group_variable_for_line_en = sym(group_variable_for_line)
     # 如果设置了line而没设置显示点，默认也要显示点
+    # https://cran.r-project.org/src/contrib/Archive/ggbeeswarm/ggbeeswarm_0.6.0.tar.gz
     if (!(jitter || jitter_bp)) {
       p <-
         p + geom_quasirandom(
