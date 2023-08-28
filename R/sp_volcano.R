@@ -147,7 +147,8 @@ sp_volcano_plot <-
     }
 
     if (log10_transform_fdr) {
-      data[[fdr_var]] <- (-1) * log10(data[[fdr_var]])
+      current_min_fdr = min(data[[fdr_var]][data[[fdr_var]]!=0])
+      data[[fdr_var]] <- (-1) * log10(data[[fdr_var]]+current_min_fdr)
       fdr <- -1*(log10(fdr))
     }
 

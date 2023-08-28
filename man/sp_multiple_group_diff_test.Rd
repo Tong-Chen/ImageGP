@@ -22,11 +22,15 @@ sp_multiple_group_diff_test(
 \item{group_variable}{The column represents the group information.
 The data would be split by this group and diff test would be performed within each group.}
 
-\item{...}{Other paramters givene to \link\link{sp_diff_test}.}
+\item{...}{Other parameters given to \link{sp_diff_test}.}
 }
 \value{
 A list. list(data=data, a data frame with statistical information, Tukey_HSD=Tukey_HSD)
 }
 \description{
 Perform statistical test using given methods for split data.
+}
+\examples{
+NULL
+
 }

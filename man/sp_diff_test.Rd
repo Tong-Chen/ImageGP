@@ -32,3 +32,8 @@ A list. list(data=data, a data frame with statistical information, Tukey_HSD=Tuk
 \description{
 Perform statistical test using given methods.
 }
+\examples{
+NULL
+
+
+}

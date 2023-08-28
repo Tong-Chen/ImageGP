@@ -134,7 +134,7 @@ GeomFlatViolin <-
 #' @return A ggplot2 object
 #' @export
 #'
-#' @examples
+#' @examples NULL
 #'
 sp_raincloud <- function (data,
                           melted = TRUE ,
