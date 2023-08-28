@@ -21,10 +21,12 @@ multipleGroupDEgenes(
 
 \item{comparePairFile}{A file containing sample groups for comparing. Optional.
 If not given, the function will use \code{colData} information in \code{dds}
-and perform group compare for all possible combinations.\preformatted{groupA groupB
+and perform group compare for all possible combinations.
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{groupA groupB
 groupA groupC
 groupC groupB
-}}
+}\if{html}{\out{</div>}}}
 
 \item{design}{The group column name. Default "conditions".}
 

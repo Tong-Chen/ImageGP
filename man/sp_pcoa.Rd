@@ -75,7 +75,9 @@ For \code{auto}: If the data values are larger than common abundance class scale
 If the values look very large, the function also performs \code{\link{sqrt}} transformation.
 For \code{None}: No transformation would be performed.
 For \code{total}: Compute relative abundance of OTUs/Genes in each sample.
-For \code{hellinger}: square root of \code{method = "total"}.}
+For \code{hellinger}: square root of \code{method = "total"}.
+For \code{scale}: row scale.
+For \code{sqrt} and \code{log2}, just as the words.}
 
 \item{group_variable}{The variable for grouping points to generate normal data confidence ellipses. Optional.}
 

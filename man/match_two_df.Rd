@@ -20,7 +20,3 @@ A list in format like list(df1=df1, df2=df2)
 \description{
 Extract same rows of two data.frame with same order.
 }
-\examples{
-
-
-}

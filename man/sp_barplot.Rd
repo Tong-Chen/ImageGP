@@ -6,6 +6,7 @@
 \usage{
 sp_barplot(
   data,
+  metadata = NULL,
   color_variable = NULL,
   yvariable = NULL,
   xvariable = NULL,
@@ -13,6 +14,9 @@ sp_barplot(
   title = NULL,
   x_label = NULL,
   y_label = NULL,
+  top_n = 1,
+  statistical_value_type = sum,
+  keep_filtered_as_others = TRUE,
   color_variable_order = NULL,
   xvariable_order = NULL,
   y_add = 0,
@@ -48,6 +52,9 @@ sp_barplot(
 \item{data}{Data frame or data file (with header line, the first column will
 not be treated as row names, tab separated).}
 
+\item{metadata}{Giving a metadata file with format specified in example
+to tell the group information for each sample.}
+
 \item{color_variable}{Name for specifying bars colors (one of column names, should be specified
 when inputting long format matrix).}
 
@@ -64,6 +71,14 @@ when inputting long format matrix).}
 \item{x_label}{Xlab label.}
 
 \item{y_label}{Ylab label.}
+
+\item{top_n}{An integer larger than 1 will be used to get top x genes (like top 5000).
+A float number less than 1 will be used to get top x fraction genes (like top 0.7 of
+all genes).}
+
+\item{statistical_value_type}{Specify the way for statistical computation. Default mad, accept mean, var, sum, median.}
+
+\item{keep_filtered_as_others}{Get sums of all filtered items as an new item - Others. Default FALSE.}
 
 \item{color_variable_order}{Set orders of color variable (this can also used to extract specific rows).}
 
@@ -133,7 +148,8 @@ use same scale (x,y range), \code{free} (variable x, y ranges for each sub-plot)
 
 \item{extra_ggplot2_cmd}{Other legal R codes for ggplot2 will be given here.}
 
-\item{coordinate_flip}{Flip cartesian coordinates so that horizontal becomes vertical, and vertical, horizontal. This is primarily useful for converting geoms and statistics which display y conditional on x, to x conditional on y.}
+\item{coordinate_flip}{Rotate the plot from vertical to horizontal.
+Usefull for plots with many values or very long labels at X-axis}
 
 \item{add_text}{Add text to bar. Default FALSE.}
 

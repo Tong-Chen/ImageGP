@@ -34,24 +34,18 @@ flower_plot(
 \arguments{
 \item{input}{Input data file (first line as header line, the first column is the name of
 genes or OTUs or otehr things one wants to compare, the second column is the group name which genes belong to,
-tab seperated)\preformatted{Gene    Sample
+tab seperated)
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{Gene    Sample
 g1    Set1
 a1    Set3
 b4    Set1
 .
 .
 c1    Set3
-}}
+}\if{html}{\out{</div>}}}
 
 \item{start}{Start position of first ellipse. Default 90 represents starting from 0 clock.}
-
-\item{a}{
-Vectors, radii of the ellypses along the two axes in user units.
-}
-
-\item{b}{
-Vectors, radii of the ellypses along the two axes in user units.
-}
 
 \item{r}{Set the size of the center circle.}
 

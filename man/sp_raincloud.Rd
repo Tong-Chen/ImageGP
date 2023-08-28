@@ -77,6 +77,3 @@ A ggplot2 object
 \description{
 raincloud
 }
-\examples{
-
-}

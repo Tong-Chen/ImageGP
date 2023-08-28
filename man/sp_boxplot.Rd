@@ -23,6 +23,8 @@ sp_boxplot(
   notch = FALSE,
   par = NULL,
   outlier = FALSE,
+  statistical_method = "aov",
+  statistical_threshold_for_letters = 0.05,
   out_scale = 1.05,
   legend.position = "right",
   manual_color_vector = NULL,
@@ -98,6 +100,10 @@ simply \code{log2} to set the scale way.}
 \item{notch}{Using notch (sand clock shape) or not. Default FALSE.}
 
 \item{outlier}{Exclude outliers. Exclude outliers or not, default `FALSE`` means keeping outliers.}
+
+\item{statistical_method}{Statistical method. For two groups, default <t.test>. For more than two groups, default \if{html}{\out{<aov>}}.}
+
+\item{statistical_threshold_for_letters}{Threshold for treating as significance, default 0.05.}
 
 \item{out_scale}{The scales for one want to set to exclude outliers.
 Default 1.05. No recommend to change unless you know what you are doing.}

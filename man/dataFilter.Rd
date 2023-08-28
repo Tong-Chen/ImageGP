@@ -10,7 +10,8 @@ dataFilter(
   minimal_mad = NULL,
   top_mad_n = 0.75,
   rmVarZero = T,
-  noLessThan = NULL
+  noLessThan = NULL,
+  value_type = mad
 )
 }
 \arguments{
@@ -25,7 +26,9 @@ all genes).}
 \item{rmVarZero}{Default TRUE. Remove genes with variance as 0. Normally for PCA or
 correlation analysis.}
 
-\item{noLessThan}{Specify the lowest number of genes to be kept. Default \code{NULL} meaining no lower limit.}
+\item{noLessThan}{Specify the lowest number of genes to be kept. Default \code{NULL} meaning no lower limit.}
+
+\item{value_type}{Specify the way for statistical computation. Default mad, accept mean, var.}
 }
 \value{
 A dataframe.

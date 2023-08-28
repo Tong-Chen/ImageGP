@@ -4,7 +4,7 @@
 \alias{sp_read_in_long_wide_matrix}
 \title{Used to read in long/wide format file or datafrmes. Wide format would be transferred to lonf fromat.}
 \usage{
-sp_read_in_long_wide_matrix(data, xvariable, melted)
+sp_read_in_long_wide_matrix(data, xvariable, melted, ...)
 }
 \arguments{
 \item{data}{Data frame or data file (with header line, the first column will
@@ -14,6 +14,8 @@ not be treated as row names for long format matrix, tab seperated).}
 
 \item{melted}{\code{TRUE} for dealinig with long format matrix, the program will skip melt preprocess.
 Default \code{FALSE} for dealing with wide format matrix.}
+
+\item{...}{Parameters given to \code{\link{dataFilter2}}.}
 }
 \value{
 a A long format dataframe

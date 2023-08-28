@@ -8,6 +8,8 @@ sp_pheatmap(
   data,
   filename = NA,
   renameDuplicateRowNames = F,
+  top_n = 1,
+  statistical_value_type = mad,
   logv = NULL,
   log_add = 0,
   scale = "none",
@@ -15,6 +17,7 @@ sp_pheatmap(
   annotation_col = NULL,
   cluster_rows = FALSE,
   cluster_cols = FALSE,
+  display_numbers = F,
   cluster_cols_variable = NULL,
   cluster_rows_variable = NULL,
   remove_cluster_cols_variable_in_annocol = FALSE,
@@ -22,6 +25,10 @@ sp_pheatmap(
   clustering_method = "complete",
   clustering_distance_rows = "pearson",
   clustering_distance_cols = "pearson",
+  label_row_cluster_boundary = FALSE,
+  label_col_cluster_boundary = FALSE,
+  label_every_n_rowitems = 1,
+  label_every_n_colitems = 1,
   breaks = NA,
   breaks_mid = NULL,
   breaks_digits = 2,
@@ -34,6 +41,8 @@ sp_pheatmap(
   manual_annotation_colors_sidebar = NULL,
   cutree_cols = NA,
   cutree_rows = NA,
+  anno_cutree_cols = F,
+  anno_cutree_rows = F,
   kclu = NA,
   ytics = TRUE,
   xtics = TRUE,
@@ -55,6 +64,12 @@ Colnames normally should be unique unless you know what you are doing.)}
 Default FALSE: representing duplicated row names are not allowed.
 Accept  TRUE: representing make duplicated row names unique by adding <.1>, <.2>
 for the second, third appearances.}
+
+\item{top_n}{An integer larger than 1 will be used to get top x genes (like top 5000).
+A float number less than 1 will be used to get top x fraction genes (like top 0.7 of
+all genes).}
+
+\item{statistical_value_type}{Specify the way for statistical computation. Default mad, accept mean, var, sum, median.}
 
 \item{logv}{First get log-value, then do other analysis.
 Accept an R function log2 or log10. Default FALSE.}
@@ -79,6 +94,10 @@ would always be set to FALSE.}
 When there are less than 3 columns or more than 5000 columns, this parameter
 would always be set to FALSE.}
 
+\item{display_numbers}{logical determining if the numeric values are also printed to 
+the cells. If this is a matrix (with same dimensions as original matrix), the contents
+of the matrix are shown instead of original values.}
+
 \item{cluster_cols_variable}{Reorder branch order of clustered columns by given variable. (Test only)}
 
 \item{cluster_rows_variable}{Reorder branch order of clustered rows by given variable. (Test only)}
@@ -100,6 +119,22 @@ Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 Default 'pearson', accept 'spearman','euclidean', "manhattan", "maximum",
 "canberra", "binary", "minkowski", "bray", "kulczynski", "jaccard", "gower", "altGower",
 "morisita", "horn", "mountford", "raup" , "binomial", "chao", "cao", "mahalanobis". (Some need vegan package)}
+
+\item{label_row_cluster_boundary}{Only display labels of row cluster boundary (w)
+(the first item in cluster start).}
+
+\item{label_col_cluster_boundary}{Only display labels of column cluster boundary (x)
+(the first item in cluster start).}
+
+\item{label_every_n_rowitems}{Label every n row items (n>1).
+(Default 1 means labeling all row items. Supplying a large number when there are many rows to
+label only few rows. For a data matrix with 1000 rows, giving 10 here,
+will only label 10 genes, the 1st, 11st, 21st, ... 91st) (y)}
+
+\item{label_every_n_colitems}{Label every n column items (n>1) (Z)
+(Default 1 means labeling all column items. Supplying a large number when there are many columns to
+label only few columns. For a data matrix with 1000 columns, giving 10 here,
+will only label 10 genes, the 1st, 11st, 21st, ... 91st)}
 
 \item{breaks}{A sequence of numbers that covers the range of values in mat and
 is one element longer than color vector. Used for mapping values to colors.
@@ -151,6 +186,10 @@ In R, one can use colors() function to get names of all available colors.}
 \item{cutree_rows}{number of clusters the rows are divided into, based on the
  hierarchical clustering (using cutree), if rows are not clustered, the 
 argument is ignored}
+
+\item{anno_cutree_cols}{Add column tree-cut results as column annotation.}
+
+\item{anno_cutree_rows}{Add row tree-cut results as row annotation.}
 
 \item{kclu}{Aggregate the rows using kmeans clustering.
 This is advisable if number of rows is so big that R cannot
