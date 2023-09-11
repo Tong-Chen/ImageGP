@@ -16,12 +16,6 @@ WGCNA_cytoscape(
 \arguments{
 \item{net}{\code{\link{WGCNA_coexprNetwork}} or \code{\link[WGCNA]{blockwiseModules}} returned WGCNA object.}
 
-\item{power}{ soft-thresholding power for network construction. }
-
-\item{datExpr}{ Expression data. A matrix (preferred) or 
-data frame in which columns are genes and rows ar samples. NAs are
-allowed, but not too many. See \code{checkMissingData} below and details.}
-
 \item{TOM_plot}{Get TOM plot and save to file given here like 'tomplot.pdf'.}
 
 \item{prefix}{prefix for output files.}

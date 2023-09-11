@@ -104,13 +104,14 @@ WGCNA_readindata <-
            ...) {
     cat(sp_current_time(), "Start reading in exprMat and traitData.\n")
     datExpr <-
-      read.table(
+      sp_readTable(
         exprMat,
         sep = sep,
         row.names = row.names,
         header = header,
         quote = quote,
         comment = comment,
+        renameDuplicateRowNames = T,
         check.names = check.names
       )
 
@@ -134,8 +135,23 @@ WGCNA_readindata <-
           check.names = check.names
         )
 
+
+
+
+      common_sampleL <- base::intersect(sampleName, rownames(traitData))
+      if (length(common_sampleL) < 6){
+        stop("Please check if your sample names in expr table matched sample names in trait table!!!!!")
+      }
+
+      if (length(common_sampleL) != length(sampleName) || length(common_sampleL) != length(rownames(traitData))){
+        print("Not all samples names in expr table matched sample names in trait table, please check it!!!!!")
+      }
+
+      # 保证表达表样品与METAdata样品顺序和数目完全一致
+      datExpr <- datExpr[,common_sampleL,drop=F]
+
+      traitData = traitData[common_sampleL,,drop=FALSE]
       coln <- colnames(traitData)
-      traitData = traitData[match(sampleName, rownames(traitData)),,drop=FALSE]
       #colnames(traitData) <- coln
 
       traitfile <- data.frame(row.names=rownames(traitData))
