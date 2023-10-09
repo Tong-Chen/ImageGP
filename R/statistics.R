@@ -112,7 +112,7 @@ sp_diff_test <-
 
 
     max_y = sapply(split(data, data[[stat_group_variable]]),
-                     function (x) {max(x[[stat_value_variable]])})
+                     function (x) {max(x[[stat_value_variable]], na.rm=T)})
     #print(max_y)
 
     data$y = max_y[data[[stat_group_variable]]] * 1.06

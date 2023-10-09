@@ -437,6 +437,7 @@ sp_boxplot <- function(data,
                group_variable = facet_variable,
                statistical_method = statistical_method,
                statistical_threshold_for_letters = statistical_threshold_for_letters)
+    # print(dataList$data)
 
     suppressWarnings(sp_writeTable(dataList$Tukey_HSD_table, file = paste0(filename,
                                                                   ".significance.txt")))
