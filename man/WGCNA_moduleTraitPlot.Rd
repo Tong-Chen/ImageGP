@@ -22,6 +22,10 @@ WGCNA_moduleTraitPlot(
 \item{traitData}{Sample attributes data frame.
 Or the "traitData" generated in \code{\link{WGCNA_readindata}}.}
 
+\item{corType}{character string specifying the correlation to be used. Allowed values are (unique
+abbreviations of) \code{"pearson"} and \code{"bicor"}, corresponding to Pearson and bidweight
+midcorrelation, respectively. Missing values are handled using the \code{pairwise.complete.obs} option. }
+
 \item{saveplot}{Save plot to given file "a.pdf", "b.png".}
 
 \item{prefix}{prefix for output files.}
