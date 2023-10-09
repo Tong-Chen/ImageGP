@@ -1200,6 +1200,10 @@ sp_get_ggplot_limits <- function(p) {
 #'
 value.identical <-
   function(x, y, treat_fully_contain_as_identical = F) {
+    # numerical columns not used for compare
+    if(is.numeric(x) || is.numeric(y)){
+      return(FALSE)
+    }
     x_unique = sort(unique(as.character(x)))
     y_unique = sort(unique(as.character(y)))
     all_ident = identical(x_unique, y_unique)
