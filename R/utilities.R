@@ -1266,10 +1266,13 @@ get_matched_columns_based_on_value <-
     }
     df1_rownames = rownames(df1)
     df2_rownames = rownames(df2)
+    # print(sp.is.null(df1_rownames))
+    # print(sp.is.null(df2_rownames))
 
     if(value.identical(df1_rownames, df2_rownames, treat_fully_contain_as_identical) &&
        # ignore default number row names
-       !(value.identical(df2_rownames, 1:length(df2_rownames)))){
+       !(value.identical(df2_rownames, as.character(1:length(df2_rownames))))){
+      print(1273)
       return(c(0,0))
     }
 
