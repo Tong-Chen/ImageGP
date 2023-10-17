@@ -38,6 +38,14 @@ A tree with Multiple-Sequence-Alignment plot would be generated when given.}
 
 \item{color_branches}{Name of columns in \code{tree_attrib} used for color branches.}
 
+\item{layout}{one of 'rectangular', 'dendrogram', 'slanted', 'ellipse', 'roundrect',
+'fan', 'circular', 'inward_circular', 'radial', 'equal_angle', 'daylight' or 'ape'}
+
+\item{ladderize}{logical (default \code{TRUE}). Should the tree be re-organized to have a 'ladder'
+aspect?}
+
+\item{branch.length}{variable for scaling branch, if 'none' draw cladogram}
+
 \item{tip_text}{Show branch labels or supply a name of columns in \code{tree_attrib} to be
 shown as branch labels, Or \code{label} to show default labels, or NULL to not show
 branch labels.}
@@ -68,7 +76,12 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 "YlGn"    "YlGnBu"   "YlOrBr"   "YlOrRd"
 (check http://www.sthda.com/english/wiki/colors-in-r for more).}
 
-\item{...}{Extra parameters to \code{\link[ggplot2]{ggsave}}.}
+\item{...}{additional parameter
+
+some dot arguments:
+\itemize{
+\item \code{nsplit} integer, the number of branch blocks divided when 'continuous' is not "none", default is 200.
+}}
 }
 \value{
 A ggplot2 object
