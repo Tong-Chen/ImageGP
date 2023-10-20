@@ -373,7 +373,7 @@ dataFilter2 <-
            noLessThan = NULL,
            statistical_value_type = mad,
            keep_filtered_as_others = F) {
-    if(top_n == 1) {
+    if(top_n == 1 || top_n <= 0) {
       return(datExpr)
     }
 
