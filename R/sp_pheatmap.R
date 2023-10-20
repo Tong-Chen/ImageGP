@@ -509,8 +509,7 @@ sp_pheatmap <- function(data,
 
 
 
-  if (width == 0 && height == 0) {
-    height = nrow(data)
+  if (width == 0) {
     width = ncol(data) * 1.1
 
     if (xtics_angle == 0) {
@@ -522,19 +521,9 @@ sp_pheatmap <- function(data,
       width = width * 1.1
     }
 
-    if ("data.frame" %in% class(annotation_col)) {
-      height = height + ncol(annotation_col)
-      width = width * 1.1
-    }
-
     if (cluster_rows) {
       width = width + 4
     }
-
-    if (cluster_cols) {
-      height = height + 4
-    }
-
 
     if (width < 8) {
       width = 8
@@ -544,6 +533,23 @@ sp_pheatmap <- function(data,
       width = 10 + (width - 20) / 5
     } else {
       width = 30
+    }
+
+    if (("logical" %in% class(display_numbers) && display_numbers) ||
+         'data.frame' %in% class(display_numbers) ||
+         'matrix' %in% class(display_numbers)){
+      width = width * 2
+    }
+  }
+  if (height == 0) {
+    height = nrow(data)
+
+    if ("data.frame" %in% class(annotation_col)) {
+      height = height + ncol(annotation_col)
+    }
+
+    if (cluster_cols) {
+      height = height + 4
     }
 
     if (height < 10) {
@@ -557,16 +563,11 @@ sp_pheatmap <- function(data,
     }
 
     if (("logical" %in% class(display_numbers) && display_numbers) ||
-         'data.frame' %in% class(display_numbers) ||
-         'matrix' %in% class(display_numbers)){
-      width = width * 2
+        'data.frame' %in% class(display_numbers) ||
+        'matrix' %in% class(display_numbers)){
       height = height * 1.2
     }
   }
-
-
-
-
 
 
   if (sp.is.null(manual_annotation_colors_sidebar)) {
