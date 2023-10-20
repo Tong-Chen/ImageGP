@@ -502,6 +502,7 @@ mixedToFloat <- function(x) {
 #'
 #' @param alpha Generate an alpha transparency values for return colors. 0 means fully transparent and 1 means opaque. Default 1.
 #'
+#' @param reverseColorList Get the reverse of generated color list.
 #' @return A color vector
 #' @export
 #'
@@ -513,7 +514,7 @@ mixedToFloat <- function(x) {
 #' generate_color_list("Set3", 5)
 #'
 
-generate_color_list <- function(color, number, alpha = 1, constantColor=F) {
+generate_color_list <- function(color, number, alpha = 1, constantColor=F, reverseColorList=F) {
   color = color[color!="None" & color !=""]
   color_len = length(color)
 
@@ -551,6 +552,10 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F) {
       colorL = colorRampPalette(color)(number)
     }
 
+  }
+
+  if (reverseColorList){
+    colorL = rev(colorL)
   }
   return(rgb(
     t(col2rgb(colorL)),
