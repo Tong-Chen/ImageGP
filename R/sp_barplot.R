@@ -43,6 +43,7 @@
 #' @inheritParams sp_ggplot_layout
 #' @inheritParams sp_manual_fill_ggplot2
 #' @inheritParams dataFilter2
+#' @inheritParams sp_read_in_long_wide_matrix
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by

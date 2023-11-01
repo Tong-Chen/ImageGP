@@ -47,7 +47,7 @@
 #' @inheritParams sp_boxplot
 #' @inheritParams stats::cmdscale
 #' @inheritParams ggplot2::stat_ellipse
-#' @inheritParams sp_scatterplot
+#' @inheritParams dataFilter2
 #' @param ... Parameters given to `sp_ggplot_layout`
 #'
 #' @return A ggplot2 object
@@ -63,6 +63,8 @@ sp_pcoa <- function(data,
                     input_type = "normalized_OTUtable",
                     dissimilarity_index = "bray",
                     k = 3,
+                    top_n = 1,
+                    statistical_value_type = mad,
                     binary_dissimilarity_index = F,
                     data_transform = 'auto',
                     group_variable = NULL,
@@ -86,12 +88,17 @@ sp_pcoa <- function(data,
                     extra_ggplot2_cmd = NULL,
                     check_significance = T,
                     check_paired_significance = T,
-                    facet_variable = NULL,
                     coord_fixed = T,
                     ...) {
   if ("character" %in% class(data)) {
     file <- data
     data <- sp_readTable(data, row.names = 1)
+    if (input_type == "normalized_OTUtable" &&
+        (!'dist' %in% class(data))){
+      data <- dataFilter2(data, top_n = top_n,
+                          statistical_value_type = statistical_value_type)
+    }
+
   } else if ('data.frame' %in% class(data) |
              'dist' %in% class(data)) {
     stop("Unknown input format for `data` parameter.")
@@ -174,6 +181,7 @@ sp_pcoa <- function(data,
   eig_percent <- round(pcoa$eig / sum_eig * 100, 1)
 
   colnames(pcoa_points) <- paste0("PCoA", 1:ndimensions)
+  print(pcoa_points)
 
   data <- cbind(pcoa_points, metadata)
 
@@ -247,13 +255,16 @@ sp_pcoa <- function(data,
   }
 
   analysis_label = "PCoA"
-  if (distance_algorithm != ""){
-    analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
+  if (input_type == "normalized_OTUtable"){
+    if (distance_algorithm != ""){
+      analysis_label = paste("PCoA", "(", distance_algorithm, ")", sep="")
+    }
+
+    if (dissimilarity_index == "euclidean"){
+      analysis_label = "PCA"
+    }
   }
 
-  if (dissimilarity_index == "euclidean"){
-    analysis_label = "PCA"
-  }
 
   p <- ggplot(data, aes(x = PCoA1, y = PCoA2, group = !!group_variable_en)) +
     labs(
@@ -365,12 +376,6 @@ sp_pcoa <- function(data,
   }
 
 
-  if (!sp.is.null(facet_variable)) {
-    if (facet_singlecell_style) {
-      p <-
-        sp_ggplot_facet(p, facet_variable, facet_ncol, facet_nrow, facet_scales)
-    }
-  }
 
   p <- sp_ggplot_layout(
     p,
