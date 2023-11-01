@@ -1069,7 +1069,11 @@ WGCNA_saveModuleAndMe <-
     colnames(MEs_col) = paste0("ME", labels2colors(as.numeric(
       stringr::str_replace_all(colnames(MEs), "ME", "")
     )))
-    MEs_col = orderMEs(MEs_col)
+
+    if(ncol(MEs_col) >2 ){
+      MEs_col = orderMEs(MEs_col)
+    }
+
 
     ## 保存模块代表性信息
     MEs_colt = as.data.frame(t(MEs_col))
