@@ -132,7 +132,7 @@ sp_pcoa <- function(data,
     data <- t(data)
     # copy and modified from vegan::metaMDSdist
     if (data_transform == "auto") {
-      xam <- max(data, na.rm=F)
+      xam <- max(data, na.rm=T)
       if (xam > 50) {
         data <- sqrt(data)
       }
