@@ -15,6 +15,7 @@ suppressPackageStartupMessages(library(aplot))
 suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(grid))
 suppressPackageStartupMessages(library(pheatmap))
+
 expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
 # group <- sp_readTable(file="TraitsClean.txt", row.names=1, header=T)
 
@@ -29,6 +30,7 @@ WGCNA_onestep(exprMat, traitData, prefix="../wgcna_ehbio")
 
      
            
+
            categoricalTrait = NULL
            prefix = "ehbio"
            corType = "bicor"
@@ -62,3 +64,5 @@ WGCNA_onestep(exprMat, traitData, prefix="../wgcna_ehbio")
            up_color = c("red", "white", "blue")
            down_color = c("green", "white")
 ```
+
+
