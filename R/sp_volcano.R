@@ -299,7 +299,8 @@ sp_volcano_plot <-
             point.padding = unit(0.3, "lines"),
             max.overlaps = 200,
             colour = "black",
-            show.legend = F
+            show.legend = F,
+            min.segment.length = 0
           )
       }
     }
