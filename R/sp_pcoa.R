@@ -157,7 +157,7 @@ sp_pcoa <- function(data,
 
     dist_matrix <- vegan::vegdist(data, method = dissimilarity_index,
                                   binary = binary_dissimilarity_index,
-                                  na.rm=FALSE)
+                                  na.rm=TRUE)
     distance_algorithm <- dissimilarity_index
   } else {
     dist_matrix <- as.dist(data)
