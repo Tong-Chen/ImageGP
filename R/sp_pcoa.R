@@ -132,7 +132,7 @@ sp_pcoa <- function(data,
     data <- t(data)
     # copy and modified from vegan::metaMDSdist
     if (data_transform == "auto") {
-      xam <- max(data)
+      xam <- max(data, na.rm=F)
       if (xam > 50) {
         data <- sqrt(data)
       }
@@ -156,7 +156,8 @@ sp_pcoa <- function(data,
     }
 
     dist_matrix <- vegan::vegdist(data, method = dissimilarity_index,
-                                  binary = binary_dissimilarity_index)
+                                  binary = binary_dissimilarity_index,
+                                  na.rm=FALSE)
     distance_algorithm <- dissimilarity_index
   } else {
     dist_matrix <- as.dist(data)
