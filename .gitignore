@@ -1,5 +1,8 @@
 
 build
+vignettes/*.txt
+vignettes/*.pdf
+*.txt
 
 bin/py2
 .history
