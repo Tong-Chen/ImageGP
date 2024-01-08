@@ -41,12 +41,12 @@ sp_pheatmap("exprTable.txt", xtics_angle = 200, cluster_rows = T, cluster_cols =
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T)
 
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
-            correlation_plot = "row", clustering_distance_rows="cao",
+            correlation_plot = "row", clustering_distance_rows="bray",
             clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
-            anno_cutree_cols = T)
+            anno_cutree_cols = T, width=0, height=0)
 
 sp_pheatmap("exprTable.txt", xtics_angle = 250, cluster_rows = T, cluster_cols = T,
-            correlation_plot = "row", clustering_distance_rows="cao",
+            correlation_plot = "row", clustering_distance_rows="bray",
             clustering_distance_cols = "minkowski", cutree_cols = 3, cutree_rows = 2,
             filename = "pheatmap.pdf")
 ```
@@ -894,6 +894,7 @@ suppressMessages(library("vegan"))
 suppressMessages(library("ggalt"))
 # devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
 suppressMessages(library("pairwiseAdonis"))
+suppressMessages(library("ImageGP"))
 
 pcoa_data = "pcoa.data"
 group_pcoa_data = "group_pcoa.data"
