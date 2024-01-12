@@ -128,7 +128,7 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   txi <- tximport::tximport(salmon_file, type = "salmon", tx2gene = tx2gene)
 
   sample1 <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t",
+                       quote='', check.names=T, sep="\t",
                        stringsAsFactors = T)
   sample1 <- sample1[,!grepl('fastq', colnames(sample1)),  drop=F]
 
@@ -195,11 +195,11 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
                          filter=NULL, rundeseq=T) {
 
   data <- read.table(count_matrix_file, header=T, row.names=1, com='', quote='',
-                     check.names=F, sep="\t", stringsAsFactors = F)
+                     check.names=T, sep="\t", stringsAsFactors = F)
 
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t", stringsAsFactors = T)
+                       quote='', check.names=T, sep="\t", stringsAsFactors = T)
   sample <- sample[,!grepl('fastq', colnames(sample)), drop=F]
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
 
@@ -646,7 +646,7 @@ multipleGroupDEgenes <- function(
 
   if(!sp.is.null(comparePairFile)){
     compare_data <- read.table(comparePairFile, sep="\t",
-                               check.names=F, quote='', com='',
+                               check.names=T, quote='', com='',
                                stringsAsFactors = F)
     colnames(compare_data) <- c("sampA", "sampB")
   } else {
@@ -710,7 +710,7 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
 
   if (sp.is.null(design)) {
     sample <- read.table(sampleFile, header=T, row.names=1, com='',
-                       quote='', check.names=F, sep="\t",
+                       quote='', check.names=T, sep="\t",
                        stringsAsFactors = T)
   	design = colnames(sample)[1]
   }
