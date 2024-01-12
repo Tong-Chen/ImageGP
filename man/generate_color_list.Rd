@@ -4,7 +4,13 @@
 \alias{generate_color_list}
 \title{Generate color code}
 \usage{
-generate_color_list(color, number, alpha = 1, constantColor = F)
+generate_color_list(
+  color,
+  number,
+  alpha = 1,
+  constantColor = F,
+  reverseColorList = F
+)
 }
 \arguments{
 \item{color}{Colors like c('red', 'blue', '#6181BD') or
@@ -20,6 +26,8 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 \item{number}{Number of colors to return.}
 
 \item{alpha}{Generate an alpha transparency values for return colors. 0 means fully transparent and 1 means opaque. Default 1.}
+
+\item{reverseColorList}{Get the reverse of generated color list.}
 }
 \value{
 A color vector

@@ -10,6 +10,8 @@ sp_pcoa(
   input_type = "normalized_OTUtable",
   dissimilarity_index = "bray",
   k = 3,
+  top_n = 1,
+  statistical_value_type = mad,
   binary_dissimilarity_index = F,
   data_transform = "auto",
   group_variable = NULL,
@@ -33,7 +35,6 @@ sp_pcoa(
   extra_ggplot2_cmd = NULL,
   check_significance = T,
   check_paired_significance = T,
-  facet_variable = NULL,
   coord_fixed = T,
   ...
 )
@@ -66,6 +67,12 @@ to handle unknown (and variable) sample sizes.}
 \item{k}{the maximum dimension of the space which the data are to be
     represented in; must be in \eqn{\{1, 2, \ldots, n-1\}}{{1, 2, \\dots, n-1}}.}
 
+\item{top_n}{An integer larger than 1 will be used to get top x genes (like top 5000).
+A float number less than 1 will be used to get top x fraction genes (like top 0.7 of
+all genes).}
+
+\item{statistical_value_type}{Specify the way for statistical computation. Default mad, accept mean, var, sum, median.}
+
 \item{binary_dissimilarity_index}{Perform presence/absence standardization
 before computing \code{dissimilarity_index}. Default \code{FALSE}, accept \code{TRUE}.}
 
@@ -80,19 +87,6 @@ For \code{scale}: row scale.
 For \code{sqrt} and \code{log2}, just as the words.}
 
 \item{group_variable}{The variable for grouping points to generate normal data confidence ellipses. Optional.}
-
-\item{color_variable}{The variable for point color. Optional, such as \code{color} (one of column names).}
-
-\item{color_variable_order}{The order for color variable. Default alphabetical order,
-accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
-
-\item{shape_variable}{The variable for point shape. Optional, such as \code{shape} (one of column names).}
-
-\item{shape_variable_order}{The order for shape variable. Default alphabetical order,
-accept a vector like c('K562','hESC','GM12878','HUVEC','NHEK','IMR90','HMEC').}
-
-\item{size_variable}{The variable for point size. Optional,
-such as a number or a variable like \code{count} (one of column names), normally should be number column.}
 
 \item{label_variable}{The variable for text used to label points. Optional.
 Specially supplying \code{Row.names} would label sample with their names.}
@@ -119,9 +113,6 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 
 \item{title}{Title of picture.}
 
-\item{label_font_size}{Label font size. Default system default. Accept a number.
-Supplying numbers less than 5 to shrink fonts.}
-
 \item{type}{The type of ellipse.
 The default \code{"t"} assumes a multivariate t-distribution, and
 \code{"norm"} assumes a multivariate normal distribution.
@@ -140,9 +131,6 @@ or, if \code{type="euclid"}, the radius of the circle to be drawn.}
 as defined by measure space are equivalent for all groups.}
 
 \item{check_paired_significance}{Paired-check for each two groups.}
-
-\item{facet_variable}{Wrap plots by given column (one of column names should be specified).
-This is used to put multiple plot in one picture.}
 
 \item{coord_fixed}{When True (the default) ensures that one unit on the x-axis is
 the same length as one unit on the y-axis.}

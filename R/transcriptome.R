@@ -200,8 +200,13 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 
   sample <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=T, sep="\t", stringsAsFactors = T)
+  rownames(sample) <- make.names(rownames(sample))
+
   sample <- sample[,!grepl('fastq', colnames(sample)), drop=F]
   sample <- sample[match(colnames(data), rownames(sample)),, drop=F]
+
+  # print(paste("Samples in read-count matrix", colnames(data)))
+  # print(paste("Samples in metadata/sampleFile", rownames(sample)))
 
 
   if (sp.is.null(design)) {
