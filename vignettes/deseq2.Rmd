@@ -1,0 +1,171 @@
+---
+title: "高通量数据中批次效应的鉴定和处理"
+author: "陈同"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    df_print: paged
+    theme: cerulean
+    highlight: haddock
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    code_fold: show
+---
+
+```{r, echo=F}
+knitr::opts_chunk$set( echo = TRUE, message=FALSE, warning=FALSE, fig.width=8 )
+```
+
+下面我们以一个具体例子实战（配对样品处理前后基因表达的变化）和检验下效果。为了演示批次效应的影响，大部分代码做了封装，我们只关心核心的地方。如果自己对封装的代码感兴趣，可以自行查看函数源码。
+
+## 检查有无缺失的包并安装，加载所有包
+
+```{r}
+site = "https://mirrors.tuna.tsinghua.edu.cn/CRAN"
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager", repos = site)
+
+options(BioC_mirror="https://mirrors.tuna.tsinghua.edu.cn/bioconductor")
+installed_packages = data.frame(installed.packages())
+a = rownames(installed_packages)
+
+# 安装指定版本的ggbeeswarm
+if (!"ggbeeswarm" %in% a){
+   install.packages("https://cran.r-project.org/src/contrib/Archive/ggbeeswarm/ggbeeswarm_0.6.0.tar.gz", repos = NULL, type = "source")
+} else {
+  if (installed_packages["ggbeeswarm","Version"] != "0.6.0") {
+    install.packages("https://cran.r-project.org/src/contrib/Archive/ggbeeswarm/ggbeeswarm_0.6.0.tar.gz", repos = NULL, type = "source")
+  }
+}
+
+install_bioc <- c("tidyverse", "DESeq2", "RColorBrewer", "ggplot2", "org.Hs.eg.db",
+                  "reshape2", "stringr", "gplots","tidyr","amap","BiocParallel","sva",
+                  "ggfortify","patchwork", "ggrepel",
+                  "VennDiagram","grid", "limma", 
+                  "devtools","rmarkdown","dplyr","conflicted")
+
+
+for (i in install_bioc) {
+  if (!i %in% a){
+    BiocManager::install(i, update = F, site_repository=site)
+    a = rownames(installed.packages())
+  }
+}
+
+if (!"ImageGP" %in% a){
+  # devtools::install_github("Tong-Chen/ImageGP")
+  devtools::install_git("https://gitee.com/ct5869/ImageGP.git")
+}
+```
+
+```{r}
+# 若缺少ImageGP包，则安装
+# BiocManager::install("Tong-Chen/ImageGP", update=F)
+suppressMessages(library(DESeq2))
+suppressMessages(library("RColorBrewer"))
+suppressMessages(library("gplots"))
+suppressMessages(library("amap"))
+suppressMessages(library("ggplot2"))
+suppressMessages(library("BiocParallel"))
+suppressMessages(library("ImageGP"))
+suppressMessages(library(sva))
+suppressMessages(library(ggfortify))
+suppressMessages(library(patchwork))
+# https://cran.r-project.org/src/contrib/Archive/ggbeeswarm/ggbeeswarm_0.6.0.tar.gz
+suppressMessages(library(ggbeeswarm))
+suppressMessages(library(ggrepel))
+suppressMessages(library(VennDiagram))
+suppressMessages(library(grid))
+suppressMessages(library(limma))
+suppressMessages(library(dplyr))
+suppressMessages(library(conflicted))
+conflict_prefer("select", "dplyr")
+```
+
+输入文件1： `reads count`矩阵 (*ehbio_trans.Count_matrix.txt*)，格式如下：
+
+    ENSG    untrt_N61311    untrt_N052611   untrt_N080611   untrt_N061011   trt_N61311  trt_N052611 trt_N080611 trt_N061011
+    ENSG00000223972 1   0   0   0   0   1   0   0
+    ENSG00000227232 13  25  23  24  12  12  22  22
+    ENSG00000278267 0   5   3   4   2   4   3   1
+
+输入文件2： `实验设计信息`表 (*metadata*): `conditions`为处理条件（`untrt`是对照, `trt`是加药处理 ），`individual`标记样品的个体来源 (4个个体：N61311、N052611、N080611、N061011)。
+
+    Samp    conditions  individual
+    untrt_N61311    untrt   N61311
+    untrt_N052611   untrt   N052611
+    untrt_N080611   untrt   N080611
+    untrt_N061011   untrt   N061011
+    trt_N61311  trt N61311
+    trt_N052611 trt N052611
+    trt_N080611 trt N080611
+    trt_N061011 trt N061011
+
+## 不考虑批次因素直接进行差异基因分析 {#batch6}
+
+初始化，定义输入、输出和参数
+
+```{r}
+# Prefix for all output file 
+dir.create("result/", recursive = T)
+output_prefix = "result/ehbio.simpler"
+
+# pipelineStar.sh或其它方式生成的reads count 文件，行为基因，列为样品
+file = "ZWR_Brain.txt"
+# 分组信息表
+metadata = "sampleFile"
+# 分组信息所在列名字
+covariate = NULL
+# covariate = "batch"
+design="conditions"
+# 输入数据类型，salmon结果或reads count 矩阵
+type="readscount"
+# 差异基因参数
+padj=0.05
+log2FC=1
+```
+
+数据读入和标准化
+
+```{r}
+dds <- readscount2deseq(file, metadata, design=design, covariate = covariate)
+
+normexpr <- deseq2normalizedExpr(dds, output_prefix=output_prefix, rlog=F, vst=T)
+```
+
+检查数据标准化效果: 标准化后基因在不同样品的表达分布越均一越好。从下图看不出存在批次效应的影响。
+
+```{r}
+# normalizedExpr2DistribBoxplot(normexpr, 
+#   saveplot=paste(output_prefix, "DESeq2.normalizedExprDistrib.pdf", sep="."))
+normalizedExpr2DistribBoxplot(normexpr)
+```
+
+[样本聚类](https://mp.weixin.qq.com/mp/appmsgalbum?__biz=MzI5MTcwNjA4NQ==&action=getalbum&album_id=1335864997100224512&subscene=38&scenenote=https%3A%2F%2Fmp.weixin.qq.com%2Fs%3F__biz%3DMzI5MTcwNjA4NQ%3D%3D%26mid%3D2247495133%26idx%3D2%26sn%3D37d1572211a755566b5de5f120e476cf%26chksm%3Dec0e2857db79a1411fab8405e9f6284f10644eb9965f2d5fdfa98f0ff44a581729f990fc9c14%26scene%3D38%26key%3Dbbd9db2a3d7572cd769c7f8e4e3317fec44d11168b996d9b03e0828fc8c61abdcf8565023bdb967b8005fb7f8f9d6e2f7cb5d24289c52229bae2b2791048ea213afbf98f447947495cde5742eae678a4%26ascene%3D7%26uin%3DOTY2MDEyMzgw%26devicetype%3DWindows%2B7%2Bx64%26version%3D62090529%26lang%3Dzh_CN%26exportkey%3DAa8iMQ%252BTtWiuSpqGzIiwmvk%253D%26pass_ticket%3DDAyFVADyPalxlkE8NUofnsSAhBBJHP7CYr46pHPxHfWOVdG1RLPhHzDUX%252BmMIHmH%26winzoom%3D1#wechat_redirect)查看样品相似性，trt组和untrt组区分明显 (*聚类采用的不同基因数目、聚类参数都可能影响聚类结果*)
+
+```{r}
+# clusterSampleHeatmap2(normexpr$vst, 
+#                       cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."), 
+#                       saveplot=paste(output_prefix, "DESeq2.sampleCorrelation.pdf", sep="."))
+# 根据前5000个表达变化幅度最大的基因进行聚类分析
+clusterSampleHeatmap2(normexpr$vst[1:5000,], cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."))
+clusterSampleUpperTriPlot(normexpr$vst[1:500,], cor_file=paste(output_prefix, "DESeq2.sampleCorrelation.txt", sep="."))
+```
+
+[主成分分析PCA](https://mp.weixin.qq.com/s?__biz=MzI5MTcwNjA4NQ==&mid=2247489825&idx=1&sn=e56d490bec2bed4068cb2f294399e675&chksm=ec0ddcabdb7a55bd5ad91cc16c470250213d78c782da419e70039e851621525674203e47916f&scene=158#rd)查看样品相似性，发现在`PC1`轴上，样品按**处理条件**区分开；在`PC2`轴上，样品按**个体**区分开，不同的个体是影响样品基因表达差异的一个重要因素。
+
+```{r}
+metadata = as.data.frame(colData(dds))
+sp_pca(normexpr$vst[1:1000,], metadata, color_variable="conditions", shape_variable = "individual") + aes(size=1) + guides(size = "none")
+```
+
+先鉴定出差异基因，获得差异基因文件`ehbio.simpler.DESeq2.all.DE.txt`和其它可视化图表（暂时忽略）。
+
+```{r}
+multipleGroupDEgenes(dds, design=design, output_prefix=output_prefix, padj=padj, log2FC=log2FC, normalized_counts=normexpr, lfcShrink=T)
+```
+

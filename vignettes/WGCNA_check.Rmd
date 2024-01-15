@@ -16,17 +16,21 @@ suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(grid))
 suppressPackageStartupMessages(library(pheatmap))
 
-expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
+conflict_prefer("cor", "WGCNA")
+conflict_prefer("bicor", "WGCNA")
+
+#dir.create("result/WGCNA", recursive=T)
+#expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
 # group <- sp_readTable(file="TraitsClean.txt", row.names=1, header=T)
 
-exprMat = "LiverFemaleClean.txt"  
-traitData = "TraitsClean.txt"
+#exprMat = "LiverFemaleClean.txt"  
+#traitData = "TraitsClean.txt"
            
-exprMat = "../TMPw.txt"
-traitData = "../WGCNA_trait.txt"     
+exprMat = "~/tmp/LiverFemaleClean.txt"
+traitData = "~/tmp/TraitsClean.txt"     
 expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
-WGCNA_onestep(exprMat, traitData, prefix="../wgcna_ehbio")
+WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio")
 
      
            

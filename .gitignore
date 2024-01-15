@@ -2,6 +2,8 @@
 build
 vignettes/*.txt
 vignettes/*.pdf
+vignettes/*.xls
+vignettes/*.zip
 *.txt
 
 bin/py2
