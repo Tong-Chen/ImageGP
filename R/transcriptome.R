@@ -395,6 +395,7 @@ twoGroupDEgenes <- function
   dropCol=c("lfcSE", "stat"),
   output_prefix="ehbio",
   normalized_counts = NULL,
+  lfcShrink = FALSE,
   ...
 ){
   #print(sampleV)
@@ -422,7 +423,12 @@ twoGroupDEgenes <- function
   print(paste("DE genes between", groupA, groupB, sep=" "))
   contrastV <- c(design, groupA, groupB)
   print(contrastV)
-  res <- DESeq2::results(dds,  contrast=contrastV)
+
+  if(lfcShrink){
+    res <- lfcShrink(dds, coef=2, type="apeglm")
+  } else {
+    res <- DESeq2::results(dds,  contrast=contrastV)
+  }
 
   if (sp.is.null(normalized_counts)){
     normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
@@ -647,6 +653,7 @@ multipleGroupDEgenes <- function(
   dropCol=c("lfcSE", "stat"),
   output_prefix="ehbio",
   normalized_counts = NULL,
+  lfcShrink = FALSE,
   ...
 ){
 
@@ -716,7 +723,7 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
                        covariate = NULL,
                        tx2gene=NULL, filter=NULL, output_prefix='ehbio',
                        rlog=T, vst=F, comparePairFile=NULL, padj=0.05,
-                       log2FC=1, dropCol=c("lfcSE", "stat")){
+                       log2FC=1, dropCol=c("lfcSE", "stat"), lfcShrink = FALSE){
 
   if (sp.is.null(design)) {
     sample <- read.table(sampleFile, header=T, row.names=1, com='',

@@ -14,6 +14,7 @@ twoGroupDEgenes(
   dropCol = c("lfcSE", "stat"),
   output_prefix = "ehbio",
   normalized_counts = NULL,
+  lfcShrink = FALSE,
   ...
 )
 }

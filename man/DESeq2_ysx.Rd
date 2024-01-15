@@ -18,7 +18,8 @@ DESeq2_ysx(
   comparePairFile = NULL,
   padj = 0.05,
   log2FC = 1,
-  dropCol = c("lfcSE", "stat")
+  dropCol = c("lfcSE", "stat"),
+  lfcShrink = FALSE
 )
 }
 \arguments{
