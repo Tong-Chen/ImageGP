@@ -541,6 +541,11 @@ twoGroupDEgenes <- function
 
   res_de_top20 <- c(res_de_up_top20_id, res_de_dw_top20_id)
 
+  if(length(res_de_top20) == 0){
+    print(paste("There is no DE gene between group", groupA, "and", groupB, "!"))
+    return(list())
+  }
+
   res_de_top20_type <- data.frame(Type=c(rep("UP", length(res_de_up_top20_id)),
                                          rep("DW", length(res_de_dw_top20_id))),
                                   row.names = c(res_de_up_top20_id, res_de_dw_top20_id))
