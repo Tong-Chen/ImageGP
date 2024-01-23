@@ -95,7 +95,7 @@ sp_pcoa <- function(data,
     data <- sp_readTable(data, row.names = 1)
     if(input_type != "normalized_OTUtable") {
       rownames_data <- rownames(data)
-      colnames_data <- colnames_data(data)
+      colnames_data <- colnames(data)
       if (! value.identical(rownames_data, colnames_data)){
         print("We assume the input data is not the dist matrix!")
         input_type == "normalized_OTUtable"

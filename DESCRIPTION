@@ -13,7 +13,7 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Roxygen: list(markdown = TRUE)
 URL: https://www.bic.ac.cn/BIC
 Depends:
