@@ -125,6 +125,9 @@ sp_volcano_plot <-
       fc = significance_threshold[2]
     }
 
+    # filter NA pvalue NA fdr
+    data <- data[complete.cases(data),,drop=F]
+
     if (!self_compute_status) {
       if (!sp.is.null(status_col_var_order)) {
         sig_level <- status_col_var_order

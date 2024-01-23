@@ -1,6 +1,6 @@
 Package: ImageGP
 Type: Package
-Title: For ImageGP cloud platform (http://www.ehbio.com/Cloud_Platform/front/#)
+Title: For ImageGP cloud platform (https://www.bic.ac.cn/BIC)
 Version: 0.1.0
 Author: Chen Tong
 Authors@R: c(person("Chen", "Tong", email = "chentong_biology@163.com",
@@ -15,7 +15,7 @@ LazyData: true
 VignetteBuilder: knitr
 RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
-URL: http://www.ehbio.com/Cloud_Platform/front/#/
+URL: https://www.bic.ac.cn/BIC
 Depends:
     R (>= 3.1)
 Imports:
