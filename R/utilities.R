@@ -1315,9 +1315,10 @@ get_matched_columns_based_on_value <-
     # print(matches_names)
     if (only_allow_one_match)
       if (matches_names_count > 1) {
-        stop(
+        print(
           "Multiple pairs of columns matched each other between given two data.frames. The program does not know which to return. Please check."
         )
+        return(as.vector(matches_names[, 1]))
       } else {
         # In case there are factors
         return(as.vector(matches_names[, 1]))
