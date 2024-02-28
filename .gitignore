@@ -5,6 +5,7 @@ vignettes/*.pdf
 vignettes/*.xls
 vignettes/*.zip
 *.txt
+tmp
 
 bin/py2
 .history
