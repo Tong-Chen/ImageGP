@@ -98,7 +98,7 @@ sp_pcoa <- function(data,
       colnames_data <- colnames(data)
       if (! value.identical(rownames_data, colnames_data)){
         print("We assume the input data is not the dist matrix!")
-        input_type == "normalized_OTUtable"
+        input_type = "normalized_OTUtable"
       }
     }
 
