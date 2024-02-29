@@ -4,6 +4,7 @@ library(WGCNA)
 library(aplot)
 library(pheatmap)
 library(grid)
+library(conflicted)
 suppressPackageStartupMessages(library(ImageGP))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(stringr))
@@ -26,30 +27,40 @@ conflict_prefer("bicor", "WGCNA")
 #exprMat = "LiverFemaleClean.txt"  
 #traitData = "TraitsClean.txt"
            
-exprMat = "~/tmp/LiverFemaleClean.txt"
-traitData = "~/tmp/TraitsClean.txt"     
+exprMat = "~/tmp/a44b22b9-f0d7-42d3-bf2a-52197cea4618.txt"
+traitData = NULL     
 expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
-WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio")
+WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "pearson",
+           networkType = "unsigned",
+           maxPower = 30, removeOutlier = T,
+  RsquaredCut = 0.8, minModuleSize=2, deepSplit = 2)
 
-     
-           
-
+     prefix="wgcna_ehbio"
+     top_mad_n = 2000
+     corType = "pearson"
+     networkType = "unsigned"
+     maxPower = 30 
+     removeOutlier = T
+  RsquaredCut = 0.8
+     minModuleSize=2
+     deepSplit = 2
+          
            categoricalTrait = NULL
-           prefix = "ehbio"
-           corType = "bicor"
-           corType = "pearson"
-           networkType = "signed"
-           maxPower = NULL
+           # prefix = "ehbio"
+           # corType = "bicor"
+           # corType = "pearson"
+           # networkType = "unsigned"
+           maxPower = 30
            maxBlockSize = NULL
-           top_mad_n = 0.75
+           top_mad_n = 2000
            rmVarZero = T
            minimal_mad = NULL
            thresholdZ.k = -2.5
            TOM_plot = NULL
            top_hub_n = 20
-           removeOutlier = F
-           RsquaredCut = 0.85
+           # removeOutlier = F
+           # RsquaredCut = 0.85
            minModuleSize = NULL
            mergeCutHeight = 0.2
            numericLabels = TRUE
@@ -58,7 +69,7 @@ WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio")
            maxPOutliers = NULL
            loadTOM = TRUE
            TOMDenom = "min"
-           deepSplit = 1
+           # deepSplit = 1
            stabilityCriterion = "Individual fraction"
            verbose = 0
            os_system = NULL

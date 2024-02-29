@@ -955,6 +955,10 @@ WGCNA_coexprNetwork <- function(datExpr,
   moduleLabels = net$colors
   moduleColors = WGCNA::labels2colors(moduleLabels)
 
+  # if(length(unique(moduleColors)) == 1 &&  unique(moduleColors) == "grey" ){
+  #  stop("NO Clusters found. Please try other parameters.")
+  # }
+
   # Plot the dendrogram and the module colors underneath
   # 如果对结果不满意，还可以recutBlockwiseTrees，节省计算时间
 

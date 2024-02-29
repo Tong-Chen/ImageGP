@@ -6,6 +6,8 @@ vignettes/*.xls
 vignettes/*.zip
 *.txt
 tmp
+*.RData
+*/*.RData
 
 bin/py2
 .history
