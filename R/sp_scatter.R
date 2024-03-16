@@ -139,7 +139,7 @@ sp_scatterplot <- function (data,
     data = sp_set_factor_order(data, yvariable, yvariable_order)
   }
 
-  if (!is.numeric(data[[yvariable]]) &&
+  if (!is.numeric(data[[xvariable]]) &&
       !sp.is.null(xvariable_order)) {
     data = sp_set_factor_order(data, xvariable, xvariable_order)
   }
