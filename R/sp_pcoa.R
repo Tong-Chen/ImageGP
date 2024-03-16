@@ -114,7 +114,8 @@ sp_pcoa <- function(data,
   }
 
   if (class(metadata) == "character") {
-    metadata <- sp_readTable(metadata, row.names = 1)
+    metadata <- sp_readTable(metadata)
+    rownames(metadata) <- metadata[,1]
   } else if ('data.frame' %in% class(metadata) |
              'dist' %in% class(metadata)) {
     stop("Unknown input format for `metadata` parameter.")
@@ -191,7 +192,7 @@ sp_pcoa <- function(data,
   eig_percent <- round(pcoa$eig / sum_eig * 100, 1)
 
   colnames(pcoa_points) <- paste0("PCoA", 1:ndimensions)
-  print(pcoa_points)
+  # print(pcoa_points)
 
   data <- cbind(pcoa_points, metadata)
 
@@ -353,6 +354,10 @@ sp_pcoa <- function(data,
       "\ndispersion P-value: ",
       round(dispersion_test_p,6)
     )
+
+    if(nlevels(metadata[[group_variable]])>20){
+      check_paired_significance = FALSE
+    }
 
     if (check_paired_significance) {
       # devtools::install_github("pmartinezarbizu/pairwiseAdonis/pairwiseAdonis")
