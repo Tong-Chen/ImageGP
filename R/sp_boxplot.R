@@ -447,10 +447,10 @@ sp_boxplot <- function(data,
       aes(
         x = !!xvariable_en,
         y = y,
-        color = !!legend_variable_en,
         label = stat,
         group = !!legend_variable_en
       ),
+      color = "black",
       position = position_dodge(width =
                                   0.9),
       show.legend = F

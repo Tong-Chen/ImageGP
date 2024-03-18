@@ -78,41 +78,47 @@ sp_diff_test <-
     # 代码修改自 amplicon包 microbiota/amplicon
     # https://github.com/microbiota/amplicon/blob/master/R/alpha_boxplot.R
     data <- droplevels(data)
+    # print(paste(stat_value_variable, "~", stat_group_variable))
 
-    formula = as.formula(paste(stat_value_variable, "~", stat_group_variable))
-    if (statistical_method == "aov") {
-      model = aov(formula, data = data)
-      Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
+    if(length(unique(data[[stat_group_variable]])) == 1){
+      data$stat = "#"
+      Tukey_HSD_table =NULL
+    } else {
+      formula = as.formula(paste(stat_value_variable, "~", stat_group_variable))
+      if (statistical_method == "aov") {
+        model = aov(formula, data = data)
+        Tukey_HSD = TukeyHSD(model, ordered = TRUE, conf.level = 0.95)
 
-      Tukey_HSD_table = as.data.frame(Tukey_HSD[[stat_group_variable]])
-      # print(Tukey_HSD_table)
+        Tukey_HSD_table = as.data.frame(Tukey_HSD[[stat_group_variable]])
+        # print(Tukey_HSD_table)
 
-      if (length(unique(data[[stat_group_variable]])) == 2) {
-        library(agricolae)
-        out = LSD.test(model, stat_group_variable, p.adj = "none", alpha=statistical_threshold_for_letters)
-        #print(out)
-        LSD.test_table = as.data.frame(out$statistics)
-        stat = out$groups
-        data$stat = stat[as.character(data[[stat_group_variable]]),]$groups
-      } else{
         if (length(unique(data[[stat_group_variable]])) == 2) {
-          Tukey.levels = Tukey_HSD[[stat_group_variable]][, 4, drop = F]
+          library(agricolae)
+          out = LSD.test(model, stat_group_variable, p.adj = "none", alpha=statistical_threshold_for_letters)
+          #print(out)
+          LSD.test_table = as.data.frame(out$statistics)
+          stat = out$groups
+          data$stat = stat[as.character(data[[stat_group_variable]]),]$groups
         } else{
-          Tukey.levels = Tukey_HSD[[stat_group_variable]][, 4]
-        }
+          if (length(unique(data[[stat_group_variable]])) == 2) {
+            Tukey.levels = Tukey_HSD[[stat_group_variable]][, 4, drop = F]
+          } else{
+            Tukey.levels = Tukey_HSD[[stat_group_variable]][, 4]
+          }
 
-        # print(Tukey.levels)
-        Tukey.labels = data.frame(multcompView::multcompLetters(
-                      Tukey.levels, threshold=statistical_threshold_for_letters)['Letters'])
-        Tukey.labels$group = rownames(Tukey.labels)
-        Tukey.labels = Tukey.labels[order(Tukey.labels$group),]
-        data$stat = Tukey.labels[as.character(data[[stat_group_variable]]), ]$Letters
+          # print(Tukey.levels)
+          Tukey.labels = data.frame(multcompView::multcompLetters(
+            Tukey.levels, threshold=statistical_threshold_for_letters)['Letters'])
+          Tukey.labels$group = rownames(Tukey.labels)
+          Tukey.labels = Tukey.labels[order(Tukey.labels$group),]
+          data$stat = Tukey.labels[as.character(data[[stat_group_variable]]), ]$Letters
+        }
       }
     }
 
 
     max_y = sapply(split(data, data[[stat_group_variable]]),
-                     function (x) {max(x[[stat_value_variable]], na.rm=T)})
+                   function (x) {max(x[[stat_value_variable]], na.rm=T)})
     #print(max_y)
 
     data$y = max_y[data[[stat_group_variable]]] * 1.06
