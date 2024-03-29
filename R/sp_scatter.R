@@ -38,14 +38,14 @@
 #' For observations < 1000 default is 'loess', observations >= 1000 defaults to 'gam'.
 #' Default 'no smooth' meaning show the real lines and do not smooth lines. Accept auto, lm, glm, gam, loess, rlm.
 #' @param line_size line size. Default NULL. Accept a number.
-#' @param facet Wrap plots by given column. This is used to put multiple plot
+#' @param facet_variable Wrap plots by given column. This is used to put multiple plot
 #' in one picture. Used when `melted` is FALSE, normally a string `set` (one of column names)
 #' should be suitable for this parameter.
-#' @param nrow 	The number of rows one want when `melted` is used. Default NULL.
-#' @param ncol The number of columns one want when `melted` is used. Default NULL.
-#' @param scales Paramter for scales for facet. Default `fixed` meaning each inner graph
+#' @param facet_nrow 	The number of rows one want when `melted` is used. Default NULL.
+#' @param facet_ncol The number of columns one want when `melted` is used. Default NULL.
+#' @param facet_scales Parameter for scales for facet. Default `fixed` meaning each inner graph
 #' @inheritParams sp_ggplot_layout
-#' @param ... Parametes given to `sp_ggplot_layout`
+#' @param ... Parameters given to `sp_ggplot_layout`
 #'
 #' @return A ggplot2 object
 #' @export
@@ -81,7 +81,7 @@
 #' size_variable = "Size",label="Samp",Jitter = TRUE)
 #'
 #' sp_scatterplot(data="scatter.txt",xvariable = "X_val",yvariable = "Y_val", color_variable = "Color", shape_variable= "Shape",
-#' size_variable = "Size",label="Samp",Jitter = TRUE,facet = "Color", scales = "free_y")
+#' size_variable = "Size",label="Samp",Jitter = TRUE,facet_variable = "Color", facet_scales = "free_y")
 #' ## End(Not run)
 #'
 sp_scatterplot <- function (data,
@@ -115,10 +115,10 @@ sp_scatterplot <- function (data,
                             y_label = NULL,
                             extra_ggplot2_cmd = NULL,
                             label_font_size = 3,
-                            facet = NULL,
-                            nrow = NULL,
-                            ncol = NULL,
-                            scales = 'fixed',
+                            facet_variable = NULL,
+                            facet_nrow = NULL,
+                            facet_ncol = NULL,
+                            facet_scales = 'fixed',
                             scale_y_way = NULL,
                             ...) {
   if ("character" %in% class(data)) {
@@ -256,11 +256,10 @@ sp_scatterplot <- function (data,
                         range = range(scale_size_min, scale_size_max))
   }
 
-  if (!sp.is.null(facet)) {
-    p <- p + facet_wrap( ~  .data[[facet]],
-                         nrow = nrow ,
-                         ncol = ncol ,
-                         scale = scales)
+  if (!sp.is.null(facet_variable)) {
+    # 列的名字不能为 facet_variable
+    p <-
+      sp_ggplot_facet(p, facet_variable, facet_ncol, facet_nrow, facet_scales)
   }
 
   if (!sp.is.null(scale_y_way)) {
