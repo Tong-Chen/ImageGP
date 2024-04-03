@@ -36,10 +36,10 @@ sp_scatterplot(
   y_label = NULL,
   extra_ggplot2_cmd = NULL,
   label_font_size = 3,
-  facet = NULL,
-  nrow = NULL,
-  ncol = NULL,
-  scales = "fixed",
+  facet_variable = NULL,
+  facet_nrow = NULL,
+  facet_ncol = NULL,
+  facet_scales = "fixed",
   scale_y_way = NULL,
   ...
 )
@@ -126,20 +126,20 @@ or represents group information to avoid point overlaps. Default FALSE.}
 \item{label_font_size}{Label font size. Default system default. Accept a number.
 Supplying numbers less than 5 to shrink fonts.}
 
-\item{facet}{Wrap plots by given column. This is used to put multiple plot
+\item{facet_variable}{Wrap plots by given column. This is used to put multiple plot
 in one picture. Used when \code{melted} is FALSE, normally a string \code{set} (one of column names)
 should be suitable for this parameter.}
 
-\item{nrow}{The number of rows one want when \code{melted} is used. Default NULL.}
+\item{facet_nrow}{The number of rows one want when \code{melted} is used. Default NULL.}
 
-\item{ncol}{The number of columns one want when \code{melted} is used. Default NULL.}
+\item{facet_ncol}{The number of columns one want when \code{melted} is used. Default NULL.}
 
-\item{scales}{Paramter for scales for facet. Default \code{fixed} meaning each inner graph}
+\item{facet_scales}{Parameter for scales for facet. Default \code{fixed} meaning each inner graph}
 
 \item{scale_y_way}{The way to scale Y-axis like \code{scale_y_log10}, \code{coord_trans(y="log10")},
 \code{scale_y_continuous(trans="log2")}, \code{coord_trans(y="log2")}.}
 
-\item{...}{Parametes given to \code{sp_ggplot_layout}}
+\item{...}{Parameters given to \code{sp_ggplot_layout}}
 }
 \value{
 A ggplot2 object
@@ -179,7 +179,7 @@ sp_scatterplot(data="scatter.txt",xvariable = "X_val",yvariable = "Y_val", color
 size_variable = "Size",label="Samp",Jitter = TRUE)
 
 sp_scatterplot(data="scatter.txt",xvariable = "X_val",yvariable = "Y_val", color_variable = "Color", shape_variable= "Shape",
-size_variable = "Size",label="Samp",Jitter = TRUE,facet = "Color", scales = "free_y")
+size_variable = "Size",label="Samp",Jitter = TRUE,facet_variable = "Color", facet_scales = "free_y")
 ## End(Not run)
 
 }

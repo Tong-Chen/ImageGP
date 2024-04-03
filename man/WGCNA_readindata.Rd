@@ -13,7 +13,7 @@ WGCNA_readindata(
   header = T,
   quote = "",
   comment = "",
-  check.names = F,
+  check.names = T,
   ...
 )
 }

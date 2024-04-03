@@ -100,7 +100,7 @@ WGCNA_readindata <-
            header = T,
            quote = "",
            comment = "",
-           check.names = F,
+           check.names = T,
            ...) {
     cat(sp_current_time(), "Start reading in exprMat and traitData.\n")
     datExpr <-
@@ -134,9 +134,12 @@ WGCNA_readindata <-
           comment = comment,
           check.names = check.names
         )
+      rownames(traitData) <- make.names(rownames(traitData))
 
 
-
+      if(length(sampleName) < 6){
+        stop("At least six samples are needed!!!!!")
+      }
 
       common_sampleL <- base::intersect(sampleName, rownames(traitData))
       if (length(common_sampleL) < 6){
@@ -149,6 +152,19 @@ WGCNA_readindata <-
 
       # 保证表达表样品与METAdata样品顺序和数目完全一致
       datExpr <- datExpr[,common_sampleL,drop=F]
+
+      # log transform datExpr
+      qx <- as.numeric(quantile(datExpr, c(0., 0.25, 0.5, 0.75, 0.99, 1.0), na.rm=T))
+      log2transform_exprvalue <- (qx[1]>=-0.0001) && ((qx[5] > 100) || (qx[6]-qx[1] > 50 && qx[2] > 0))
+
+      if(log2transform_exprvalue){
+        cat("Perform Log2 transform.")
+        datExpr <- log2(datExpr+1)
+      }
+
+      datExpr[] <- lapply(datExpr, as.numeric)
+
+
 
       traitData = traitData[common_sampleL,,drop=FALSE]
       coln <- colnames(traitData)
@@ -497,7 +513,7 @@ WGCNA_dataFilter <- function (wgcnaL, ...) {
       "samples remained.\n")
   if(class(wgcnaL) == "list"){
     wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
-    wgcnaL$traitColor = wgcnaL$traitColor[rownames(datExpr),,drop=F]
+    wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
     wgcnaL$datExpr = datExpr
   } else {
     wgcnaL = datExpr
@@ -628,7 +644,7 @@ WGCNA_sampleClusterDetectOutlier <-
     }
     if(class(wgcnaL) == "list"){
       wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
-      wgcnaL$traitColor = wgcnaL$traitColor[rownames(datExpr),,drop=F]
+      wgcnaL$traitColors = traitColors[rownames(datExpr),,drop=F]
       wgcnaL$datExpr = datExpr
     } else {
       wgcnaL = datExpr
@@ -2009,25 +2025,26 @@ WGCNA_onestep <-
                     width = 20)
 
 
-    datExpr <-
+    wgcnaL <-
       WGCNA_dataFilter(
-        datExpr,
+        wgcnaL,
         minimal_mad = minimal_mad,
         top_mad_n = top_mad_n,
         rmVarZero = rmVarZero
       )
 
 
-    datExpr <-
+
+    wgcnaL <-
       WGCNA_sampleClusterDetectOutlier(
-        datExpr,
+        wgcnaL,
         traitColors = wgcnaL$traitColors,
         thresholdZ.k = thresholdZ.k,
         removeOutlier = removeOutlier,
         saveplot = paste0(prefix, ".WGCNA_sampleClusterDetectOutlier.pdf")
       )
 
-
+  datExpr = wgcnaL$datExpr
 
     power <-
       WGCNA_softpower(

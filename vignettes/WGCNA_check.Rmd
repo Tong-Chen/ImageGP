@@ -17,6 +17,7 @@ suppressPackageStartupMessages(library(RColorBrewer))
 suppressPackageStartupMessages(library(grid))
 suppressPackageStartupMessages(library(pheatmap))
 
+library(conflicted)
 conflict_prefer("cor", "WGCNA")
 conflict_prefer("bicor", "WGCNA")
 
@@ -27,23 +28,31 @@ conflict_prefer("bicor", "WGCNA")
 #exprMat = "LiverFemaleClean.txt"  
 #traitData = "TraitsClean.txt"
            
-exprMat = "~/tmp/a44b22b9-f0d7-42d3-bf2a-52197cea4618.txt"
-traitData = NULL     
+exprMat = "~/tmp/82440f17-aa2c-4d86-a20f-f606e906d32f.txt"
+traitData = "~/tmp/0f92bb50-bd75-4c34-9d1f-b9cc6688296f.txt"     
 expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
-WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "pearson",
-           networkType = "unsigned",
+WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "bicor",
+           networkType = "signed",
            maxPower = 30, removeOutlier = T,
-  RsquaredCut = 0.8, minModuleSize=2, deepSplit = 2)
+  RsquaredCut = 0.85, minModuleSize=25, deepSplit = 2, thresholdZ.k = -2.5, randomSeed = 2020)
 
+yprefix="wgcna_ehbio"
+networkType = "signed"
+maxPower = 30
+RsquaredCut = 0.85
+categoricalTrait = NULL
+removeOutlier = T
      prefix="wgcna_ehbio"
+     minimal_mad=NULL
      top_mad_n = 2000
-     corType = "pearson"
-     networkType = "unsigned"
+     rmVarZero = T
+     corType = "bicor"
+     #networkType = "unsigned"
      maxPower = 30 
      removeOutlier = T
-  RsquaredCut = 0.8
-     minModuleSize=2
+  RsquaredCut = 0.85
+     minModuleSize=25
      deepSplit = 2
           
            categoricalTrait = NULL
@@ -73,11 +82,13 @@ WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corTyp
            stabilityCriterion = "Individual fraction"
            verbose = 0
            os_system = NULL
-           randomSeed = 11521
+           randomSeed = 2020
            dynamicCutPlot = TRUE
            power_min = NULL
            up_color = c("red", "white", "blue")
            down_color = c("green", "white")
+           
+           saveTOMFileBase = "blockwiseTOM"
 ```
 
 
