@@ -2105,7 +2105,7 @@ WGCNA_onestep <-
     # )
 
     cyt <-
-      WGCNA_cytoscape(net, power, datExpr, TOM_plot = TOM_plot, prefix = prefix)
+      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix)
 
     net$cyt <- cyt
 
