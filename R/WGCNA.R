@@ -640,7 +640,11 @@ WGCNA_sampleClusterDetectOutlier <-
           rownames(datExpr[which(Z.k < thresholdZ.k), ]),">.\n")
       datExpr <- datExpr[which(Z.k >= thresholdZ.k), ]
 
-      cat("\tAfter removing outlier samples, ", nrow(datExpr), "samples kept.\n")
+      # filter datExpr again
+      m.var <- apply(datExpr, 2, var)
+      datExpr <- datExpr[, which(m.var > 0), drop=F]
+
+      cat("\tAfter removing outlier samples, ", nrow(datExpr), "samples kept, ", ncol(datExpr), "genes kept.\n")
     }
     if(class(wgcnaL) == "list"){
       wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
@@ -919,7 +923,7 @@ WGCNA_coexprNetwork <- function(datExpr,
                                 ...) {
   cat(sp_current_time(), "Start constructing WGCNA network.\n")
   if (sp.is.null(maxBlockSize)) {
-    maxBlockSize = ncol(datExpr)
+    maxBlockSize = ncol(datExpr) + 1
   }
 
   if(sp.is.null(minModuleSize)){
@@ -2017,10 +2021,10 @@ WGCNA_onestep <-
     wgcnaL <- WGCNA_readindata(exprMat, traitData = traitData,
                                categoricalTrait = categoricalTrait)
 
-    datExpr <- wgcnaL$datExpr
+    # datExpr <- wgcnaL$datExpr
 
 
-    WGCNA_dataCheck(datExpr,
+    WGCNA_dataCheck(wgcnaL$datExpr,
                     saveplot = paste0(prefix, ".WGCNA_dataCheck.pdf"),
                     width = 20)
 
@@ -2044,11 +2048,11 @@ WGCNA_onestep <-
         saveplot = paste0(prefix, ".WGCNA_sampleClusterDetectOutlier.pdf")
       )
 
-  datExpr = wgcnaL$datExpr
+  # datExpr = wgcnaL$datExpr
 
     power <-
       WGCNA_softpower(
-        datExpr,
+        wgcnaL$datExpr,
         saveplot = paste0(prefix, ".WGCNA_softpower.pdf"),
         networkType = networkType,
         maxPower = maxPower,
@@ -2062,7 +2066,7 @@ WGCNA_onestep <-
     }
 
     net <- WGCNA_coexprNetwork(
-      datExpr,
+      wgcnaL$datExpr,
       power,
       saveplot = paste0(prefix, ".WGCNA_module_generation_plot.pdf"),
       maxBlockSize = maxBlockSize,
@@ -2086,7 +2090,7 @@ WGCNA_onestep <-
 
     MEs_col <- WGCNA_saveModuleAndMe(
       net,
-      datExpr,
+      wgcnaL$datExpr,
       prefix = prefix,
       saveplot = paste0(prefix, ".WGCNA_module_correlation_plot.pdf")
     )
@@ -2121,7 +2125,7 @@ WGCNA_onestep <-
 
       geneTraitCor <-
         WGCNA_ModuleGeneTraitHeatmap(
-          datExpr,
+          wgcnaL$datExpr,
           traitData = wgcnaL$traitData,
           net = net,
           prefix = prefix,
@@ -2131,7 +2135,7 @@ WGCNA_onestep <-
       net$geneTraitCor <- geneTraitCor
 
       WGCNA_GeneModuleTraitCoorelation(
-        datExpr,
+        wgcnaL$datExpr,
         MEs_col,
         geneTraitCor,
         traitData = wgcnaL$traitData,
