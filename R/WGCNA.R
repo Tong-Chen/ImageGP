@@ -515,6 +515,8 @@ WGCNA_dataFilter <- function (wgcnaL, ...) {
       "samples remained.\n")
   if(class(wgcnaL) == "list"){
     if(!is.null(wgcnaL$traitData)){
+      print(wgcnaL$traitData)
+      print(rownames(datExpr)[1:10])
       wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
     }
 
