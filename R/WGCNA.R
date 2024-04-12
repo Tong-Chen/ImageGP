@@ -514,13 +514,13 @@ WGCNA_dataFilter <- function (wgcnaL, ...) {
       nSamples,
       "samples remained.\n")
   if(class(wgcnaL) == "list"){
-    if(!is.null(wgcnaL$traitData)){
+    if(!sp.is.null(wgcnaL$traitData)){
       print(wgcnaL$traitData)
       print(rownames(datExpr)[1:10])
       wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
     }
 
-    if(!is.null(wgcnaL$traitColors)){
+    if(!sp.is.null(wgcnaL$traitColors)){
       wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
     }
 
@@ -658,11 +658,11 @@ WGCNA_sampleClusterDetectOutlier <-
     }
     if(class(wgcnaL) == "list"){
 
-      if(!is.null(wgcnaL$traitData)){
+      if(!sp.is.null(wgcnaL$traitData)){
         wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
       }
 
-      if(!is.null(wgcnaL$traitColors)){
+      if(!sp.is.null(wgcnaL$traitColors)){
         wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
       }
 
