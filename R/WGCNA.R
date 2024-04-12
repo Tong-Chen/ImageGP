@@ -115,6 +115,8 @@ WGCNA_readindata <-
         check.names = check.names
       )
 
+
+
     sampleName = colnames(datExpr)
 
     continuous = 0
@@ -949,6 +951,8 @@ WGCNA_coexprNetwork <- function(datExpr,
   if (sp.is.null(maxPOutliers)) {
     maxPOutliers = ifelse(corType == "pearson", 1, 0.05)
   }
+
+  datExpr[] <- lapply(datExpr, as.numeric)
 
   net = WGCNA::blockwiseModules(
     datExpr,
