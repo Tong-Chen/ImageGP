@@ -512,8 +512,14 @@ WGCNA_dataFilter <- function (wgcnaL, ...) {
       nSamples,
       "samples remained.\n")
   if(class(wgcnaL) == "list"){
-    wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
-    wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
+    if(!is.null(wgcnaL$traitData)){
+      wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
+    }
+
+    if(!is.null(wgcnaL$traitColors)){
+      wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
+    }
+
     wgcnaL$datExpr = datExpr
   } else {
     wgcnaL = datExpr
@@ -640,15 +646,22 @@ WGCNA_sampleClusterDetectOutlier <-
           rownames(datExpr[which(Z.k < thresholdZ.k), ]),">.\n")
       datExpr <- datExpr[which(Z.k >= thresholdZ.k), ]
 
-      # filter datExpr again
+      # filter datExpr in case still 0 variance data again
       m.var <- apply(datExpr, 2, var)
       datExpr <- datExpr[, which(m.var > 0), drop=F]
 
       cat("\tAfter removing outlier samples, ", nrow(datExpr), "samples kept, ", ncol(datExpr), "genes kept.\n")
     }
     if(class(wgcnaL) == "list"){
-      wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
-      wgcnaL$traitColors = traitColors[rownames(datExpr),,drop=F]
+
+      if(!is.null(wgcnaL$traitData)){
+        wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
+      }
+
+      if(!is.null(wgcnaL$traitColors)){
+        wgcnaL$traitColors = wgcnaL$traitColors[rownames(datExpr),,drop=F]
+      }
+
       wgcnaL$datExpr = datExpr
     } else {
       wgcnaL = datExpr
