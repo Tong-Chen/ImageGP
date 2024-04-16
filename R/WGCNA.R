@@ -1530,6 +1530,11 @@ WGCNA_moduleTraitPlot <-
       modTraitCor = modTraitCorP$bicor
       modTraitP   = modTraitCorP$p
     }
+
+    # NA substitute as 0
+    modTraitCor[is.na(modTraitCor)] <- 0
+    modTraitP[is.na(modTraitP)] <- 1
+
     # signif表示保留几位小数
     textMatrix = paste(signif(modTraitCor, 3), "\n(", signif(modTraitP, 2), ")", sep = "")
     dim(textMatrix) = dim(modTraitCor)
@@ -1706,6 +1711,9 @@ WGCNA_ModuleGeneTraitHeatmap <-
       geneTraitCor = as.data.frame(geneTraitCorA$bicor)
       geneTraitP   = as.data.frame(geneTraitCorA$p)
     }
+
+    geneTraitCor[is.na(geneTraitCor)] <- 0
+    geneTraitP[is.na(geneTraitP)] <- 1
 
     geneTraitCorMelt = as.data.frame(geneTraitCor)
     write.table(

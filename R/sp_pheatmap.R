@@ -459,9 +459,9 @@ sp_pheatmap <- function(data,
 
   if (correlation_plot  %in% c("row", "Row")) {
     if (clustering_distance_rows  == "pearson") {
-      row_cor = cor(t(data))
+      row_cor = cor(t(data), use = 'pairwise.complete.obs')
     } else if (clustering_distance_rows  == "spearman") {
-      row_cor = cor(t(data), method = "spearman")
+      row_cor = cor(t(data), method = "spearman", use = 'pairwise.complete.obs')
     } else {
       if (clustering_distance_rows %in% dist_method) {
         row_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
@@ -480,9 +480,9 @@ sp_pheatmap <- function(data,
     # data_mad <- apply(data, 1, mad)
     # data <- data[data_mad > 0.1, ]
     if (clustering_distance_cols == "pearson") {
-      col_cor = cor(data)
+      col_cor = cor(data, use = 'pairwise.complete.obs')
     } else if (clustering_distance_cols == "spearman") {
-      col_cor = cor(data, method = "spearman")
+      col_cor = cor(data, method = "spearman", use = 'pairwise.complete.obs')
     }  else {
       if (clustering_distance_cols %in% dist_method) {
         col_cor = as.data.frame(as.matrix(dist(data, method = clustering_distance_rows)))
@@ -500,7 +500,7 @@ sp_pheatmap <- function(data,
   #print(data)
   # filter abnormal lines
   if(ncol(data)>1 && nrow(data)>1){
-    data_sd <- apply(data, 1, sd)
+    data_sd <- apply(data, 1, sd, na.rm=T)
     if (any(data_sd == 0)) {
       stop("Wrong correlation method for this type of data. Please choose another method.")
     }
@@ -619,7 +619,7 @@ sp_pheatmap <- function(data,
   if (cluster_rows) {
     if (clustering_distance_rows == "pearson") {
       if (!cor_data) {
-        row_cor = cor(t(data))
+        row_cor = cor(t(data), use = 'pairwise.complete.obs')
       } else {
         row_cor = data
       }
@@ -630,7 +630,7 @@ sp_pheatmap <- function(data,
       }
     } else if (clustering_distance_rows == "spearman") {
       if (!cor_data) {
-        row_cor = cor(t(data), method = "spearman")
+        row_cor = cor(t(data), method = "spearman", use = 'pairwise.complete.obs')
       } else {
         row_cor = data
       }
@@ -676,7 +676,7 @@ sp_pheatmap <- function(data,
   if (cluster_cols) {
     if (clustering_distance_cols == "pearson") {
       if (!cor_data) {
-        col_cor = cor(data)
+        col_cor = cor(data, use = 'pairwise.complete.obs')
       } else {
         col_cor = data
       }
@@ -686,7 +686,7 @@ sp_pheatmap <- function(data,
       }
     } else if (clustering_distance_cols  == "spearman") {
       if (!cor_data) {
-        col_cor = cor(data, method = "spearman")
+        col_cor = cor(data, method = "spearman", use = 'pairwise.complete.obs')
       } else {
         col_cor = data
       }
