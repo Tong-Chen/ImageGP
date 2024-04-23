@@ -19,11 +19,12 @@ conflict_prefer("bicor", "WGCNA")
 #expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
 # group <- sp_readTable(file="TraitsClean.txt", row.names=1, header=T)
 
-exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
-traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
+#exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
+# traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
            
-exprMat = "~/tmp/tpm_gene.log.BFHaeL1623.txt"
-traitData = "~/tmp/character1623.txt"     
+exprMat = "~/tmp/dc701486-9fc9-4549-881e-e632b719cab7.txt"
+traitData = "~/tmp/563a8a5e-8664-4270-bf21-9ad682cff683.txt"  
+# traitData = NULL
 # expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
 WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "bicor",

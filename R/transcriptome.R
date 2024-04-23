@@ -723,7 +723,8 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
                        covariate = NULL,
                        tx2gene=NULL, filter=NULL, output_prefix='ehbio',
                        rlog=T, vst=F, comparePairFile=NULL, padj=0.05,
-                       log2FC=1, dropCol=c("lfcSE", "stat"), lfcShrink = FALSE){
+                       log2FC=1, dropCol=c("lfcSE", "stat"), lfcShrink = FALSE,
+                       normalize_only=F){
 
   if (sp.is.null(design)) {
     sample <- read.table(sampleFile, header=T, row.names=1, com='',
@@ -752,6 +753,10 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
 
 
   normexpr <- deseq2normalizedExpr(dds, output_prefix, rlog=rlog, vst=vst)
+
+  if(normalize_only){
+    return(1)
+  }
 
   normalizedExpr2DistribBoxplot(normexpr,
                                 saveplot=paste(output_prefix, "DESeq2.normalizedExprDistrib.pdf", sep="."))
