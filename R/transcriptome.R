@@ -123,9 +123,12 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
 
   if (!sp.is.null(tx2gene)){
     tx2gene <- read.table(tx2gene, header=T, row.names=NULL, sep="\t")
+    txOut = FALSE
+  } else {
+    txOut = TRUE
   }
   # 整合读入的salmon文件和transcript2gene文件
-  txi <- tximport::tximport(salmon_file, type = "salmon", tx2gene = tx2gene)
+  txi <- tximport::tximport(salmon_file, type = "salmon", tx2gene = tx2gene, txOut = txOut)
 
   sample1 <- read.table(sampleFile, header=T, row.names=1, com='',
                        quote='', check.names=T, sep="\t",
