@@ -264,26 +264,53 @@ readscount2deseq <- function(count_matrix_file, sampleFile, design, covariate=NU
 #'
 #' nomrexpr <- deseq2normalizedExpr(dds)
 #'
-deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, savemat=T){
+deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, savemat=T, design=NULL){
   #标准化后的结果按整体差异大小排序，同时输出对数转换的结果。
 
   # Get normalized counts
   normalized_counts <- DESeq2::counts(dds, normalized=TRUE)
 
+  # 计算均值
+  all_group <- as.vector(levels(colData(dds)[[design]]))
+
+  group_rowmean <- function(groupA, x, dds, design){
+    baseA <- x[, colData(dds)[[design]] == groupA]
+    if (is.vector(baseA)){
+      baseMeanA <- as.data.frame(baseA)
+    } else {
+      baseMeanA <- as.data.frame(rowMeans(baseA))
+    }
+    baseMeanA <- round(baseMeanA, 3)
+    colnames(baseMeanA) <- groupA
+    baseMeanA
+  }
+
   # 标准化的结果按整体差异大小排序
   normalized_counts_mad <- apply(normalized_counts, 1, mad)
   normalized_counts <- normalized_counts[order(normalized_counts_mad, decreasing=T), ]
+
+  normalized_counts_meanL <- lapply(all_group, group_rowmean, x=normalized_counts,
+                                    dds=dds, design=design)
+
+  normalized_counts_mean <- as.data.frame(do.call(cbind, normalized_counts_meanL))
+
 
   # 常规R输出忽略左上角（输出文件第一列也就是基因列的列名字）
   # 输出结果为完整矩阵，保留左上角的id。
   normalized_counts_output = data.frame(id=rownames(normalized_counts), normalized_counts)
   if(savemat){
 	print("Output normalized counts")
-    write.table(normalized_counts_output, file=paste0(output_prefix,".DESeq2.normalized.txt"),
+    write.table(normalized_counts_output,
+                file=paste0(output_prefix,".DESeq2.normalized.txt"),
                 quote=F, sep="\t", row.names=F, col.names=T)
+
+    sp_writeTable(normalized_counts_mean,
+                  file=paste0(output_prefix,".DESeq2.normalized_mean.txt"))
   }
 
   normexpr <- list(normalized=normalized_counts, normalizedSave=normalized_counts_output)
+
+
 
   if (rlog) {
     rld <- DESeq2::rlog(dds, blind=FALSE)
@@ -292,13 +319,20 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
     rlogMat_mad <- apply(rlogMat, 1, mad)
     rlogMat <- rlogMat[order(rlogMat_mad, decreasing=T), ]
 
+    rlogMat_meanL <- lapply(all_group, group_rowmean, x=rlogMat,
+                                      dds=dds, design=design)
+
+    rlogMat_mean <- as.data.frame(do.call(cbind, rlogMat_meanL))
 
 
     rlogMat_output = data.frame(id=rownames(rlogMat), rlogMat)
 	if(savemat) {
       print("Output rlog transformed normalized counts")
-      write.table(rlogMat_output, file=paste0(output_prefix,".DESeq2.normalized.rlog.txt"),
+      write.table(rlogMat_output,
+                  file=paste0(output_prefix,".DESeq2.normalized.rlog.txt"),
                  quote=F, sep="\t", row.names=F, col.names=T)
+      sp_writeTable(rlogMat_mean,
+                    file=paste0(output_prefix,".DESeq2.normalized.rlog_mean.txt"))
 	}
     normexpr$rlog <- rlogMat
     normexpr$rlogSave <- rlogMat_output
@@ -313,12 +347,20 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
     vstMat_mad <- apply(vstMat, 1, mad)
     vstMat <- vstMat[order(vstMat_mad, decreasing=T), ]
 
+    vstMat_meanL <- lapply(all_group, group_rowmean, x=vstMat,
+                            dds=dds, design=design)
+
+    vstMat_mean <- as.data.frame(do.call(cbind, vstMat_meanL))
+
     vstMat_output = data.frame(id=rownames(vstMat), vstMat)
 
     if(savemat){
       print("Output vst transformed normalized counts")
-      write.table(vstMat_output, file=paste0(output_prefix,".DESeq2.normalized.vst.txt"),
+      write.table(vstMat_output,
+                  file=paste0(output_prefix,".DESeq2.normalized.vst.txt"),
                 quote=F, sep="\t", row.names=F, col.names=T)
+      sp_writeTable(vstMat_mean,
+                    file=paste0(output_prefix,".DESeq2.normalized.vst_mean.txt"))
 	}
 
     normexpr$vst <- vstMat
@@ -755,7 +797,7 @@ DESeq2_ysx <- function(file, sampleFile, design, type,
             quote=F, sep="\t", row.names=F, col.names=T)
 
 
-  normexpr <- deseq2normalizedExpr(dds, output_prefix, rlog=rlog, vst=vst)
+  normexpr <- deseq2normalizedExpr(dds, output_prefix, rlog=rlog, vst=vst, design=design)
 
   if(normalize_only){
     return(1)

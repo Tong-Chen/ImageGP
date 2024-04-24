@@ -19,7 +19,8 @@ DESeq2_ysx(
   padj = 0.05,
   log2FC = 1,
   dropCol = c("lfcSE", "stat"),
-  lfcShrink = FALSE
+  lfcShrink = FALSE,
+  normalize_only = F
 )
 }
 \arguments{

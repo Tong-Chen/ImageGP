@@ -10,7 +10,8 @@ deseq2normalizedExpr(
   output_prefix = "ehbio",
   rlog = T,
   vst = F,
-  savemat = T
+  savemat = T,
+  design = NULL
 )
 }
 \arguments{
