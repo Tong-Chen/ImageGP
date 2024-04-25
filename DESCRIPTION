@@ -1,7 +1,7 @@
 Package: ImageGP
 Type: Package
 Title: For ImageGP cloud platform (https://www.bic.ac.cn/BIC)
-Version: 0.2.0
+Version: 0.2.1
 Author: Chen Tong
 Authors@R: c(person("Chen", "Tong", email = "chentong_biology@163.com",
   role = c("aut", "cre")),
