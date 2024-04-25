@@ -275,6 +275,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
   group_rowmean <- function(groupA, x, dds, design){
     baseA <- x[, colData(dds)[[design]] == groupA]
+
     if (is.vector(baseA)){
       baseMeanA <- as.data.frame(baseA)
     } else {
@@ -331,6 +332,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
       write.table(rlogMat_output,
                   file=paste0(output_prefix,".DESeq2.normalized.rlog.txt"),
                  quote=F, sep="\t", row.names=F, col.names=T)
+      rlogMat_mean[rlogMat_mean<0] = 0
       sp_writeTable(rlogMat_mean,
                     file=paste0(output_prefix,".DESeq2.normalized.rlog_mean.txt"))
 	}
@@ -359,6 +361,7 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
       write.table(vstMat_output,
                   file=paste0(output_prefix,".DESeq2.normalized.vst.txt"),
                 quote=F, sep="\t", row.names=F, col.names=T)
+      vstMat_mean[vstMat_mean<0] = 0
       sp_writeTable(vstMat_mean,
                     file=paste0(output_prefix,".DESeq2.normalized.vst_mean.txt"))
 	}
