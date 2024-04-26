@@ -325,6 +325,9 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
     rlogMat_mean <- as.data.frame(do.call(cbind, rlogMat_meanL))
 
+    rlogMat_max <- data.frame(Specific=colnames(rlogMat_mean)[max.col(rlogMat_mean)],
+                              Value=apply(rlogMat_mean,1,max), row.names=rownames(rlogMat_mean))
+
 
     rlogMat_output = data.frame(id=rownames(rlogMat), rlogMat)
 	if(savemat) {
@@ -335,6 +338,8 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
       rlogMat_mean[rlogMat_mean<0] = 0
       sp_writeTable(rlogMat_mean,
                     file=paste0(output_prefix,".DESeq2.normalized.rlog_mean.txt"))
+      sp_writeTable(rlogMat_max,
+                    file=paste0(output_prefix,".DESeq2.normalized.rlog_max.txt"))
 	}
     normexpr$rlog <- rlogMat
     normexpr$rlogSave <- rlogMat_output
@@ -354,6 +359,9 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
 
     vstMat_mean <- as.data.frame(do.call(cbind, vstMat_meanL))
 
+    vstMat_max <- data.frame(Specific=colnames(vstMat_mean)[max.col(vstMat_mean)],
+                              Value=apply(vstMat_mean,1,max), row.names=rownames(vstMat_mean))
+
     vstMat_output = data.frame(id=rownames(vstMat), vstMat)
 
     if(savemat){
@@ -364,6 +372,8 @@ deseq2normalizedExpr <- function(dds, output_prefix='ehbio', rlog=T, vst=F, save
       vstMat_mean[vstMat_mean<0] = 0
       sp_writeTable(vstMat_mean,
                     file=paste0(output_prefix,".DESeq2.normalized.vst_mean.txt"))
+      sp_writeTable(vstMat_max,
+                    file=paste0(output_prefix,".DESeq2.normalized.vst_max.txt"))
 	}
 
     normexpr$vst <- vstMat
