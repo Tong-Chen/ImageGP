@@ -501,7 +501,7 @@ sp_pheatmap <- function(data,
   # filter abnormal lines
   if(ncol(data)>1 && nrow(data)>1){
     data_sd <- apply(data, 1, sd, na.rm=T)
-    if (any(data_sd == 0)) {
+    if (any(data_sd == 0, na.rm=T)) {
       stop("Wrong correlation method for this type of data. Please choose another method.")
     }
   }
