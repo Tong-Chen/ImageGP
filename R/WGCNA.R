@@ -391,6 +391,12 @@ dataFilter2 <-
            noLessThan = NULL,
            statistical_value_type = mad,
            keep_filtered_as_others = F) {
+
+    if (rmVarZero) {
+      m.var <- apply(datExpr, 1, var)
+      datExpr <- datExpr[which(m.var > 0), ]
+    }
+
     if(top_n == 1 || top_n <= 0) {
       return(datExpr)
     }
@@ -446,10 +452,7 @@ dataFilter2 <-
     }
 
 
-    if (rmVarZero) {
-      m.var <- apply(datExpr2, 1, var)
-      datExpr2 <- datExpr2[which(m.var > 0), ]
-    }
+
 
     return(datExpr2)
   }

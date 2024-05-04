@@ -309,7 +309,7 @@ sp_pheatmap <- function(data,
     stop(paste(non_numeric_col, "contains non-numeric values."))
   }
 
-  data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type)
+  data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type, rmVarZero = T)
 
   if ("character" %in% class(display_numbers)) {
     if (display_numbers!="NULL" && display_numbers!="") {
