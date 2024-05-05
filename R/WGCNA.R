@@ -374,6 +374,7 @@ dataFilter <-
 #' correlation analysis.
 #' @param noLessThan Specify the lowest number of genes to be kept. Default `NULL` meaning no lower limit.
 #' @param keep_filtered_as_others Get sums of all filtered items as an new item - Others. Default FALSE.
+#' @param fillna Fill NA with specified value.
 
 #' @return A dataframe.
 #' @export
@@ -390,8 +391,12 @@ dataFilter2 <-
            rmVarZero = F,
            noLessThan = NULL,
            statistical_value_type = mad,
-           keep_filtered_as_others = F) {
+           keep_filtered_as_others = F,
+           fillna=NULL) {
 
+    if(!sp.is.null(fillna)){
+      datExpr[is.na(datExpr)] <- fillna
+    }
     if (rmVarZero) {
       m.var <- apply(datExpr, 1, var)
       datExpr <- datExpr[which(m.var > 0), ]

@@ -92,7 +92,7 @@ sp_pcoa <- function(data,
                     ...) {
   if ("character" %in% class(data)) {
     file <- data
-    data <- sp_readTable(data, row.names = 1)
+    data <- sp_readTable(file, row.names = 1)
     if(input_type != "normalized_OTUtable") {
       rownames_data <- rownames(data)
       colnames_data <- colnames(data)
@@ -105,7 +105,9 @@ sp_pcoa <- function(data,
     if (input_type == "normalized_OTUtable" &&
         (!'dist' %in% class(data))){
       data <- dataFilter2(data, top_n = top_n,
-                          statistical_value_type = statistical_value_type)
+                          statistical_value_type = statistical_value_type,
+                          rmVarZero = T,
+                          fillna=0)
     }
 
   } else if ('data.frame' %in% class(data) |

@@ -13,7 +13,8 @@ dataFilter2(
   rmVarZero = F,
   noLessThan = NULL,
   statistical_value_type = mad,
-  keep_filtered_as_others = F
+  keep_filtered_as_others = F,
+  fillna = NULL
 )
 }
 \arguments{
@@ -33,6 +34,8 @@ correlation analysis.}
 \item{statistical_value_type}{Specify the way for statistical computation. Default mad, accept mean, var, sum, median.}
 
 \item{keep_filtered_as_others}{Get sums of all filtered items as an new item - Others. Default FALSE.}
+
+\item{fillna}{Fill NA with specified value.}
 }
 \value{
 A dataframe.
