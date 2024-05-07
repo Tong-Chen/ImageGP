@@ -397,7 +397,7 @@ dataFilter2 <-
     if(!sp.is.null(fillna)){
       datExpr[is.na(datExpr)] <- fillna
     }
-    if (rmVarZero) {
+    if (rmVarZero && ncol(datExpr)>2) {
       m.var <- apply(datExpr, 1, var)
       datExpr <- datExpr[which(m.var > 0), ]
     }
@@ -523,8 +523,8 @@ WGCNA_dataFilter <- function (wgcnaL, ...) {
       "samples remained.\n")
   if(class(wgcnaL) == "list"){
     if(!sp.is.null(wgcnaL$traitData)){
-      print(wgcnaL$traitData)
-      print(rownames(datExpr)[1:10])
+      #print(wgcnaL$traitData)
+      #print(rownames(datExpr)[1:10])
       wgcnaL$traitData = wgcnaL$traitData[rownames(datExpr),,drop=F]
     }
 
