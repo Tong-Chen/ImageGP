@@ -113,6 +113,11 @@ sp_volcano_plot <-
       stop("Must specify p-value, padjust or fdr column for Statistical significance column.")
     }
 
+    if(!sp.is.null(status_col_var) && length(unique(data[[status_col_var]]))>100){
+      print("You may choose the wrong status column. We will change it to default.")
+      status_col_var = NULL
+    }
+
     if (sp.is.null(status_col_var) && length(significance_threshold) == 2) {
       status_col_var <- 'DE_genes'
       self_compute_status <- TRUE
