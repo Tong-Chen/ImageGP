@@ -265,7 +265,7 @@ sp_volcano_plot <-
       if(length(geneL) == 1){
         matched_column <-
           get_matched_columns_based_on_value(data, geneL,
-                                             only_allow_one_match = T)
+                                             only_allow_one_match = F)
         #print(matched_column)
         #print(head(data[matched_column[1]]))
         #print(head(geneL[matched_column[2]]))
