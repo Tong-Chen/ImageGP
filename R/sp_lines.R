@@ -162,6 +162,9 @@ sp_lines <- function(data,
     if (yaxis_scale_mode == "log2") {
       data[[yvariable]] <- log2(data[[yvariable]])
     }
+    if (yaxis_scale_mode == "log10") {
+      data[[yvariable]] <- log10(data[[yvariable]])
+    }
   }
 
 
@@ -376,7 +379,7 @@ sp_lines <- function(data,
     if(!sp.is.null(line_size) && is.numeric(line_size)){
       p <- p + stat_smooth(method = smooth_method,
                            se = FALSE,
-                           alpha = alpha, size=line_size)
+                           alpha = alpha, linewidth=line_size)
     }else{
       p <- p + stat_smooth(method = smooth_method,
                            se = FALSE,
@@ -385,7 +388,7 @@ sp_lines <- function(data,
 
   } else{
     if(!sp.is.null(line_size) && is.numeric(line_size)){
-      p <- p + geom_line(alpha = alpha, size=line_size)
+      p <- p + geom_line(alpha = alpha, linewidth=line_size)
     }
     else {
       p <- p + geom_line(alpha = alpha)
@@ -399,11 +402,11 @@ sp_lines <- function(data,
         stop("Unexisted columns specifed for line_size parameters")
       }
       p <-
-        p + aes(size = !!line_size_en)
+        p + aes(linewidth = !!line_size_en)
 
   }
 
-  if (yaxis_scale_mode != "" && (yaxis_scale_mode  != "log2")) {
+  if (yaxis_scale_mode != "" && (yaxis_scale_mode  != "log2") && (yaxis_scale_mode  != "log10")) {
     # Transfer string to R code
     p <- p + eval(parse(text=yaxis_scale_mode))
   }
