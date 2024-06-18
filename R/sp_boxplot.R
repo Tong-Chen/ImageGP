@@ -429,7 +429,8 @@ sp_boxplot <- function(data,
 
     group_variable_vector <- unique(c(xvariable, legend_variable))
     group_variable_vector <- group_variable_vector[!sapply(group_variable_vector, sp.is.null)]
-    data$combine__grp__for__statistis_sp <- do.call(paste0, data[group_variable_vector])
+    # no - allowed
+    data$combine__grp__for__statistis_sp <- gsub("-", "", do.call(paste0, data[group_variable_vector]), ignore.case = FALSE)
 
     dataList = sp_multiple_group_diff_test(data,
                stat_value_variable=yvariable,
