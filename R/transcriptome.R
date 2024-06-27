@@ -142,11 +142,18 @@ salmon2deseq <- function(salmon_file_list, sampleFile, design, covariate=NULL,
   	design = colnames(sample2)[1]
   }
 
+
+
   if(!sp.is.null(covariate)){
     covariate <- paste(covariate, collapse="+")
     formula <- as.formula(paste("~", covariate,"+", design))
   } else {
     formula <- as.formula(paste("~", design))
+  }
+
+  if(length(unique(sample2[[design]]))==length(sample2[[design]])) {
+    print("No replicates supplied, use formula ~1 instead. ")
+    formula = as.formula(paste("~", 1))
   }
 
   dds <- DESeq2::DESeqDataSetFromTximport(txi, colData=sample2, design=formula)
