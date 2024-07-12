@@ -22,8 +22,8 @@ conflict_prefer("bicor", "WGCNA")
 #exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
 # traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
            
-exprMat = "~/tmp/dc701486-9fc9-4549-881e-e632b719cab7.txt"
-traitData = "~/tmp/563a8a5e-8664-4270-bf21-9ad682cff683.txt"  
+exprMat = "~/tmp/gene.txt"
+traitData = "~/tmp/fenzuxinxi.txt"  
 # traitData = NULL
 # expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
@@ -38,34 +38,22 @@ maxPower = 30
 RsquaredCut = 0.85
 categoricalTrait = NULL
 removeOutlier = T
-     prefix="wgcna_ehbio"
      minimal_mad=NULL
      top_mad_n = 2000
      rmVarZero = T
      corType = "bicor"
-     #networkType = "unsigned"
-     maxPower = 30 
-     removeOutlier = T
-  RsquaredCut = 0.85
      minModuleSize=25
      deepSplit = 2
           
-           categoricalTrait = NULL
-           # prefix = "ehbio"
-           # corType = "bicor"
-           # corType = "pearson"
-           # networkType = "unsigned"
-           maxPower = 30
-           maxBlockSize = NULL
-           top_mad_n = 2000
-           rmVarZero = T
-           minimal_mad = NULL
+ categoricalTrait = NULL
+
+maxBlockSize = NULL
+
+minimal_mad = NULL
            thresholdZ.k = -2.5
            TOM_plot = NULL
            top_hub_n = 20
-           # removeOutlier = F
-           # RsquaredCut = 0.85
-           minModuleSize = NULL
+
            mergeCutHeight = 0.2
            numericLabels = TRUE
            pamRespectsDendro = FALSE
@@ -84,6 +72,139 @@ removeOutlier = T
            down_color = c("green", "white")
            
            saveTOMFileBase = "blockwiseTOM"
+           
+           
+           
+
+
+
+    wgcnaL <- WGCNA_readindata(exprMat, traitData = traitData,
+                               categoricalTrait = categoricalTrait)
+
+    # datExpr <- wgcnaL$datExpr
+
+
+    WGCNA_dataCheck(wgcnaL$datExpr,
+                    saveplot = paste0(prefix, ".WGCNA_dataCheck.pdf"),
+                    width = 20)
+
+
+    wgcnaL <-
+      WGCNA_dataFilter(
+        wgcnaL,
+        minimal_mad = minimal_mad,
+        top_mad_n = top_mad_n,
+        rmVarZero = rmVarZero
+      )
+
+
+
+    wgcnaL <-
+      WGCNA_sampleClusterDetectOutlier(
+        wgcnaL,
+        traitColors = wgcnaL$traitColors,
+        thresholdZ.k = thresholdZ.k,
+        removeOutlier = removeOutlier,
+        saveplot = paste0(prefix, ".WGCNA_sampleClusterDetectOutlier.pdf")
+      )
+
+  # datExpr = wgcnaL$datExpr
+
+    power <-
+      WGCNA_softpower(
+        wgcnaL$datExpr,
+        saveplot = paste0(prefix, ".WGCNA_softpower.pdf"),
+        networkType = networkType,
+        maxPower = maxPower,
+        RsquaredCut = RsquaredCut
+      )
+
+    power <- power$power
+
+    if (!sp.is.null(power_min) && (power < power_min)) {
+      power = power_min
+    }
+
+    net <- WGCNA_coexprNetwork(
+      wgcnaL$datExpr,
+      power,
+      saveplot = paste0(prefix, ".WGCNA_module_generation_plot.pdf"),
+      maxBlockSize = maxBlockSize,
+      minModuleSize = minModuleSize,
+      networkType = networkType,
+      mergeCutHeight = mergeCutHeight,
+      numericLabels = numericLabels,
+      pamRespectsDendro = pamRespectsDendro,
+      saveTOMs = saveTOMs,
+      corType = corType,
+      maxPOutliers = maxPOutliers,
+      loadTOM = loadTOM,
+      TOMDenom = TOMDenom,
+      deepSplit = deepSplit,
+      stabilityCriterion = stabilityCriterion,
+      saveTOMFileBase = paste0(prefix, ".blockwiseTOM"),
+      verbose = verbose,
+      randomSeed = randomSeed,
+      dynamicCutPlot = dynamicCutPlot
+    )
+
+    MEs_col <- WGCNA_saveModuleAndMe(
+      net,
+      wgcnaL$datExpr,
+      prefix = prefix,
+      saveplot = paste0(prefix, ".WGCNA_module_correlation_plot.pdf")
+    )
+
+
+    net$MEs_col <- MEs_col
+
+    # WGCNA_MEs_traitCorrelationHeatmap(
+    #   MEs_col,
+    #   traitData = traitData,
+    #   saveplot = paste0(prefix, ".WGCNA_moduletrait_correlation_plot.pdf")
+    # )
+
+    cyt <-
+      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix)
+
+    net$cyt <- cyt
+
+    hubgene <- WGCNA_hubgene(cyt, top_hub_n = top_hub_n, prefix = prefix)
+
+    net$hubgene <- hubgene
+
+    if (!is.null(traitData)) {
+      WGCNA_moduleTraitPlot(
+        MEs_col,
+        traitData = wgcnaL$traitData,
+        saveplot = paste0(prefix, ".WGCNA_moduleTraitHeatmap.pdf"),
+        corType = corType,
+        prefix = prefix
+      )
+
+      geneTraitCor <-
+        WGCNA_ModuleGeneTraitHeatmap(
+          wgcnaL$datExpr,
+          traitData = wgcnaL$traitData,
+          net = net,
+          prefix = prefix,
+          saveplot = paste0(prefix, ".WGCNA_ModuleGeneTraitHeatmap.pdf")
+        )
+
+      net$geneTraitCor <- geneTraitCor
+
+      WGCNA_GeneModuleTraitCoorelation(
+        wgcnaL$datExpr,
+        MEs_col,
+        geneTraitCor,
+        traitData = wgcnaL$traitData,
+        net,
+        corType = corType,
+        prefix = prefix
+      )
+    }
+    invisible(net)
+    cat(sp_current_time(), "Success.\n")
 ```
 
 
