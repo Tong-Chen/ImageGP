@@ -2044,13 +2044,13 @@ WGCNA_onestep <-
       os_system = Sys.info()['sysname']
     }
 
-    #if (os_system == "Linux") {
-    #  # 打开多线程
-    #  enableWGCNAThreads()
-    #} else {
-    #  # if mac
-    #  allowWGCNAThreads()
-    #}
+    if (os_system == "Linux") {
+      # 打开多线程
+      enableWGCNAThreads(nThreads=10)
+    } else {
+      # if mac
+      allowWGCNAThreads()
+    }
 
 
     wgcnaL <- WGCNA_readindata(exprMat, traitData = traitData,
