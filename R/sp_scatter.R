@@ -149,7 +149,7 @@ sp_scatterplot <- function (data,
       stop(paste(color_variable, 'must be column names of data!'))
     }
 
-    data = sp_set_factor_order(data, color_variable, color_variable_order)
+    data = sp_set_factor_order(data, color_variable, color_variable_order, order_data_frame_by_this_variable_order=T)
 
   }
 

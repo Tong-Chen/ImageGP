@@ -6,7 +6,12 @@
 factors in \code{variable_order} will be kept and re-factored. Other variables
 would be depleted.}
 \usage{
-sp_set_factor_order(data, variable, variable_order = NULL)
+sp_set_factor_order(
+  data,
+  variable,
+  variable_order = NULL,
+  order_data_frame_by_this_variable_order = F
+)
 }
 \arguments{
 \item{data}{A data matrix}
@@ -14,6 +19,9 @@ sp_set_factor_order(data, variable, variable_order = NULL)
 \item{variable}{One column name of data matrix}
 
 \item{variable_order}{Expected order of \code{data[[variable]]}.}
+
+\item{order_data_frame_by_this_variable_order}{Return ordered datafrme by this order.
+Please remember that only keep the last order if applying mutiple order operation.}
 }
 \value{
 A data frame

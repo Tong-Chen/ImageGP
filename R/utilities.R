@@ -549,7 +549,7 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
         colorL <- c(color, rep("gray23", number - color_len))
       }
     } else {
-      colorL = colorRampPalette(color)(number)
+      colorL = colorRampPalette(color, alpha=T)(number)
     }
 
   }
@@ -618,6 +618,8 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #' @param data A data matrix
 #' @param variable One column name of data matrix
 #' @param variable_order Expected order of `data[[variable]]`.
+#' @param order_data_frame_by_this_variable_order Return ordered datafrme by this order.
+#' Please remember that only keep the last order if applying mutiple order operation.
 #'
 #' @return A data frame
 #' @export
@@ -634,7 +636,7 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #' data$B
 #'
 sp_set_factor_order <-
-  function(data, variable, variable_order = NULL) {
+  function(data, variable, variable_order = NULL, order_data_frame_by_this_variable_order=F) {
     if (!variable %in% colnames(data)){
       stop(paste(variable,'must be one of column names of data!'))
     }
@@ -660,6 +662,9 @@ sp_set_factor_order <-
         data[[variable]] <- factor(data[[variable]],
                                    levels = unique(data[[variable]]), ordered = T)
       }
+    }
+    if (order_data_frame_by_this_variable_order){
+      data = data[rev(order(data[[variable]])),,drop=F]
     }
     invisible(data)
   }
