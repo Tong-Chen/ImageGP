@@ -1528,6 +1528,10 @@ WGCNA_moduleTraitPlot <-
       traitData <- WGCNA_filterTrait(MEs_col, traitData)
       #print(trairData)
     }
+    if(ncol(MEs_col) <2){
+      cat("No modules detected.")
+      return(1)
+    }
     nSamples <- nrow(traitData)
     robustY = ifelse(corType == "pearson", T, F)
     if (corType == "pearson") {
