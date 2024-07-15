@@ -197,7 +197,7 @@ sp_scatterplot <- function (data,
       size_variable = as.numeric(size_variable)
       p <-
         p + geom_point_self(size = size_variable,
-                            alpha = alpha,
+                            #alpha = alpha,
                             groupOnX = groupOnX)
     } else {
       if (!(size_variable %in% data_colnames)) {
@@ -206,11 +206,11 @@ sp_scatterplot <- function (data,
       size_variable_en = sym(size_variable)
       p <-
         p + geom_point_self(aes(size = !!size_variable_en),
-                            alpha = alpha,
+                            #alpha = alpha,
                             groupOnX = groupOnX)
     }
   } else {
-    p <- p + geom_point_self(alpha = alpha, groupOnX = NULL)
+    p <- p + geom_point_self(groupOnX = NULL)
   }
 
   if (!sp.is.null(color_variable)) {

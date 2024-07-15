@@ -39,6 +39,7 @@
 #' If "width", all violins have the same maximum width. 'equal' is also accepted.
 #' @param ID_var Other columns one want to treat as ID variable columns
 #' except the one given to `xvariable`.
+#' @param The size of dots. [Default 2]
 #' @param jitter Do jitter plot instead of boxplot.
 #' @param jitter_bp Do jitter plot overlay with violin plot or boxplot or both.
 #' @param dotplot Do dotplot plot instead of boxplot.
@@ -114,6 +115,7 @@ sp_boxplot <- function(data,
                        debug = F,
                        filename = NULL,
                        extra_ggplot2_cmd = NULL,
+                       dotsize = 2,
                        ...) {
   if (debug) {
     argg <- c(as.list(environment()), list(...))
@@ -266,7 +268,7 @@ sp_boxplot <- function(data,
         geom = "point",
         fill = "black",
         shape = 19,
-        size = 1,
+        size = dotsize,
         position = position_dodge(width = .9)
       )
   } else if (violin_nb) {
@@ -285,6 +287,7 @@ sp_boxplot <- function(data,
           colour = !!legend_variable_en,
           group = !!legend_variable_en
         ),
+        size = dotsize,
         groupOnX = NULL,
         position = position_dodge(width = .9)
       )
@@ -302,15 +305,14 @@ sp_boxplot <- function(data,
       binaxis = 'y',
       aes(
         group = !!legend_variable_en,
-        fill = !!legend_variable_en
+        fill = !!legend_variable_en,
       ),
       position = position_dodge(width = .9),
       stackdir = 'center',
       stackratio = 1.5,
       binwidth = .1,
       binpositions = "all",
-      dotsize = 0.6,
-      alpha = .75,
+      dotsize = dotsize,
       na.rm = TRUE
     )
   } else {
@@ -356,6 +358,7 @@ sp_boxplot <- function(data,
         varwidth = T,
         groupOnX = TRUE,
         dodge.width = 0.9,
+        size = dotsize,
         position = position_dodge(width = .9)
       )
   }
@@ -368,7 +371,7 @@ sp_boxplot <- function(data,
       stackratio = 1.5,
       binwidth = .1,
       binpositions = "all",
-      dotsize = 0.6,
+      dotsize = dotsize,
       alpha = .75,
       fill = "lightseagreen",
       colour = "lightseagreen",

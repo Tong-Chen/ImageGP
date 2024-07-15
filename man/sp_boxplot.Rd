@@ -51,6 +51,7 @@ sp_boxplot(
   debug = F,
   filename = NULL,
   extra_ggplot2_cmd = NULL,
+  dotsize = 2,
   ...
 )
 }
@@ -174,6 +175,8 @@ to tell the group information for each sample.}
 \item{extra_ggplot2_cmd}{Extra ggplot2 commands (currently unsupported)}
 
 \item{...}{Parametes given to \code{sp_ggplot_layout}}
+
+\item{The}{size of dots. \link{Default 2}}
 }
 \value{
 A ggplot2 object

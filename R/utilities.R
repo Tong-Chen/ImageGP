@@ -541,6 +541,7 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
     }
   } else if (color_len == number) {
     colorL = color
+    # return(colorL)
   } else{
     if(constantColor) {
       if ((number - color_len) < 0) {
@@ -551,12 +552,17 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
     } else {
       colorL = colorRampPalette(color, alpha=T)(number)
     }
-
+    # return(colorL)
   }
 
   if (reverseColorList){
     colorL = rev(colorL)
   }
+
+  if (alpha==1){
+    return(colorL)
+  }
+
   return(rgb(
     t(col2rgb(colorL)),
     alpha = alpha * 255,
@@ -745,12 +751,15 @@ sp_manual_fill_ggplot2 <-
     if (!sp.is.null(manual_color_vector)) {
       if (is.numeric(data[[color_variable]])) {
         color_v <- generate_color_list(manual_color_vector, 10, alpha = alpha)
+        print(color_v)
         p <-
           p + scale_fill_gradientn(colors = color_v)
       } else {
+
         color_v <-
           generate_color_list(manual_color_vector, length(unique(data[[color_variable]])),
                               alpha = alpha)
+        print(color_v)
         p <- p + scale_fill_manual(values = color_v)
       }
     }
@@ -795,7 +804,7 @@ sp_ggplot_add_vline_hline <- function(p,
   if (!sp.is.null(custom_vline_x_position)) {
     p <- p + geom_vline(xintercept = custom_vline_x_position,
                         linetype = linetype,
-                        size = size,
+                        linewidth = size,
                         ...)
     if (!is.null(custom_vline_anno)) {
       if (is.null(custom_vline_anno_y_pos)) {
@@ -816,7 +825,7 @@ sp_ggplot_add_vline_hline <- function(p,
   if (!sp.is.null(custom_hline_y_position)) {
     p <- p + geom_hline(yintercept = custom_hline_y_position,
                         linetype = linetype,
-                        size = size,
+                        linewidth = size,
                         ...)
     if (!is.null(custom_hline_anno)) {
       if (is.null(custom_hline_anno_x_pos)) {

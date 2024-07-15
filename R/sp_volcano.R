@@ -150,8 +150,11 @@ sp_volcano_plot <-
 
     if (length(sig_level) > 1 &&
         status_col_var != log2fc_var && status_col_var !=  fdr_var) {
-      data[[status_col_var]] <-
-        factor(data[[status_col_var]], levels = sig_level, ordered = T)
+      # data[[status_col_var]] <-
+      #  factor(data[[status_col_var]], levels = sig_level, ordered = T)
+
+      data = sp_set_factor_order(data, status_col_var, sig_level, order_data_frame_by_this_variable_order=T)
+
     }
 
     if (log10_transform_fdr) {
