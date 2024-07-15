@@ -244,7 +244,9 @@ sp_volcano_plot <-
       p <- p + geom_point()
     }
 
-    p <- p + scale_color_manual(values = point_color_vector)
+    # p <- p + scale_color_manual(values = point_color_vector)
+    p <-
+      sp_manual_color_ggplot2(p, data, status_col_var, point_color_vector)
 
 
     if (!is.na(alpha)) {
