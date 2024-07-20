@@ -8,6 +8,7 @@ vignettes/*.zip
 tmp
 *.RData
 */*.RData
+ggsci_colors.json
 
 bin/py2
 .history
