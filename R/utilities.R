@@ -485,6 +485,47 @@ mixedToFloat <- function(x) {
 
 #mixedToFloat(c('1 1/2', '2 3/4', '2/3', '11 1/4', '1'))
 
+#' GGSCI object for json
+#'
+#' @return A color vector
+#' @export
+#'
+#' @examples
+#'
+#' ggsci_to_json()
+#'
+ggsci_to_json <- function(){
+  library(jsonlite)
+
+  json_list <- list()
+
+  json_data <- lapply(names(ggsci_db), function(group) {
+    #cat(group)
+    lapply(names(ggsci_db[[group]]), function(subgroup){
+      #cat(group)
+      #cat(subgroup)
+      colors <- unname(ggsci_db[[group]][[subgroup]])
+      short_name <- paste("ggsci", group, subgroup, sep = "_")
+      long_name <- paste("ggsci", group, subgroup, sep = "_")
+      json_list[[length(json_list) + 1]] <<- list(color = colors,
+                                                  short_name = unbox(short_name),
+                                                  long_name = unbox(long_name),
+                                                  type = unbox("string"))
+    })
+
+  })
+
+  # Convert the list to JSON
+  json_output <- toJSON(json_list, pretty = TRUE)
+
+  # Print the JSON
+  # cat(json_output)
+
+  writeLines(json_output,"ggsci_colors.json")
+}
+
+
+
 
 #' Generate color code
 #'
@@ -521,27 +562,41 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
   color_len = length(color)
 
   if (color_len == 1) {
-    brewer = rownames(RColorBrewer::brewer.pal.info)
-    if (color %in% brewer) {
-      maxcolor = RColorBrewer::brewer.pal.info[color, ]$maxcolors
+    if (grepl("^ggsci", color)) {
+      # color = "ggsci_npg_nrc"
+      colorV = sp_string2vector(color, "_")
+      colorSet = unname(ggsci_db[[colorV[2]]][[colorV[3]]])
+      maxcolor = len(colorSet)
       if (number <= maxcolor) {
-		  mincolor = 3
-		  if (number < mincolor) {
-		  	colorL <- RColorBrewer::brewer.pal(mincolor, color)[1:number]
-		  } else {
-            colorL <- RColorBrewer::brewer.pal(number, color)
-		  }
+        colorL <- colorSet[1:number]
       } else {
         colorL <-
-          colorRampPalette(RColorBrewer::brewer.pal(maxcolor, color))(number)
+          colorRampPalette(colorSet)(number)
       }
-    } else{
-      if(constantColor){
-        colorL <- c(color, rep("gray23",number-1))
-      } else {
-        colorL <- rep(color, number)
+    } else {
+      brewer = rownames(RColorBrewer::brewer.pal.info)
+      if (color %in% brewer) {
+        maxcolor = RColorBrewer::brewer.pal.info[color, ]$maxcolors
+        if (number <= maxcolor) {
+          mincolor = 3
+          if (number < mincolor) {
+            colorL <- RColorBrewer::brewer.pal(mincolor, color)[1:number]
+          } else {
+            colorL <- RColorBrewer::brewer.pal(number, color)
+          }
+        } else {
+          colorL <-
+            colorRampPalette(RColorBrewer::brewer.pal(maxcolor, color))(number)
+        }
+      } else{
+        if(constantColor){
+          colorL <- c(color, rep("gray23",number-1))
+        } else {
+          colorL <- rep(color, number)
+        }
       }
     }
+
   } else if (color_len == number) {
     colorL = color
     # return(colorL)
