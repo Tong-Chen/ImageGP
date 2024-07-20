@@ -514,6 +514,8 @@ mixedToFloat <- function(x) {
 #' generate_color_list("Set3", 5)
 #'
 
+
+
 generate_color_list <- function(color, number, alpha = 1, constantColor=F, reverseColorList=F) {
   color = color[color!="None" & color !=""]
   color_len = length(color)
@@ -521,7 +523,8 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
   if (color_len == 1) {
     brewer = rownames(RColorBrewer::brewer.pal.info)
     if (color %in% brewer) {
-      if (number <= RColorBrewer::brewer.pal.info[color, ]$maxcolors) {
+      maxcolor = RColorBrewer::brewer.pal.info[color, ]$maxcolors
+      if (number <= maxcolor) {
 		  mincolor = 3
 		  if (number < mincolor) {
 		  	colorL <- RColorBrewer::brewer.pal(mincolor, color)[1:number]
@@ -530,7 +533,7 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
 		  }
       } else {
         colorL <-
-          colorRampPalette(RColorBrewer::brewer.pal(3, color))(number)
+          colorRampPalette(RColorBrewer::brewer.pal(maxcolor, color))(number)
       }
     } else{
       if(constantColor){
