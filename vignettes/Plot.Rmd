@@ -273,7 +273,7 @@ sp_volcano_plot(data=res_output,
            log2fc_var="log2FoldChange",
            fdr_var="padj",
            significance_threshold = c(0.05, 1),
-           point_color_vector = c("red","blue","black"),
+           point_color_vector = c("#FF000022","blue","black"),
            max_allowed_log10p = 10
            )
 ```

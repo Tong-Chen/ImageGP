@@ -682,8 +682,10 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #' @param data A data matrix
 #' @param variable One column name of data matrix
 #' @param variable_order Expected order of `data[[variable]]`.
-#' @param order_data_frame_by_this_variable_order Return ordered datafrme by this order.
-#' Please remember that only keep the last order if applying mutiple order operation.
+#' @param order_data_frame_by_this_variable_order Return ordered dataframe by this order.
+#' Please remember that only keep the last order if applying multiple order operation.
+#' @param filter_unexist_factor Filter un-exist factors.
+#' @param rename_levels Rename old levels to new levels.
 #'
 #' @return A data frame
 #' @export
@@ -700,7 +702,8 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #' data$B
 #'
 sp_set_factor_order <-
-  function(data, variable, variable_order = NULL, order_data_frame_by_this_variable_order=F) {
+  function(data, variable, variable_order = NULL, order_data_frame_by_this_variable_order=F,
+           filter_unexist_factor=T, rename_levels=T) {
     if (!variable %in% colnames(data)){
       stop(paste(variable,'must be one of column names of data!'))
     }
@@ -719,9 +722,16 @@ sp_set_factor_order <-
       }
     } else {
       if (!sp.is.null(variable_order)) {
-        data = data[data[[variable]] %in% variable_order, , drop = F]
-        data[[variable]] <-
-          droplevels(factor(data[[variable]], levels = variable_order, ordered = T))
+        if (filter_unexist_factor){
+          data = data[data[[variable]] %in% variable_order, , drop = F]
+        }
+        if (rename_levels){
+          levels(data[[variable]]) <- variable_order
+        } else {
+          data[[variable]] <-
+            droplevels(factor(data[[variable]], levels = variable_order, ordered = T))
+        }
+
       } else {
         data[[variable]] <- factor(data[[variable]],
                                    levels = unique(data[[variable]]), ordered = T)

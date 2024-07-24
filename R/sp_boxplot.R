@@ -25,7 +25,8 @@
 #' @param legend_variable_cut Self-define intervals for legend variable when
 #' values in `legend_variable` column is continuous numbers.
 #' @param xvariable_order xvariable_order Levels for x-axis variable. Default data order, accept input like c('g','a','j','x','s','c','o','u') for Set column.
-#' @param xvariable_cut sxvariable_cut Self-define intervals for x-axis variable.
+#' @param xvariable_cut xvariable_cut Self-define intervals for x-axis variable.
+#' @param xvariable_cut_order Specify a list of names for self-define intervals for x-axis variable.
 #' @inheritParams sp_transfer_one_column
 #' @param notch Using notch (sand clock shape) or not. Default FALSE.
 #' @param outlier Exclude outliers. Exclude outliers or not, default `FALSE`` means keeping outliers.
@@ -80,6 +81,7 @@ sp_boxplot <- function(data,
                        legend_variable_cut = NULL,
                        xvariable_order = NULL,
                        xvariable_cut = NULL,
+                       xvariable_cut_order = NULL,
                        group_variable_for_line = NULL,
                        group_variable_order_for_line = NULL,
                        y_add = 0,
@@ -223,6 +225,11 @@ sp_boxplot <- function(data,
       ((xvariable != legend_variable) ||
        sp.is.null(legend_variable_cut))) {
     data[[xvariable]] <- cut(data[[xvariable]], xvariable_cut)
+    print(data)
+    if (!sp.is.null(xvariable_cut_order)){
+      data = sp_set_factor_order(data, xvariable, xvariable_cut_order,
+                                 filter_unexist_factor=F, rename_levels=T)
+    }
   } else if (!sp.is.null(xvariable_order)) {
     data = sp_set_factor_order(data, xvariable, xvariable_order)
   }

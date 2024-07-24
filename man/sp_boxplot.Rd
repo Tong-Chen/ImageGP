@@ -16,6 +16,7 @@ sp_boxplot(
   legend_variable_cut = NULL,
   xvariable_order = NULL,
   xvariable_cut = NULL,
+  xvariable_cut_order = NULL,
   group_variable_for_line = NULL,
   group_variable_order_for_line = NULL,
   y_add = 0,
@@ -85,7 +86,9 @@ values in \code{legend_variable} column is continuous numbers.}
 
 \item{xvariable_order}{xvariable_order Levels for x-axis variable. Default data order, accept input like c('g','a','j','x','s','c','o','u') for Set column.}
 
-\item{xvariable_cut}{sxvariable_cut Self-define intervals for x-axis variable.}
+\item{xvariable_cut}{xvariable_cut Self-define intervals for x-axis variable.}
+
+\item{xvariable_cut_order}{Specify a list of names for self-define intervals for x-axis variable.}
 
 \item{group_variable_for_line}{Specify the group of points to line together (one column name).}
 
