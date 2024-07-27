@@ -724,12 +724,13 @@ sp_set_factor_order <-
       if (!sp.is.null(variable_order)) {
         if (filter_unexist_factor){
           data = data[data[[variable]] %in% variable_order, , drop = F]
+          data = droplevels(data)
         }
         if (rename_levels){
           levels(data[[variable]]) <- variable_order
         } else {
           data[[variable]] <-
-            droplevels(factor(data[[variable]], levels = variable_order, ordered = T))
+            factor(data[[variable]], levels = variable_order, ordered = T)
         }
 
       } else {
