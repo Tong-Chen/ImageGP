@@ -75,7 +75,7 @@ match_two_df <- function(df1, df2, way="row-row"){
     # 保证表达表样品与df2样品顺序和数目完全一致
     df1 <- df1[common_rownameL,,drop=F]
     df2 <- df2[common_rownameL,,drop=F]
-  } else {
+  } else if (way == "col-row") {
     df1_colnameL <- colnames(df1)
     df2_rownameL <- rownames(df2)
 

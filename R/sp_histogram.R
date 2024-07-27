@@ -122,8 +122,8 @@ sp_histogram <- function(data ,
   fontname = sp_load_font(font_path = font_path)
 
   if (melted) {
-    if (sp.is.null(group_variable) || sp.is.null(xvariable)) {
-      stop("For melted matrix, <group_variable> and <xvariable> should be supplied.")
+    if ( sp.is.null(xvariable)) {
+      stop("For melted matrix,  <xvariable> should be supplied.")
     }
   } else {
     xvariable = 'value'
@@ -134,10 +134,18 @@ sp_histogram <- function(data ,
 
   #print(data)
 
+
   wide_rownames <- data$wide_rownames
   wide_colnames <- data$wide_colnames
   data <- data$data
+
+  if(sp.is.null(group_variable)){
+    data$all_data_in_one_group = "Group"
+    group_variable = "all_data_in_one_group"
+  }
+
   data_colnames <- colnames(data)
+
 
 
   if (sp.is.null(color_variable)) {
@@ -255,7 +263,7 @@ sp_histogram <- function(data ,
       (plot_type  == "both" &&  yaxis_statistics  == "density")) {
     geom_density_1_option = list()
     geom_density_1_option$stat = "density"
-    geom_density_1_option$size = line_size
+    geom_density_1_option$linewidth = line_size
     geom_density_1_option$alpha = alpha
     if (fill_area) {
       geom_density_1 <- function(...) {
@@ -286,7 +294,7 @@ sp_histogram <- function(data ,
       (plot_type == "both" &&  yaxis_statistics  != "density")) {
     geom_density_color_fill_option = list()
     geom_density_color_fill_option$stat = "bin"
-    geom_density_color_fill_option$size = line_size
+    geom_density_color_fill_option$linewidth = line_size
     geom_density_color_fill_option$alpha = alpha
 
     if (fill_area) {

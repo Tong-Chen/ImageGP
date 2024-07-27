@@ -18,6 +18,14 @@ knitr::opts_chunk$set(
 )
 ```
 
+## RDA analysis 
+
+```{r}
+library(vegan)
+# 可以是物种表，也可以是 OTU 表
+species_table = "phylum_table.txt"
+```
+
 ## Heatmap plot
 
 ### Transfer a file to heatmap
@@ -831,7 +839,15 @@ sp_histogram(data = "histogram.demo1.txt", xvariable = "weight", melted=T,
              yaxis_statistics  = "density", fill_area = T, add_mean_value_vline = T)
 ```
 
-
+```{r}
+library(ggplot2)
+library(ImageGP)
+library(dplyr)
+data = data.frame(a=1:100)
+sp_histogram(data = data, xvariable = "a", melted=T,
+            plot_type = "both", 
+             yaxis_statistics  = "density", fill_area = T, add_mean_value_vline = T)
+```
 
 
 Demo2
