@@ -90,10 +90,6 @@ samp6 OE B
 
 \item{prefix}{prefix for output files.}
 
-\item{corType}{character string specifying the correlation to be used. Allowed values are (unique
-abbreviations of) \code{"pearson"} and \code{"bicor"}, corresponding to Pearson and bidweight
-midcorrelation, respectively. Missing values are handled using the \code{pairwise.complete.obs} option. }
-
 \item{networkType}{Default "signed". Allowed values are (unique abbreviations of)
 "unsigned", "signed", "signed hybrid". Correlation and distance are transformed as
 follows:
@@ -107,10 +103,6 @@ and for type = "distance", adjacency = (1-(dist/max(dist))^2)^power.}
 
 \item{maxPower}{Specify maximum power to check. Default 30 for "unsigned" network
 and 40 for other type. Any number less than 20 would be treated as 20.}
-
-\item{maxBlockSize}{integer giving maximum block size for module detection. Ignored if \code{blocks}
-above is non-NULL. Otherwise, if the number of genes in \code{datExpr} exceeds \code{maxBlockSize}, genes
-will be pre-clustered into blocks whose size should not exceed \code{maxBlockSize}. }
 
 \item{top_mad_n}{An integer larger than 1 will be used to get top x genes (like top 5000).
 A float number less than 1 will be used to get top x fraction genes (like top 0.7 of
@@ -134,56 +126,6 @@ no suitable soft power can be found.}
 
 \item{RsquaredCut}{R2 for defining scale-free network (default 0.85). Any number larger than 1 would be treated as 0.99.}
 
-\item{minModuleSize}{ minimum module size for module detection. See
-\code{\link[dynamicTreeCut]{cutreeDynamic}} for more details.  }
-
-\item{mergeCutHeight}{ dendrogram cut height for module merging. }
-
-\item{numericLabels}{ logical: should the returned modules be labeled by colors (\code{FALSE}), or by
-numbers (\code{TRUE})? }
-
-\item{pamRespectsDendro}{Logical, only used when \code{pamStage} is \code{TRUE}. 
-If \code{TRUE}, the PAM stage will
-respect the dendrogram in the sense an object can be PAM-assigned only to clusters that lie below it on
-the branch that the object is merged into. 
-     See \code{\link[dynamicTreeCut]{cutreeDynamic}} for more details. }
-
-\item{saveTOMs}{ logical: should the consensus topological overlap matrices for each block be saved
-and returned?  }
-
-\item{maxPOutliers}{ only used for \code{corType=="bicor"}. Specifies the maximum percentile of data 
-that can be considered outliers on either 
-side of the median separately. For each side of the median, if
-higher percentile than \code{maxPOutliers} is considered an outlier by the weight function based on
-\code{9*mad(x)}, the width of the weight function is increased such that the percentile of outliers on
-that side of the median equals \code{maxPOutliers}. Using \code{maxPOutliers=1} will effectively disable
-all weight function broadening; using \code{maxPOutliers=0} will give results that are quite similar (but
-not equal to) Pearson correlation. }
-
-\item{loadTOM}{logical: should Topological Overlap Matrices be loaded from previously saved files (\code{TRUE}) 
-or calculated (\code{FALSE})? It may be useful to load previously saved TOM matrices if these have been
-calculated previously, since TOM calculation is often the most computationally expensive part of network
-construction and module identification. See \code{saveTOMs} and \code{saveTOMFileBase} below for when and how TOM
-files are saved, and what the file names are. If \code{loadTOM} is \code{TRUE} but the files cannot be
-found, or do not contain the correct TOM data, TOM will be recalculated.}
-
-\item{TOMDenom}{ a character string specifying the TOM variant to be used. Recognized values are 
-\code{"min"} giving the standard TOM described in Zhang and Horvath (2005), and \code{"mean"} in which 
-the \code{min} function in the denominator is replaced by \code{mean}. The \code{"mean"} may produce 
-better results but at this time should be considered experimental.}
-
-\item{deepSplit}{ integer value between 0 and 4. Provides a simplified control over how sensitive
-module detection should be to module splitting, with 0 least and 4 most sensitive. See
-\code{\link[dynamicTreeCut]{cutreeDynamic}} for more details. }
-
-\item{stabilityCriterion}{One of \code{c("Individual fraction", "Common fraction")}, indicating which method
-for assessing stability similarity of two branches should be used. We recommend \code{"Individual fraction"}
-which appears to perform better; the \code{"Common fraction"} method is provided for backward compatibility
-since it was the (only) method available prior to WGCNA version 1.60.}
-
-\item{verbose}{ integer level of verbosity. Zero means silent, higher values make the output
-progressively more and more verbose. }
-
 \item{os_system}{Default the program will detect system type to choose which multiple thread function will be used.
 \code{enableWGCNAThreads} is recommended, but only work in some linux os.
 \code{\link[WGCNA]{allowWGCNAThreads}} is not recommended if \code{enableWGCNAThreads} works.
@@ -192,10 +134,6 @@ Even for some linux system, using \code{enableWGCNAThreads} will make programs
 stuck in \code{\link[WGCNA]{pickSoftThreshold}} step.
 So if stucked, supply any string other than \code{linux} to enable the usages
 of \code{\link[WGCNA]{allowWGCNAThreads}}.}
-
-\item{randomSeed}{integer to be used as seed for the random number generator before the function
-starts. If a current seed exists, it is saved and restored upon exit. If \code{NULL} is given, the 
-function will not save and restore the seed. }
 
 \item{dynamicCutPlot}{Plot merged modules as well as dynamic cutted modules before merge.}
 

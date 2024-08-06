@@ -1,4 +1,4 @@
-
+options(scipen = 999)
 
 #' Pheatmap function only for inner usages
 #'

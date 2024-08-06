@@ -84,6 +84,8 @@ sp_enrichment <- function(data,
                           coordinate_flip = FALSE,
                           extra_ggplot2_cmd = NULL,
                           ...) {
+
+  options(scipen = 999)
   if ("character" %in% class(data)) {
     data <- sp_readTable(data, row.names = NULL)
   } else if (!"data.frame" %in% class(data)) {

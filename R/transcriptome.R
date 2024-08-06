@@ -6,7 +6,7 @@
 #   Test Package:              'Ctrl + Shift + T'
 #   Generate DOC:              'Ctrl + Shift + Alt + r'
 
-
+options(scipen = 999)
 
 #' Iniitialize a DESeq2 object from salmon output.
 #'

@@ -112,6 +112,7 @@ sp_lines <- function(data,
     argg <- c(as.list(environment()), list(...))
     print(argg)
   }
+  options(scipen = 999)
 
   if (melted) {
     if (sp.is.null(xvariable) || sp.is.null(yvariable)) {

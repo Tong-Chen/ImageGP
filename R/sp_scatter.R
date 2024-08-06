@@ -127,6 +127,8 @@ sp_scatterplot <- function (data,
     stop("Unknown input format for `data` parameter.")
   }
 
+  options(scipen = 999)
+
   data_colnames <- colnames(data)
 
   if (!(xvariable %in% data_colnames &&

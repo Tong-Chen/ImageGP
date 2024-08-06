@@ -119,6 +119,7 @@ sp_histogram <- function(data ,
     print(argg)
   }
 
+  options(scipen = 999)
   fontname = sp_load_font(font_path = font_path)
 
   if (melted) {

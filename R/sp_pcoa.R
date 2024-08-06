@@ -90,6 +90,8 @@ sp_pcoa <- function(data,
                     check_paired_significance = T,
                     coord_fixed = T,
                     ...) {
+
+  options(scipen = 999)
   if ("character" %in% class(data)) {
     file <- data
     data <- sp_readTable(file, row.names = 1)

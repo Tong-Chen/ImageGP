@@ -41,10 +41,6 @@ like
 
 \item{start}{Start position of first ellipse. Default 90 represents starting from 0 clock.}
 
-\item{a, b}{
-Vectors, radii of the ellypses along the two axes in user units.
-}
-
 \item{r}{Set the size of the center circle.}
 
 \item{group_color}{Set the color of the petal ellipse (each group), with input format，like：c('#6181BD4E','#F348004E','#64A10E4E'...) or
@@ -54,10 +50,6 @@ supply a RColorBrewer color set like "Set1", "Set2", "Set3", "YlOrRd"
 \item{label}{The name of the center circle.}
 
 \item{common_color}{The color of the center circle. Default "white".}
-
-\item{...}{
-Additional arguments passed to \code{\link{polygon}}.
-}
 }
 \value{
 A pdf image.

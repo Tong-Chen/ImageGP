@@ -10,7 +10,9 @@ sp_set_factor_order(
   data,
   variable,
   variable_order = NULL,
-  order_data_frame_by_this_variable_order = F
+  order_data_frame_by_this_variable_order = F,
+  filter_unexist_factor = T,
+  rename_levels = T
 )
 }
 \arguments{
@@ -20,8 +22,12 @@ sp_set_factor_order(
 
 \item{variable_order}{Expected order of \code{data[[variable]]}.}
 
-\item{order_data_frame_by_this_variable_order}{Return ordered datafrme by this order.
-Please remember that only keep the last order if applying mutiple order operation.}
+\item{order_data_frame_by_this_variable_order}{Return ordered dataframe by this order.
+Please remember that only keep the last order if applying multiple order operation.}
+
+\item{filter_unexist_factor}{Filter un-exist factors.}
+
+\item{rename_levels}{Rename old levels to new levels.}
 }
 \value{
 A data frame

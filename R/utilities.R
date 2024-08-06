@@ -9,7 +9,7 @@
 #   Generate DOC:              'Ctrl + Shift + Alt + r'
 #   Generate DOC (Mac):              'Ctrl + Shift + Option + r'
 
-
+options(scipen = 999)
 
 #' Check and install given packages
 #'
