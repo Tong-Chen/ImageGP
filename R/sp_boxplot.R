@@ -119,11 +119,12 @@ sp_boxplot <- function(data,
                        extra_ggplot2_cmd = NULL,
                        dotsize = 2,
                        ...) {
+  options(scipen = 999)
   if (debug) {
     argg <- c(as.list(environment()), list(...))
     print(argg)
   }
-  options(scipen = 999)
+
 
   if (!melted) {
     if (sp.is.null(yvariable)) {

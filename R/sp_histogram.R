@@ -114,12 +114,13 @@ sp_histogram <- function(data ,
                          filename = NULL,
                          base_font_size = 11,
                          ...) {
+  options(scipen = 999)
   if (debug) {
     argg <- c(as.list(environment()), list(...))
     print(argg)
   }
 
-  options(scipen = 999)
+
   fontname = sp_load_font(font_path = font_path)
 
   if (melted) {

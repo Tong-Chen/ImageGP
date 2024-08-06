@@ -9,8 +9,6 @@
 #   Generate DOC:              'Ctrl + Shift + Alt + r'
 #   Generate DOC (Mac):              'Ctrl + Shift + Option + r'
 
-options(scipen = 999)
-
 #' Check and install given packages
 #'
 #' @param package A list containing names and install-names of each package.
@@ -166,6 +164,7 @@ sp.is.null <- function(x) {
 #' sp_string2vector('red, blue,white')
 #'
 sp_string2vector <- function(x, pattern = ",") {
+
   if(sp.is.null(x)){
     return(x)
   }
@@ -425,6 +424,7 @@ numCheck <- function(x) {
     return(is.numeric2)
   }
   x <- sapply(x, as.character)
+
   is.integer  <- grepl("^-?\\d+$", x)
   is.fraction <- grepl("^-?\\d+\\/\\d+$", x)
   is.float <- grepl("^-?\\d+\\.\\d+$", x)
@@ -452,6 +452,7 @@ numCheck <- function(x) {
 #'
 mixedToFloat <- function(x) {
   x <- sapply(x, as.character)
+
   is.integer  <- grepl("^-?\\d+$", x)
   is.fraction <- grepl("^-?\\d+\\/\\d+$", x)
   is.float <- grepl("^-?\\d+\\.\\d+$", x)

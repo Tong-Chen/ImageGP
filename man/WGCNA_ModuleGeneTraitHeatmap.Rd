@@ -15,10 +15,18 @@ WGCNA_ModuleGeneTraitHeatmap(
 )
 }
 \arguments{
+\item{datExpr}{ Expression data. A matrix (preferred) or 
+data frame in which columns are genes and rows ar samples. NAs are
+allowed, but not too many. See \code{checkMissingData} below and details.}
+
 \item{traitData}{Sample attributes data frame.
 Or the "traitData" generated in \code{\link{WGCNA_readindata}}.}
 
 \item{net}{\code{\link{WGCNA_coexprNetwork}} or \code{\link[WGCNA]{blockwiseModules}} returned WGCNA object.}
+
+\item{corType}{character string specifying the correlation to be used. Allowed values are (unique
+abbreviations of) \code{"pearson"} and \code{"bicor"}, corresponding to Pearson and bidweight
+midcorrelation, respectively. Missing values are handled using the \code{pairwise.complete.obs} option. }
 
 \item{prefix}{prefix for output files.}
 

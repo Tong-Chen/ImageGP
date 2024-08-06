@@ -9,6 +9,10 @@ WGCNA_saveModuleAndMe(net, datExpr, prefix = "ehbio", saveplot = NULL, ...)
 \arguments{
 \item{net}{\code{\link{WGCNA_coexprNetwork}} or \code{\link[WGCNA]{blockwiseModules}} returned WGCNA object.}
 
+\item{datExpr}{ Expression data. A matrix (preferred) or 
+data frame in which columns are genes and rows ar samples. NAs are
+allowed, but not too many. See \code{checkMissingData} below and details.}
+
 \item{prefix}{prefix for output files.}
 
 \item{saveplot}{Save plot to given file "a.pdf", "b.png".}
