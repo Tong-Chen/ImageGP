@@ -424,7 +424,7 @@ numCheck <- function(x) {
     return(is.numeric2)
   }
   x <- sapply(x, as.character)
-
+  x <- trimws(x)
   is.integer  <- grepl("^-?\\d+$", x)
   is.fraction <- grepl("^-?\\d+\\/\\d+$", x)
   is.float <- grepl("^-?\\d+\\.\\d+$", x)
@@ -452,7 +452,7 @@ numCheck <- function(x) {
 #'
 mixedToFloat <- function(x) {
   x <- sapply(x, as.character)
-
+  x <- trimws(x)
   is.integer  <- grepl("^-?\\d+$", x)
   is.fraction <- grepl("^-?\\d+\\/\\d+$", x)
   is.float <- grepl("^-?\\d+\\.\\d+$", x)
@@ -686,7 +686,7 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #' @param order_data_frame_by_this_variable_order Return ordered dataframe by this order.
 #' Please remember that only keep the last order if applying multiple order operation.
 #' @param filter_unexist_factor Filter un-exist factors.
-#' @param rename_levels Rename old levels to new levels.
+#' @param rename_levels Rename old levels to new levels. Default False.
 #'
 #' @return A data frame
 #' @export
@@ -704,7 +704,7 @@ sp_transfer_one_column <- function(data, variable, yaxis_scale_mode=NULL, y_add=
 #'
 sp_set_factor_order <-
   function(data, variable, variable_order = NULL, order_data_frame_by_this_variable_order=F,
-           filter_unexist_factor=T, rename_levels=T) {
+           filter_unexist_factor=T, rename_levels=F) {
     if (!variable %in% colnames(data)){
       stop(paste(variable,'must be one of column names of data!'))
     }

@@ -12,7 +12,7 @@ sp_set_factor_order(
   variable_order = NULL,
   order_data_frame_by_this_variable_order = F,
   filter_unexist_factor = T,
-  rename_levels = T
+  rename_levels = F
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ Please remember that only keep the last order if applying multiple order operati
 
 \item{filter_unexist_factor}{Filter un-exist factors.}
 
-\item{rename_levels}{Rename old levels to new levels.}
+\item{rename_levels}{Rename old levels to new levels. Default False.}
 }
 \value{
 A data frame

@@ -251,7 +251,7 @@ sp_enrichment <- function(data,
     }
     #print(data3)
 
-    yvariable_order <- unique(data3[[yvariable]])
+    yvariable_order <- as.vector(unique(data3[[yvariable]]))
     rm(data_freq, data2, data3)
   }
 
