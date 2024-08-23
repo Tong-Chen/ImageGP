@@ -857,7 +857,9 @@ sp_pheatmap <- function(data,
     labels_row = as.vector(labels_row$label)
   }
 
-
+  # Factor levels on variable Module do not match with annotation_colors
+  # value.identical(names(manual_annotation_colors_sidebar$Module), annotation_row$Module, treat_fully_contain_as_identical=T)
+  # intersect(names(manual_annotation_colors_sidebar$Module), annotation_row$Module)
 
 
   gt <- pheatmap::pheatmap(
