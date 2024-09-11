@@ -125,11 +125,13 @@ sp_upsetview <- function (data,
     data = cbind(ID = rownames(data), data)
   }
 
+  data
+
   nsets = dim(data)[2] - 1
-  
+
   if(nsets>maxsets){
   	stop(paste0("Your fileformat maybe wrong. It is almost meaningless for interactions among more than ", maxsets, "sets."))
-  } 
+  }
 
   if (keep_empty) {
     keep_empty = 'on'
@@ -178,22 +180,29 @@ sp_upsetview <- function (data,
 
 
   if (main_bar_color_vector != "gray23") {
+    keep_empty = 'on'
     print(nintersects)
-    if (!is.na(nintersects)){
-      main_bar_color_vector <-
-        generate_color_list(main_bar_color_vector, nintersects,
-                            alpha = 1, constantColor = T)
-    } else{
-      if (!sp.is.null(keep_empty)){
-        all_possible_nintersects = sum(choose(nsets, 1:nsets))
+
+    if (!sp.is.null(keep_empty)){
+      all_possible_nintersects = sum(choose(nsets, 1:nsets))
+
+      if (!is.na(nintersects)){
+        main_bar_color_vector <-
+          c(generate_color_list(main_bar_color_vector, nintersects,
+                              alpha = 1, constantColor = T),
+            rep('gray23', all_possible_nintersects-nintersects))
+
+      } else {
         main_bar_color_vector <-
           generate_color_list(main_bar_color_vector, all_possible_nintersects,
                               alpha = 1, constantColor = T)
-      }else{
-        main_bar_color_vector = "gray23"
+
       }
-      
+    }else{
+      main_bar_color_vector = "gray23"
     }
+
+
   }
 
   a = UpSetR::upset(
