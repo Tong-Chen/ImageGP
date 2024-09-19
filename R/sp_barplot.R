@@ -120,7 +120,7 @@ sp_barplot <- function (data,
     }
   } else {
       #if (sp.is.null(color_variable)) {
-        color_variable = "xvariable"
+        color_variable = "color_variable"
       #}
       xvariable = 'variable'
       yvariable = "value"
@@ -590,6 +590,10 @@ sp_barplot <- function (data,
 
   additional_theme$axis.ticks.x = element_blank()
   additional_theme$legend.key  = element_blank()
+
+  if(xvariable == "variable"){
+    x_label = " "
+  }
 
   p <- sp_ggplot_layout(
       p,
