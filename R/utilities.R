@@ -117,11 +117,11 @@ sp_current_time <- function(delim_left = '[',
 #' sp_determine_log_add(c(1,2,3))
 #'
 sp_determine_log_add <- function(data, ratio = 1) {
-  min_value = min(min(data))
+  min_value = min(min(data, na.rm=T), na.rm=T)
   if (min_value > 0) {
     return(0)
   } else if (min_value == 0) {
-    min_value = min(min(data[data != 0]))
+    min_value = min(min(data[data != 0],na.rm=T))
     return(min_value * ratio)
   } else{
     stop("Negative value is not allowed for log2 transform!")
@@ -976,7 +976,7 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
       rownames(data) <- wide_rownames
       wide_colnames <- colnames(data)
 
-      if (all(apply(data, 2, numCheck))) {
+      if (all(apply(data, 2, numCheck), na.rm = T)) {
         rownames_data <- rownames(data)
         data <- as.data.frame(apply(data, 2, mixedToFloat))
         data <- as.data.frame(data)

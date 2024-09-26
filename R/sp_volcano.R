@@ -158,7 +158,7 @@ sp_volcano_plot <-
     }
 
     if (log10_transform_fdr) {
-      current_min_fdr = min(data[[fdr_var]][data[[fdr_var]]!=0])
+      current_min_fdr = min(data[[fdr_var]][data[[fdr_var]]!=0], na.rm=T)
       data[[fdr_var]] <- (-1) * log10(data[[fdr_var]]+current_min_fdr)
       fdr <- -1*(log10(fdr))
     }
@@ -255,7 +255,7 @@ sp_volcano_plot <-
 
 
     if (log2fc_symmetry) {
-      boundary <- ceiling(max(abs(data[, log2fc_var])))
+      boundary <- ceiling(max(abs(data[, log2fc_var]), na.rm=T))
       p <- p + xlim(-1 * boundary, boundary)
     }
 

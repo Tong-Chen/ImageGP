@@ -275,9 +275,9 @@ sp_enrichment <- function(data,
   if (!sp.is.null(size_variable)) {
     p <- p + aes(size = !!size_variable_en)
     if(is.numeric(data[[size_variable]])){
-      if(all(data[[size_variable]] == as.integer(data[[size_variable]]))){
-        min = min(data[[size_variable]])
-        max = max(data[[size_variable]])
+      if(all(data[[size_variable]] == as.integer(data[[size_variable]]), na.rm=T)){
+        min = min(data[[size_variable]], na.rm=T)
+        max = max(data[[size_variable]], na.rm=T)
 
 		# 4 is length
 		step = ceiling((max-min)/4)

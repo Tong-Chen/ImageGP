@@ -531,8 +531,8 @@ sp_barplot <- function (data,
       ))
     }
 
-    max = max(data[, c(yvariable)])
-    min = min(data[, yvariable])
+    max = max(data[, c(yvariable)], na.rm=T)
+    min = min(data[, yvariable], na.rm=T)
     x = data[, c(xvariable, yvariable, "combine__grp__for__statistis_sp")]
     y = x %>% group_by(combine__grp__for__statistis_sp) %>% summarise(Max =
                                                                         max(!!yvariable_en))
