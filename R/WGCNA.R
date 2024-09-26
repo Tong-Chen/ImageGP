@@ -744,6 +744,12 @@ WGCNA_softpower <-
         maxPower = 45
       }
     }
+
+    #  power 必须在 30 以内
+    if (maxPower > 30) {
+      maxPower = 30
+    }
+
     if (maxPower < 20) {
       maxPower = 20
     }
