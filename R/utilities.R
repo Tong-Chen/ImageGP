@@ -423,6 +423,7 @@ numCheck <- function(x) {
   if(is.numeric2){
     return(is.numeric2)
   }
+  is_na <- is.na(x)
   x <- sapply(x, as.character)
   x <- trimws(x)
   is.integer  <- grepl("^-?\\d+$", x)
@@ -431,7 +432,7 @@ numCheck <- function(x) {
   is.percent <- grepl("[0-9.]+%$", x)
   is.mixed    <- grepl("^-?\\d+ \\d+\\/\\d+$", x)
   return(all(
-      is.integer | is.fraction | is.float | is.mixed | is.percent
+      is.integer | is.fraction | is.float | is.mixed | is.percent | is_na
   ))
 }
 
@@ -451,6 +452,7 @@ numCheck <- function(x) {
 #' mixedToFloat(c("1","0.2","1/3","-1"))
 #'
 mixedToFloat <- function(x) {
+  is_na <- is.na(x)
   x <- sapply(x, as.character)
   x <- trimws(x)
   is.integer  <- grepl("^-?\\d+$", x)
@@ -459,25 +461,29 @@ mixedToFloat <- function(x) {
   is.mixed    <- grepl("^-?\\d+ \\d+\\/\\d+$", x)
   is.percent <- grepl("[0-9.]+%$", x)
   stopifnot(all(is.integer |
-                  is.fraction | is.float | is.mixed | is.percent))
+                  is.fraction | is.float | is.mixed | is.percent | is_na))
 
   numbers <- strsplit(x, "[ /%]")
 
-  ifelse(is.integer,
-         as.numeric(sapply(numbers, `[`, 1)),
+  ifelse(is_na,
+         NA,
          ifelse(
-           is.percent,
-           as.numeric(sapply(numbers, `[`, 1)) / 100,
+           is.integer,
+           as.numeric(sapply(numbers, `[`, 1)),
            ifelse(
-             is.float,
-             as.numeric(sapply(numbers, `[`, 1)),
+             is.percent,
+             as.numeric(sapply(numbers, `[`, 1)) / 100,
              ifelse(
-               is.fraction,
-               as.numeric(sapply(numbers, `[`, 1)) /
-                 as.numeric(sapply(numbers, `[`, 2)),
-               as.numeric(sapply(numbers, `[`, 1)) +
-                 as.numeric(sapply(numbers, `[`, 2)) /
-                 as.numeric(sapply(numbers, `[`, 3))
+               is.float,
+               as.numeric(sapply(numbers, `[`, 1)),
+               ifelse(
+                 is.fraction,
+                 as.numeric(sapply(numbers, `[`, 1)) /
+                   as.numeric(sapply(numbers, `[`, 2)),
+                 as.numeric(sapply(numbers, `[`, 1)) +
+                   as.numeric(sapply(numbers, `[`, 2)) /
+                   as.numeric(sapply(numbers, `[`, 3))
+               )
              )
            )
          ))
@@ -974,12 +980,12 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
       wide_rownames <- make.unique(as.vector(as.character(data[, 1])))
       data <- data[, -1, drop = F]
       rownames(data) <- wide_rownames
-      wide_colnames <- colnames(data)
+      dawide_colnames <- colnames(data)
 
       if (all(apply(data, 2, numCheck), na.rm = T)) {
         rownames_data <- rownames(data)
         data <- as.data.frame(apply(data, 2, mixedToFloat))
-        data <- as.data.frame(data)
+        adata <- as.data.frame(data)
         rownames(data) <- rownames_data
       } else {
         stop(
