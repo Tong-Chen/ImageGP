@@ -275,7 +275,7 @@ sp_volcano_plot <-
         #print(head(data[matched_column[1]]))
         #print(head(geneL[matched_column[2]]))
         #print(table(data[matched_column[1]] %in% geneL[matched_column[2]]))
-        data.l <- data[data[[matched_column[1]]] %in% geneL[[matched_column[2]]],]
+        data.l <- data[data[[matched_column[[1]][1]]] %in% geneL[[matched_column[[1]][2]]],]
         point_label_var <- matched_column[1]
       } else {
         data.l <- merge_data_with_auto_matched_column(geneL, data, suffixes=c('','.y'))
