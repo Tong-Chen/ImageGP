@@ -154,7 +154,7 @@ sp_lines <- function(data,
     data[[legend_variable]] = 'Group'
   }
 
-  if (yaxis_scale_mode != "") {
+  if (! (yaxis_scale_mode == "" || sp.is.null(yaxis_scale_mode))) {
     # Give the minimum non-zero value to add to avoid log2(0)
     if (y_add == 0) {
       y_add = sp_determine_log_add(data[[yvariable]])
