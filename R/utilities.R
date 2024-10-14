@@ -980,7 +980,7 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
       wide_rownames <- make.unique(as.vector(as.character(data[, 1])))
       data <- data[, -1, drop = F]
       rownames(data) <- wide_rownames
-      dawide_colnames <- colnames(data)
+      wide_colnames <- colnames(data)
 
       if (all(apply(data, 2, numCheck), na.rm = T)) {
         rownames_data <- rownames(data)
