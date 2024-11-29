@@ -124,18 +124,23 @@ sp_enrichment <- function(data,
 
 
   if (!sp.is.null(shape_variable)) {
-    if (shape_variable != xvariable) {
-      data = sp_set_factor_order(data, shape_variable, shape_variable_order)
-    } else if (sp.is.null(xvariable_order)) {
-      if (!sp.is.null(shape_variable_order)) {
+    if (numCheck(data[[shape_variable]])){
+      shape_variable = NULL
+    } else {
+      if (shape_variable != xvariable) {
+
         data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+      } else if (sp.is.null(xvariable_order)) {
+        if (!sp.is.null(shape_variable_order)) {
+          data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+        }
       }
+
+      shape_level <- length(unique(data[[shape_variable]]))
+      shapes = (1:shape_level) %% 30
+
+      shape_variable_en = sym(shape_variable)
     }
-
-    shape_level <- length(unique(data[[shape_variable]]))
-    shapes = (1:shape_level) %% 30
-
-    shape_variable_en = sym(shape_variable)
   }
 
   # First order by Term, then order by shape_variable
