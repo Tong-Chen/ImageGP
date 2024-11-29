@@ -166,9 +166,13 @@ sp_scatterplot <- function (data,
     if (!(shape_variable %in% data_colnames)) {
       stop(paste(shape_variable, 'must be column names of data!'))
     }
-	  data = sp_set_factor_order(data, shape_variable, shape_variable_order)
-	  data[[shape_variable]] <- as.factor(data[[shape_variable]])
-	  shapes <- generate_shapes(data, shape_variable)
+    if (numCheck(data[[shape_variable]])){
+      shape_variable = NULL
+    } else {
+      data = sp_set_factor_order(data, shape_variable, shape_variable_order)
+      data[[shape_variable]] <- as.factor(data[[shape_variable]])
+      shapes <- generate_shapes(data, shape_variable)
+    }
   }
 
 
