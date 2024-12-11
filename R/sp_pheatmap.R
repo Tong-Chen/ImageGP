@@ -447,6 +447,7 @@ sp_pheatmap <- function(data,
                   "binary",
                   "minkowski")
 
+
   if (scale == "row") {
     if(ncol(data)>1){
       data_sd <- apply(data, 1, sd)
@@ -492,7 +493,7 @@ sp_pheatmap <- function(data,
         ))
       }
     }
-    data = round(col_cor, 3)
+    data = round(col_cor, 7)
     cor_data = T
     annotation_row = annotation_col
   }
