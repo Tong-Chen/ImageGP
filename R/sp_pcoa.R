@@ -322,6 +322,12 @@ sp_pcoa <- function(data,
       )
   }
 
+  if (is.numeric(data[[group_variable]])) {
+    check_significance = F
+    draw_ellipse = "no ellipse"
+    print("Numeric groups could not be used for significance check and ellipse!")
+  }
+
   if (draw_ellipse == "encircle") {
     p <-
       p + geom_encircle(alpha = 0.2,
@@ -337,6 +343,11 @@ sp_pcoa <- function(data,
         type = type,
         na.rm = TRUE
       )
+  }
+
+  if (check_significance && is.numeric(data[[group_variable]])) {
+    check_significance = F
+    print("Numeric groups could not be used for significance check!")
   }
 
   if (check_significance) {
