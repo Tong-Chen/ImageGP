@@ -1240,7 +1240,7 @@ WGCNA_MEs_traitCorrelationHeatmap <-
     cat(sp_current_time(), "Finish plotting module trait correlation heatmap.\n")
   }
 
-#' Export WGCNA resullt for cytoscape input edges and nodes.
+#' Export WGCNA result for cytoscape input edges and nodes.
 #'
 #' @inheritParams WGCNA_saveModuleAndMe
 #' @inheritParams WGCNA_coexprNetwork
@@ -1324,13 +1324,14 @@ WGCNA_cytoscape <-
     cyt = WGCNA::exportNetworkToCytoscape(
       TOM,
       weighted = TRUE,
-      threshold = 0.01,
+      threshold = 0.5,
       nodeNames = probes,
       nodeAttr = moduleColors
     )
 
     edgeData <- cyt$edgeData[, c(1:3)]
     colnames(edgeData) <- c("Source", "Target", "Correlation")
+    edgeData$Correlation <- round(edgeData$Correlation, 2)
 
     if (fulledge) {
       write.table(
