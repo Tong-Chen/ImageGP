@@ -132,7 +132,7 @@ sp_pca <- function(data,
     }
     #print(colnames(group_data))
 
-    data_t_label <- merge(data, group_data, by = 0, all.x = T)
+    data_t_label <- merge(data, group_data, by = 0, all.x = T, suffixes = c("",".y"))
     rownames(data_t_label) <- data_t_label$Row.names
     data_t_label <-
       data_t_label[match(sampleL, data_t_label$Row.names), ]

@@ -1438,7 +1438,12 @@ merge_data_with_auto_matched_column <- function(df1, df2, ...){
                                        only_allow_one_match = T)
 
   data <-
-    merge(df1, df2, by.x = matched_column[1], by.y = matched_column[2], ...)
+    merge(df1, df2, by.x = matched_column[1], by.y = matched_column[2], suffixes = c("",".y"), ...)
+
+  if(matched_column[2] != matched_column[1]) {
+    data[[matched_column[2]]] = data[[matched_column[1]]]
+  }
+
   invisible(data)
 }
 

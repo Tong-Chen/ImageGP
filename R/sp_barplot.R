@@ -146,15 +146,16 @@ sp_barplot <- function (data,
       stop("Unknown input format for `metadata` parameter.")
     }
 
-    matched_column <-
-      get_matched_columns_based_on_value(data, metadata,
-                                         only_allow_one_match =
-                                           T)
-
-    # return(list(data=data, metadata=metadata, matched_column=matched_column))
-    data <-
-      merge(data, metadata, by.x = matched_column[1], by.y = matched_column[2])
-    data[[matched_column[2]]] = data[[matched_column[1]]]
+    # matched_column <-
+    #   get_matched_columns_based_on_value(data, metadata,
+    #                                      only_allow_one_match =
+    #                                        T)
+    #
+    # # return(list(data=data, metadata=metadata, matched_column=matched_column))
+    # data <-
+    #   merge(data, metadata, by.x = matched_column[1], by.y = matched_column[2], suffixes = c("",".y"))
+    # data[[matched_column[2]]] = data[[matched_column[1]]]
+    data <- merge_data_with_auto_matched_column(data, metadata)
   }
 
   # print(data)
