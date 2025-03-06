@@ -1440,7 +1440,7 @@ merge_data_with_auto_matched_column <- function(df1, df2, ...){
   data <-
     merge(df1, df2, by.x = matched_column[1], by.y = matched_column[2], suffixes = c("",".y"), ...)
 
-  if(matched_column[2] != matched_column[1]) {
+  if(matched_column[2] != matched_column[1] || matched_column[1] != 0) {
     data[[matched_column[2]]] = data[[matched_column[1]]]
   }
 

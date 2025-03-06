@@ -182,9 +182,9 @@ sp_boxplot <- function(data,
     #
     data <- merge_data_with_auto_matched_column(data, metadata)
 
-    if (matched_column[1]!=0){
-      data[[matched_column[2]]] = data[[matched_column[1]]]
-	}
+    # if (matched_column[1] != 0) {
+    #   data[[matched_column[2]]] = data[[matched_column[1]]]
+    # }
   }
 
   data_colnames <- colnames(data)
@@ -230,9 +230,14 @@ sp_boxplot <- function(data,
        sp.is.null(legend_variable_cut))) {
     data[[xvariable]] <- cut(data[[xvariable]], xvariable_cut)
     print(data)
-    if (!sp.is.null(xvariable_cut_order)){
-      data = sp_set_factor_order(data, xvariable, xvariable_cut_order,
-                                 filter_unexist_factor=F, rename_levels=T)
+    if (!sp.is.null(xvariable_cut_order)) {
+      data = sp_set_factor_order(
+        data,
+        xvariable,
+        xvariable_cut_order,
+        filter_unexist_factor = F,
+        rename_levels = T
+      )
     }
   } else if (!sp.is.null(xvariable_order)) {
     data = sp_set_factor_order(data, xvariable, xvariable_order)
@@ -446,16 +451,20 @@ sp_boxplot <- function(data,
     # no - allowed
     data$combine__grp__for__statistis_sp <- gsub("-", "", do.call(paste0, data[group_variable_vector]), ignore.case = FALSE)
 
-    dataList = sp_multiple_group_diff_test(data,
-               stat_value_variable=yvariable,
-               stat_group_variable="combine__grp__for__statistis_sp",
-               group_variable = facet_variable,
-               statistical_method = statistical_method,
-               statistical_threshold_for_letters = statistical_threshold_for_letters)
+    dataList = sp_multiple_group_diff_test(
+      data,
+      stat_value_variable = yvariable,
+      stat_group_variable = "combine__grp__for__statistis_sp",
+      group_variable = facet_variable,
+      statistical_method = statistical_method,
+      statistical_threshold_for_letters = statistical_threshold_for_letters
+    )
     # print(dataList$data)
 
-    suppressWarnings(sp_writeTable(dataList$Tukey_HSD_table, file = paste0(filename,
-                                                                  ".significance.txt")))
+    suppressWarnings(sp_writeTable(
+      dataList$Tukey_HSD_table,
+      file = paste0(filename, ".significance.txt")
+    ))
 
     p <- p + geom_text(
       data = dataList$data,
@@ -471,10 +480,7 @@ sp_boxplot <- function(data,
       show.legend = F
     )
 
-    p <- sp_manual_color_ggplot2(p,
-                                 dataList$data,
-                                 legend_variable,
-                                 manual_color_vector)
+    p <- sp_manual_color_ggplot2(p, dataList$data, legend_variable, manual_color_vector)
   }
 
   if (outlier) {
@@ -487,11 +493,11 @@ sp_boxplot <- function(data,
 
   if (!sp.is.null(facet_variable)) {
     if (facet_singlecell_style) {
-	  if(coordinate_flip){
+      if (coordinate_flip) {
         strip.position = "top"
-	  } else {
-	    strip.position = 'left'
-	  }
+      } else {
+        strip.position = 'left'
+      }
       p <-
         p + facet_wrap(
           ~  .data[[facet_variable]],
