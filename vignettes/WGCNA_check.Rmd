@@ -19,11 +19,11 @@ conflict_prefer("bicor", "WGCNA")
 #expr_mat <- sp_readTable(file="LiverFemaleClean.txt", row.names = 1, header = T)
 # group <- sp_readTable(file="TraitsClean.txt", row.names=1, header=T)
 
-#exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
-# traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
+exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
+traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
            
-exprMat = "~/tmp/gene.txt"
-traitData = "~/tmp/fenzuxinxi.txt"  
+# exprMat = "~/tmp/gene.txt"
+# traitData = "~/tmp/fenzuxinxi.txt"  
 # traitData = NULL
 # expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
@@ -119,7 +119,7 @@ minimal_mad = NULL
         RsquaredCut = RsquaredCut
       )
 
-    power <- power$power
+    #power <- power$power
 
     if (!sp.is.null(power_min) && (power < power_min)) {
       power = power_min
@@ -174,7 +174,7 @@ minimal_mad = NULL
     net$hubgene <- hubgene
 
     if (!is.null(traitData)) {
-      WGCNA_moduleTraitPlot(
+      modTraitCorP = WGCNA_moduleTraitPlot(
         MEs_col,
         traitData = wgcnaL$traitData,
         saveplot = paste0(prefix, ".WGCNA_moduleTraitHeatmap.pdf"),
@@ -200,7 +200,8 @@ minimal_mad = NULL
         traitData = wgcnaL$traitData,
         net,
         corType = corType,
-        prefix = prefix
+        prefix = prefix,
+        modTraitCorP = modTraitCorP
       )
     }
     invisible(net)
