@@ -353,7 +353,7 @@ dataFilter <-
     }
 
     if (rmVarZero) {
-      m.var <- apply(datExpr, 1, var)
+      m.var <- apply(datExpr, 1, stats::var)
       datExpr <- datExpr[which(m.var > 0), ]
     }
 
@@ -398,7 +398,7 @@ dataFilter2 <-
       datExpr[is.na(datExpr)] <- fillna
     }
     if (rmVarZero && ncol(datExpr)>2) {
-      m.var <- apply(datExpr, 1, var)
+      m.var <- apply(datExpr, 1, stats::var)
       datExpr <- datExpr[which(m.var > 0), ]
     }
 
@@ -659,7 +659,7 @@ WGCNA_sampleClusterDetectOutlier <-
       datExpr <- datExpr[which(Z.k >= thresholdZ.k), ]
 
       # filter datExpr in case still 0 variance data again
-      m.var <- apply(datExpr, 2, var)
+      m.var <- apply(datExpr, 2, stats::var)
       datExpr <- datExpr[, which(m.var > 0), drop=F]
 
       cat("\tAfter removing outlier samples, ", nrow(datExpr), "samples kept, ", ncol(datExpr), "genes kept.\n")
