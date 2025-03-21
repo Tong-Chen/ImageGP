@@ -160,7 +160,7 @@ sp_pcoa <- function(data,
       data <- data + log_add
       data <- log2(data)
     }  else if (data_transform == "scale") {
-      data <- data[var(data) != 0, ]
+      data <- data[stats::var(data) != 0, ]
       data_scale <- t(apply(data, 1, scale))
       rownams(data_scale) <- rownames(data)
       colnams(data_scale) <- colnames(data)
