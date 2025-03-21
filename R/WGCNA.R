@@ -1927,15 +1927,28 @@ WGCNA_GeneModuleTraitCoorelation <-
     moduleLabels = net$colors
     moduleColors = WGCNA::labels2colors(moduleLabels)
 
-    modTraitCorP <- modTraitCorP[modTraitCorP$Pvalue<=pvalue_filter_threshold,]
-    groups <- split.data.frame(modTraitCorP, modTraitCorP$Module)
-    modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 5)))
-    #nrow(result_matrix)
-    nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
-    if(nrow_modTraitCorP_filter > 100){
-      modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 3)))
+    if (!sp.is.null(modTraitCorP)){
+      modTraitCorP <- modTraitCorP[modTraitCorP$Pvalue<=pvalue_filter_threshold,]
+      groups <- split.data.frame(modTraitCorP, modTraitCorP$Module)
+      modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 5)))
+      #nrow(result_matrix)
+      nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
+      if(nrow_modTraitCorP_filter > 100){
+        modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 3)))
+      }
+      nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
+    } else {
+      modules = colnames(MEs_col)
+      module_len = length(modules)
+
+      phenoName_len = length(phenoName)
+      modules_rep = rep(modules, each=phenoName_len)
+      phenoName_rep = rep(phenoName, each=module_len)
+
+      modTraitCorP_filter = data.frame(module=modules_rep, pheno=phenoName_rep)
+      nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
     }
-    nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
+
 
     for (i in 1:nrow_modTraitCorP_filter) {
       module = substring(modTraitCorP_filter[i,1], 3)
