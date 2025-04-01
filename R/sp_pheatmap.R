@@ -458,7 +458,14 @@ sp_pheatmap <- function(data,
 
   }
 
+  if(ncol(data)>1 && nrow(data)>1){
+    data_sd <- apply(data, 1, sd, na.rm=T)
+  }
+
   if (correlation_plot  %in% c("row", "Row")) {
+    if (any(data_sd == 0, na.rm=T)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
     if (clustering_distance_rows  == "pearson") {
       row_cor = cor(t(data), use = 'pairwise.complete.obs')
     } else if (clustering_distance_rows  == "spearman") {
@@ -476,6 +483,9 @@ sp_pheatmap <- function(data,
     annotation_col = annotation_row
     cor_data = T
   } else if (correlation_plot %in% c("col", "Column")) {
+    if (any(data_sd == 0, na.rm=T)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
     # Do not know why add this!
     # Comment out
     # data_mad <- apply(data, 1, mad)
@@ -500,12 +510,7 @@ sp_pheatmap <- function(data,
 
   #print(data)
   # filter abnormal lines
-  if(ncol(data)>1 && nrow(data)>1){
-    data_sd <- apply(data, 1, sd, na.rm=T)
-    if (any(data_sd == 0, na.rm=T)) {
-      stop("Wrong correlation method for this type of data. Please choose another method.")
-    }
-  }
+
 
 
 
@@ -618,6 +623,9 @@ sp_pheatmap <- function(data,
   col_order = colnames(data)
 
   if (cluster_rows) {
+    if (any(data_sd == 0, na.rm=T)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
     if (clustering_distance_rows == "pearson") {
       if (!cor_data) {
         row_cor = cor(t(data), use = 'pairwise.complete.obs')
@@ -675,6 +683,9 @@ sp_pheatmap <- function(data,
   }
 
   if (cluster_cols) {
+    if (any(data_sd == 0, na.rm=T)) {
+      stop("Wrong correlation method for this type of data. Please choose another method.")
+    }
     if (clustering_distance_cols == "pearson") {
       if (!cor_data) {
         col_cor = cor(data, use = 'pairwise.complete.obs')
