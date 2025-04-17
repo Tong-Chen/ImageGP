@@ -2195,6 +2195,11 @@ WGCNA_onestep <-
       saveplot = paste0(prefix, ".WGCNA_module_correlation_plot.pdf")
     )
 
+    new_modules = setdiff(colnames(MEs_col), "MEgrey")
+    if(length(new_modules) == 0){
+      cat("No modules found")
+      return(1)
+    }
 
     net$MEs_col <- MEs_col
 
