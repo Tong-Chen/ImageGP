@@ -1929,10 +1929,18 @@ WGCNA_GeneModuleTraitCoorelation <-
 
     if (!sp.is.null(modTraitCorP)){
       modTraitCorP <- modTraitCorP[modTraitCorP$Pvalue<=pvalue_filter_threshold,]
+      if(nrow(modTraitCorP) == 0){
+        cat("No significant group for performing WGCNA_GeneModuleTraitCoorelation analysis.\n")
+        return(0)
+      }
       groups <- split.data.frame(modTraitCorP, modTraitCorP$Module)
       modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 5)))
       #nrow(result_matrix)
       nrow_modTraitCorP_filter <- nrow(modTraitCorP_filter)
+      if(sp.is.null(nrow_modTraitCorP_filter)){
+        cat("No significant group for performing WGCNA_GeneModuleTraitCoorelation analysis.\n")
+        return(0)
+      }
       if(nrow_modTraitCorP_filter > 100){
         modTraitCorP_filter <- do.call(rbind, lapply(groups, function(g) head(g[order(g$Pvalue),], 3)))
       }
