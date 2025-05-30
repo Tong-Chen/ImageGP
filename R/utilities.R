@@ -569,7 +569,7 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
   color_len = length(color)
 
   if (color_len == 1) {
-    if sp.is.null(color){
+    if (sp.is.null(color)){
       color = "Set2"
     }
     if (grepl("^ggsci", color)) {
