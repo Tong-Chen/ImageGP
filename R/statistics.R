@@ -80,7 +80,10 @@ sp_diff_test <-
     data <- droplevels(data)
     # print(paste(stat_value_variable, "~", stat_group_variable))
 
-    if(length(unique(data[[stat_group_variable]])) == 1){
+    group_number = length(unique(data[[stat_group_variable]]))
+    sample_number = length(data[[stat_group_variable]])
+
+    if(group_number == 1 | group_number == sample_number){
       data$stat = "#"
       Tukey_HSD_table =NULL
     } else {
