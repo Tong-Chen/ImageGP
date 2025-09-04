@@ -1324,7 +1324,7 @@ WGCNA_cytoscape <-
     cyt = WGCNA::exportNetworkToCytoscape(
       TOM,
       weighted = TRUE,
-      threshold = 0.5,
+      threshold = 0,
       nodeNames = probes,
       nodeAttr = moduleColors
     )
@@ -1436,8 +1436,8 @@ WGCNA_hubgene <- function(cyt,
   edgeData <- edgeData[, c(1, 3, 4)]
 
   nodeTotalWeight <-
-    edgeData %>% dplyr::group_by(Node1, Module1) %>% dplyr::summarise(weight =
-                                                                        sum(Weight))
+    edgeData %>% dplyr::group_by(Node1, Module1) %>%
+    dplyr::summarise(weight = sum(abs(Weight)))
 
   nodeTotalWeight <-
     nodeTotalWeight[with(nodeTotalWeight, order(Module1,-weight)), ]
