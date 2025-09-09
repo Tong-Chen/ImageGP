@@ -1283,7 +1283,8 @@ WGCNA_cytoscape <-
            datExpr,
            TOM_plot = NULL,
            prefix = "ehbio",
-           fulledge = F) {
+           fulledge = F, 
+		   correlation_threshold=0.5) {
     ## 获取TOM矩阵，导出Cytoscape可用的数据方便网络图绘制
     # 如果采用分步计算，或设置的blocksize>=总基因数，直接load计算好的TOM结果
     # 否则需要再计算一遍，比较耗费时间
@@ -1324,7 +1325,7 @@ WGCNA_cytoscape <-
     cyt = WGCNA::exportNetworkToCytoscape(
       TOM,
       weighted = TRUE,
-      threshold = 0,
+      threshold = correlation_threshold,
       nodeNames = probes,
       nodeAttr = moduleColors
     )
@@ -2102,6 +2103,7 @@ WGCNA_onestep <-
            power_min = NULL,
            up_color = c("red", "white", "blue"),
            down_color = c("green", "white"),
+		   correlation_threshold = 0.5, 
            ...) {
     options(stringsAsFactors = FALSE)
     options(warn = -1)
@@ -2210,7 +2212,7 @@ WGCNA_onestep <-
     # )
 
     cyt <-
-      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix)
+      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix, correlation_threshold=correlation_threshold)
 
     net$cyt <- cyt
 
