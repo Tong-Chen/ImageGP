@@ -1283,7 +1283,7 @@ WGCNA_cytoscape <-
            datExpr,
            TOM_plot = NULL,
            prefix = "ehbio",
-           fulledge = F, 
+           fulledge = F,
 		   correlation_threshold=0.5) {
     ## 获取TOM矩阵，导出Cytoscape可用的数据方便网络图绘制
     # 如果采用分步计算，或设置的blocksize>=总基因数，直接load计算好的TOM结果
@@ -1292,7 +1292,7 @@ WGCNA_cytoscape <-
     cat(sp_current_time(), "Start generating input files for cytoscape.\n")
     cat("\tLoad TOM similarity matrix.\n")
     load(net$TOMFiles[1], verbose = T)
-    file.remove(net$TOMFiles[1])
+
 
     TOM <- as.matrix(TOM)
 
@@ -1453,6 +1453,14 @@ WGCNA_hubgene <- function(cyt,
   write.table(
     nodeTotalWeightTop20,
     paste(prefix, "hubgenes.txt", sep = "."),
+    quote = F,
+    sep = "\t",
+    row.names = F
+  )
+
+  write.table(
+    nodeTotalWeight,
+    paste(prefix, "hubgenes_all.txt", sep = "."),
     quote = F,
     sep = "\t",
     row.names = F
@@ -2103,7 +2111,7 @@ WGCNA_onestep <-
            power_min = NULL,
            up_color = c("red", "white", "blue"),
            down_color = c("green", "white"),
-		   correlation_threshold = 0.5, 
+		   correlation_threshold = 0.5,
            ...) {
     options(stringsAsFactors = FALSE)
     options(warn = -1)
@@ -2252,8 +2260,10 @@ WGCNA_onestep <-
         modTraitCorP = modTraitCorP
       )
     }
-    invisible(net)
+
+    file.remove(net$TOMFiles[1])
     cat(sp_current_time(), "Success.\n")
+    invisible(net)
   }
 
 ### 计算邻接矩阵
