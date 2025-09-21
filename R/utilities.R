@@ -575,7 +575,9 @@ generate_color_list <- function(color, number, alpha = 1, constantColor=F, rever
     if (grepl("^ggsci", color)) {
       # color = "ggsci_npg_nrc"
       colorV = sp_string2vector(color, "_")
-      colorSet = unname(ggsci_db[[colorV[2]]][[colorV[3]]])
+      colorV2 = colorV[2]
+      colorV3 = paste(colorV[3:length(colorV)], collapse="_")
+      colorSet = unname(ggsci_db[[colorV2]][[colorV3]])
       maxcolor = length(colorSet)
       if (number <= maxcolor) {
         colorL <- colorSet[1:number]
