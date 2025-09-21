@@ -782,7 +782,7 @@ sp_pheatmap <- function(data,
     }
   }
 
-  data_order = data[row_order, col_order]
+  data_order = data[row_order, col_order, drop=FALSE]
 
   if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical") {
     data_row_cluster <- data_row_cluster[row_order, , drop = F]
