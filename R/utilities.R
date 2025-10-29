@@ -1145,16 +1145,16 @@ sp_ggplot_layout <-
                             vjust = 0.5, angle = 0,
                             margin = margin(), debug = FALSE),
         axis.line.x = element_line(
-          size = 0.4,
+          linewidth = 0.4,
           colour = "black",
           linetype = 'solid'
         ),
         axis.line.y = element_line(
-          size = 0.4,
+          linewidth = 0.4,
           colour = "black",
           linetype = 'solid'
         ),
-        axis.ticks = element_line(size = 0.4,
+        axis.ticks = element_line(linewidth = 0.4,
                                   colour = "black")
       )
 
