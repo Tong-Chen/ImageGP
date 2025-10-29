@@ -298,8 +298,12 @@ sp_pcoa <- function(data,
 
   if (!sp.is.null(shape_variable)) {
     shape_variable_en = sym(shape_variable)
+    shape_legend = 'legend'
+    if(length(shapes)>18){
+      shape_legend = 'none'
+    }
     p <- p + aes(shape = !!shape_variable_en) +
-      scale_shape_manual(values = shapes)
+      scale_shape_manual(values = shapes, guide=shape_legend)
   }
 
   if (!sp.is.null(size_variable)) {
