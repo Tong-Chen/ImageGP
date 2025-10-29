@@ -1035,12 +1035,19 @@ sp_read_in_long_wide_matrix <- function(data, xvariable, melted, ...){
 #' # Not run
 #'
 generate_shapes <- function(data, shape_variable){
-  shape_level <- nlevels(data[[shape_variable]])
-  if (shape_level < 15){
-    shapes = (0:shape_level) %% 15
-  } else{
-    shapes = c(0:14,c((15:shape_level) %% 110 + 18))
-  }
+  shape_level <- nlevels(data[[shape_variable]]) - 1
+  shapes = c(16,17,15,18, 1:14)[(0:shape_level) %% 18 +1]
+  # if (shape_level < 5){
+  #   shapes = c(16,17,15,18)[(1:shape_level) %% 5]
+  # } else{
+  #   shapes = c(16,17,15,18, 1:14)[(1:shape_level) %% 18] #    c(0:14,c((15:shape_level) %% 110 + 18))
+  # }
+  # shapes = (0:shape_level) %% 21
+  # if (shape_level < 15){
+  #   shapes = (0:shape_level) %% 15
+  # } else{
+  #   shapes = c(0:14,c((15:shape_level) %% 110 + 18))
+  # }
 }
 
 #' Use showtext to load fonts
