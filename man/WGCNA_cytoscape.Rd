@@ -2,7 +2,7 @@
 % Please edit documentation in R/WGCNA.R
 \name{WGCNA_cytoscape}
 \alias{WGCNA_cytoscape}
-\title{Export WGCNA resullt for cytoscape input edges and nodes.}
+\title{Export WGCNA result for cytoscape input edges and nodes.}
 \usage{
 WGCNA_cytoscape(
   net,
@@ -10,7 +10,8 @@ WGCNA_cytoscape(
   datExpr,
   TOM_plot = NULL,
   prefix = "ehbio",
-  fulledge = F
+  fulledge = F,
+  correlation_threshold = 0.5
 )
 }
 \arguments{
@@ -32,7 +33,7 @@ allowed, but not too many. See \code{checkMissingData} below and details.}
 A list with edgeData and nodeData as two elements.
 }
 \description{
-Export WGCNA resullt for cytoscape input edges and nodes.
+Export WGCNA result for cytoscape input edges and nodes.
 }
 \examples{
 

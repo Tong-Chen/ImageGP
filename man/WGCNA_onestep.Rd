@@ -38,6 +38,7 @@ WGCNA_onestep(
   power_min = NULL,
   up_color = c("red", "white", "blue"),
   down_color = c("green", "white"),
+  correlation_threshold = 0.5,
   ...
 )
 }
