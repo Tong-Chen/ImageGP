@@ -311,6 +311,7 @@ sp_pheatmap <- function(data,
 
   data <- dataFilter2(data, top_n=top_n, statistical_value_type=statistical_value_type, rmVarZero = T)
 
+  have_display_numbers = FALSE
   if ("character" %in% class(display_numbers)) {
     if (display_numbers!="NULL" && display_numbers!="") {
     display_numbers <-
@@ -321,6 +322,8 @@ sp_pheatmap <- function(data,
     display_numbers <- display_numbers[rownames(data), colnames(data), drop=F]
     display_numbers[is.na(display_numbers)] <- ''
     display_numbers <- sapply(display_numbers, stringr::str_replace, "\\\\n","\n")
+    rownames(display_numbers) <- rownames(data)
+    have_display_numbers = TRUE
     } else {
       display_numbers = FALSE
     }
@@ -390,12 +393,15 @@ sp_pheatmap <- function(data,
     # print(breaks)
   }
 
+  have_annotation_row = FALSE
+  have_annotation_col = FALSE
   if (!sp.is.null(annotation_row)) {
     if (class(annotation_row) == "character") {
       annotation_row <- sp_readTable(annotation_row, row.names = 1)
       annotation_row <-
         annotation_row[match(rownames(data), rownames(annotation_row)), , drop =
                          F]
+      have_annotation_row = TRUE
     }
     if (!sp.is.null(cluster_rows_variable)) {
       if (!cluster_rows_variable %in% colnames(annotation_row)) {
@@ -418,7 +424,7 @@ sp_pheatmap <- function(data,
         annotation_col[match(colnames(data), rownames(annotation_col)), , drop =
                          F]
     }
-
+    have_annotation_col = TRUE
     if (!sp.is.null(cluster_cols_variable)) {
       if (!cluster_cols_variable %in% colnames(annotation_col)) {
         stop(
@@ -480,6 +486,9 @@ sp_pheatmap <- function(data,
       }
     }
     data = round(row_cor, 3)
+    if (have_display_numbers){
+      display_numbers = data
+    }
     annotation_col = annotation_row
     cor_data = T
   } else if (correlation_plot %in% c("col", "Column")) {
@@ -504,6 +513,9 @@ sp_pheatmap <- function(data,
       }
     }
     data = round(col_cor, 7)
+    if (have_display_numbers){
+      display_numbers = data
+    }
     cor_data = T
     annotation_row = annotation_col
   }
@@ -760,10 +772,10 @@ sp_pheatmap <- function(data,
   }
 
   if (!is.na(cutree_rows) && mode(cluster_rows_results) != "logical" && anno_cutree_rows) {
-    if (is.na(annotation_row)) {
-      annotation_row = data_row_cluster
-    } else {
+    if (have_annotation_row) {
       annotation_row = cbind(annotation_row, data_row_cluster)
+    } else {
+      annotation_row = data_row_cluster
     }
   }
 
@@ -775,10 +787,10 @@ sp_pheatmap <- function(data,
   }
 
   if (!is.na(cutree_cols) && mode(cluster_cols_results) != "logical" && anno_cutree_cols) {
-    if (is.na(annotation_col)) {
-      annotation_col = data_col_cluster
-    } else {
+    if (have_annotation_col) {
       annotation_col = cbind(annotation_col, data_col_cluster)
+    } else {
+      annotation_col = data_col_cluster
     }
   }
 
