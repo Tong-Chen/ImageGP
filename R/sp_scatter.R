@@ -136,15 +136,14 @@ sp_scatterplot <- function (data,
     stop(paste(xvariable, 'or', yvariable, 'must be column names of data!'))
   }
 
-  if (!is.numeric(data[[yvariable]]) &&
-      !sp.is.null(yvariable_order)) {
+  #if (!sp.is.null(yvariable_order)) {
     data = sp_set_factor_order(data, yvariable, yvariable_order)
-  }
+  #}
 
-  if (!is.numeric(data[[xvariable]]) &&
-      !sp.is.null(xvariable_order)) {
+  #if (!sp.is.null(xvariable_order)){
     data = sp_set_factor_order(data, xvariable, xvariable_order)
-  }
+  #}
+
 
   if (!sp.is.null(color_variable)) {
     if (!(color_variable %in% data_colnames)) {
@@ -285,7 +284,7 @@ sp_scatterplot <- function (data,
     if(!sp.is.null(line_size) && is.numeric(line_size)){
       p <- p + stat_smooth(method = smooth_method,
                            se = FALSE,
-                           size=line_size)
+                           linewidth=line_size)
     }else{
       p <- p + stat_smooth(method = smooth_method,
                            se = FALSE)
