@@ -240,6 +240,8 @@ sp_barplot <- function (data,
 
   data = sp_set_factor_order(data, xvariable, xvariable_order)
 
+  data = sp_set_factor_order(data, yvariable)
+
   #print(data)
 
   if (!sp.is.null(color_variable) && color_variable != xvariable) {
