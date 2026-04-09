@@ -1,0 +1,3 @@
+icMERS_CoV_Treat_0h	mock_0h
+icMERS_CoV_Treat_12h	icMERS_CoV_Treat_0h
+(icMERS_CoV_Treat_12h-mock_12h)	(icMERS_CoV_Treat_0h-mock_0h)
