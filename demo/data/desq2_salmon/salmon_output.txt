@@ -1,0 +1,9 @@
+Sample	Quant
+trt_N080611	system_file/desq2_salmon/trt_N080611/quant.sf
+trt_N61311	system_file/desq2_salmon/trt_N61311/quant.sf
+trt_N061011	system_file/desq2_salmon/trt_N061011/quant.sf
+untrt_N052611	system_file/desq2_salmon/untrt_N052611/quant.sf
+untrt_N061011	system_file/desq2_salmon/untrt_N061011/quant.sf
+untrt_N61311	system_file/desq2_salmon/untrt_N61311/quant.sf
+untrt_N080611	system_file/desq2_salmon/untrt_N080611/quant.sf
+trt_N052611	system_file/desq2_salmon/trt_N052611/quant.sf

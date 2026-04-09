@@ -1,0 +1,22 @@
+ID	A1	Moisture	Management	Use	Manure
+Sample1	2.8	1	SF	Haypastu	4
+Sample2	3.5	1	BF	Haypastu	2
+Sample3	4.3	2	SF	Haypastu	4
+Sample4	4.2	2	SF	Haypastu	4
+Sample5	6.3	1	HF	Hayfield	2
+Sample6	4.3	1	HF	Haypastu	2
+Sample7	2.8	1	HF	Pasture	3
+Sample8	4.2	5	HF	Pasture	3
+Sample9	3.7	4	HF	Hayfield	1
+Sample10	3.3	2	BF	Hayfield	1
+Sample11	3.5	1	BF	Pasture	1
+Sample12	5.8	4	SF	Haypastu	2
+Sample13	6	5	SF	Haypastu	3
+Sample14	9.3	5	NM	Pasture	0
+Sample15	11.5	5	NM	Haypastu	0
+Sample16	5.7	5	SF	Pasture	3
+Sample17	4	2	NM	Hayfield	0
+Sample18	4.6	1	NM	Hayfield	0
+Sample19	3.7	5	NM	Hayfield	0
+Sample20	3.5	5	NM	Hayfield	0
+
