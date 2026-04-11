@@ -83,7 +83,7 @@ sp_pca <- function(data,
     rownames(data) <- rownames_data
   }
 
-  data <- data[stats::var(data) != 0, ]
+  data <- data[apply(data,1,var) != 0, ]
 
   if(minimum_mad + top_n != 0){
     data$mad <- apply(data, 1, mad)
