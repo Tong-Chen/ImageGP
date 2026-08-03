@@ -24,14 +24,14 @@ Imports:
 	grid,
     dplyr,
     stringr,
-    readxl
+    readxl,
+    reshape2
 Suggests:
     WGCNA,
     DESeq2,
     RColorBrewer,
     gplots,
     amap,
-    reshape2,
     ggrepel,
     BiocParallel,
     cowplot,
