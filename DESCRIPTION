@@ -22,8 +22,9 @@ Imports:
     ggplot2,
 	pheatmap,
 	grid,
-	dplyr,
-    stringr
+    dplyr,
+    stringr,
+    readxl
 Suggests:
     WGCNA,
     DESeq2,

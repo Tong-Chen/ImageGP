@@ -205,11 +205,66 @@ sp_readTable <-
            renameDuplicateRowNames = F,
            stringsAsFactors = T,
            ...) {
-    if (renameDuplicateRowNames) {
-      data <- read.table(
-        file,
+    file_character <- as.character(file)[1]
+    file_without_query <- sub("[?#].*$", "", file_character)
+    is_xlsx <- grepl("\\.xlsx$", file_without_query, ignore.case = TRUE)
+    is_remote <- grepl("^https?://", file_character, ignore.case = TRUE)
+    local_file <- file_character
+    temporary_file <- NULL
+
+    if (is_remote) {
+      file_extension <- tools::file_ext(file_without_query)
+      if (!nzchar(file_extension)) {
+        file_extension <- if (is_xlsx) "xlsx" else "txt"
+      }
+      temporary_file <- tempfile(fileext = paste0(".", file_extension))
+      utils::download.file(
+        file_character,
+        temporary_file,
+        mode = "wb",
+        quiet = TRUE
+      )
+      local_file <- temporary_file
+      on.exit(unlink(temporary_file), add = TRUE)
+    }
+
+    read_input <- function(input_file, input_row_names = NULL) {
+      if (is_xlsx) {
+        if (!requireNamespace("readxl", quietly = TRUE)) {
+          stop("Reading XLSX files requires the R package 'readxl'.")
+        }
+        data <- readxl::read_excel(
+          input_file,
+          sheet = 1,
+          col_names = header,
+          .name_repair = "minimal"
+        )
+        data <- as.data.frame(
+          data,
+          check.names = check.names,
+          stringsAsFactors = stringsAsFactors
+        )
+        if (!is.null(input_row_names)) {
+          row_name_index <- if (is.numeric(input_row_names)) {
+            input_row_names
+          } else {
+            match(input_row_names, names(data))
+          }
+          if (is.na(row_name_index) || row_name_index < 1 ||
+              row_name_index > ncol(data)) {
+            stop("The requested row.names column was not found in the XLSX file.")
+          }
+          row_names <- data[[row_name_index]]
+          data <- data[, -row_name_index, drop = FALSE]
+          rownames(data) <- row_names
+        }
+        return(data)
+      }
+
+      read.table(
+        input_file,
         sep = sep,
-        row.names = NULL,
+        row.names = input_row_names,
         header = header,
         quote = quote,
         comment = comment,
@@ -217,6 +272,10 @@ sp_readTable <-
         stringsAsFactors = stringsAsFactors,
         ...
       )
+    }
+
+    if (renameDuplicateRowNames) {
+      data <- read_input(local_file, input_row_names = NULL)
       if (!is.numeric(as.vector(data[, 1]))){
         rownames_data <- make.unique(as.vector(data[, 1]))
       } else {
@@ -227,17 +286,7 @@ sp_readTable <-
       rownames(data) <- rownames_data
     } else {
       data <-
-        read.table(
-          file,
-          sep = sep,
-          row.names = row.names,
-          header = header,
-          quote = quote,
-          comment = comment,
-          check.names = check.names,
-          stringsAsFactors = stringsAsFactors,
-          ...
-        )
+        read_input(local_file, input_row_names = row.names)
     }
     invisible(data)
   }
@@ -1458,4 +1507,3 @@ merge_data_with_auto_matched_column <- function(df1, df2, ...){
 
   invisible(data)
 }
-
