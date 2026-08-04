@@ -13,7 +13,6 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
 Roxygen: list(markdown = TRUE)
 URL: https://www.bic.ac.cn/BIC
 Depends:
@@ -39,3 +38,4 @@ Suggests:
 	knitr,
 	VennDiagram,
 	UpSetR
+Config/roxygen2/version: 8.0.0

@@ -65,7 +65,7 @@ sp_corrplot(
 
 \item{saveplot}{Save plot to given file "a.pdf", "b.png".}
 
-\item{...}{}
+\item{...}{Other parameters given to base_plot_save}
 }
 \value{
 a grid object

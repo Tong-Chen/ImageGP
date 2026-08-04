@@ -22,24 +22,24 @@ conflict_prefer("bicor", "WGCNA")
 exprMat = "~/github/ImageGP/vignettes/LiverFemaleClean.txt"  
 traitData = "~/github/ImageGP/vignettes/TraitsClean.txt"
            
-# exprMat = "~/tmp/gene.txt"
-# traitData = "~/tmp/fenzuxinxi.txt"  
+exprMat = "~/tmp/exprMat.txt"
+traitData = "~/tmp/traitData.txt"  
 # traitData = NULL
 # expr_mat <- sp_readTable(file=exprMat, row.names = 1, header = T, renameDuplicateRowNames = T)
 
-WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "bicor",
-           networkType = "signed",
-           maxPower = 30, removeOutlier = T,
-  RsquaredCut = 0.85, minModuleSize=25, deepSplit = 2, thresholdZ.k = -2.5, randomSeed = 2020)
+# WGCNA_onestep(exprMat, traitData, prefix="wgcna_ehbio", top_mad_n = 2000, corType = "bicor",
+#            networkType = "signed",
+#            maxPower = 30, removeOutlier = T,
+#   RsquaredCut = 0.85, minModuleSize=25, deepSplit = 2, thresholdZ.k = -2.5, randomSeed = 2020)
 
 prefix="wgcna_ehbio"
-networkType = "signed"
-maxPower = 30
+networkType = "unsigned"
+maxPower = 40
 RsquaredCut = 0.85
 categoricalTrait = NULL
 removeOutlier = T
      minimal_mad=NULL
-     top_mad_n = 2000
+     top_mad_n = 1
      rmVarZero = T
      corType = "bicor"
      minModuleSize=25
@@ -119,7 +119,7 @@ minimal_mad = NULL
         RsquaredCut = RsquaredCut
       )
 
-    #power <- power$power
+    power <- power$power
 
     if (!sp.is.null(power_min) && (power < power_min)) {
       power = power_min
@@ -164,8 +164,11 @@ minimal_mad = NULL
     #   saveplot = paste0(prefix, ".WGCNA_moduletrait_correlation_plot.pdf")
     # )
 
+    # load(net$TOMFiles[1], verbose = T)
+    # load("wgcna_ehbio.blockwiseTOM-block.old.RData", verbose=T)
+    
     cyt <-
-      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix)
+      WGCNA_cytoscape(net, power, wgcnaL$datExpr, TOM_plot = TOM_plot, prefix = prefix, correlation_threshold = 0)
 
     net$cyt <- cyt
 

@@ -70,7 +70,7 @@ sp_manhattan2_plot(
 
 \item{legend.position}{Position of legend, accept top, bottom, left, right, none or c(0.8,0.8).}
 
-\item{...}{}
+\item{...}{Extra parameters given to \code{geom_vline} and \code{geom_hline}}
 }
 \value{
 A ggplot2 object

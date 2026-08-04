@@ -159,7 +159,7 @@ or 'HeiArial.ttc'(if in current directory), Default system default.}
 
 \item{filename}{Output picture to given file.}
 
-\item{...}{}
+\item{...}{Parametes given to \code{sp_ggplot_layout}}
 }
 \value{
 A ggplot2 object

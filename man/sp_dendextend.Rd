@@ -42,8 +42,6 @@ sp_dendextend(
 \item{node_size}{Node size.}
 
 \item{legend_site}{Legend site. Optional, "bottomright", "bottom", "bottomleft", "left", "topleft", "top", "topright", "right" and "center".}
-
-\item{...}{}
 }
 \description{
 Hierarchical cluster diagram

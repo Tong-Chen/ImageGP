@@ -23,8 +23,6 @@ corelation of one sample to other samples. Then do Z-score transfer for all
 correlation values. The samples with corelation values less than given value
 would be treated as outliers.
 Default -2.5 meaning -2.5 std.}
-
-\item{...}{}
 }
 \value{
 A data frame.

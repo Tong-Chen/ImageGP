@@ -79,8 +79,6 @@ Disregarded if fill_by_sign is TRUE (the default).}
 
 \item{y_label}{The Y axis name}
 
-\item{...}{}
-
 \item{draw_axis_x}{(character) one of "none", "behind", "front" whether to draw an x.axis line and whether to draw it behind or in front of the rectangles, default is behind.}
 }
 \value{

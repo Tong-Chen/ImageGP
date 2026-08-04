@@ -84,7 +84,7 @@ a RColorBrewer color set like  "BrBG"     "PiYG"     "PRGn"     "PuOr"
 
 \item{margin}{Number giving the amount of whitespace around the diagram in grid units. Default system default}
 
-\item{...}{}
+\item{...}{Other parameters given to \code{read.table}}
 }
 \value{
 A grid object.

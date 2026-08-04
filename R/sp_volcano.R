@@ -102,15 +102,15 @@ sp_volcano_plot <-
     data_colnames <- colnames(data)
 
     if(! (log2fc_var %in% data_colnames && fdr_var %in% data_colnames)){
-      stop(paste(log2fc_var,'or',fdr_var,'must be column names of data!'))
+      stop(paste(log2fc_var,'or',fdr_var,'must be column names of data (', paste0(data_colnames, collapse = ', '), ')!'))
     }
 
     if (!numCheck(data[[log2fc_var]])) {
-      stop("Must specify log2 transformed fold change column for Fold change column.")
+      stop("Currently selected column (", log2fc_var ,") is not all numerical. Must specify log2 transformed fold change column for Fold change column.")
     }
 
     if (!numCheck(data[[fdr_var]])) {
-      stop("Must specify p-value, padjust or fdr column for Statistical significance column.")
+      stop("Currently selected column (", fdr_var ,") is not all numerical. Must specify p-value, padjust or fdr column for Statistical significance column.")
     }
 
     if(!sp.is.null(status_col_var) && length(unique(data[[status_col_var]]))>100){
